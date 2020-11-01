@@ -1,0 +1,1 @@
+export const API = 'https://newdemo.aplikasiskripsi.com/farah_accounting/public';
