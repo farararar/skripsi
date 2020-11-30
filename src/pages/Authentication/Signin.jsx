@@ -1,5 +1,6 @@
-import React, {useContext, useState} from 'react';
-import {Context as AuthContext} from '../../services/Context/AuthContext'
+import React, { useContext, useState } from 'react';
+import clsx from 'clsx';
+import { Context as AuthContext } from '../../services/Context/AuthContext'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,8 +14,15 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { LinearProgress } from '@material-ui/core';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
 
 function Copyright() {
   return (
@@ -30,45 +38,50 @@ function Copyright() {
 }
 
 export default function Signin(props) {
-  const {state, isAuthenticated, Signin} = useContext(AuthContext)
+  const { state, isAuthenticated, Signin } = useContext(AuthContext)
   const [value, setValue] = useState({
     email: '',
-    password: ''
+    password: '',
+    showPassword: false
   })
-  const {email, password} = value
+  const { email, password } = value
 
   const classes = useStyles();
 
   const checkLogin = () => {
-    if(isAuthenticated()){
-        return <Redirect to='/' />
-    }else{
-        return false
+    if (isAuthenticated()) {
+      return <Redirect to='/' />
+    } else {
+      return false
     }
   }
 
+  const handleClickShowPassword = () => {
+    setValue({ ...value, showPassword: !value.showPassword });
+  };
+
   const handleChange = name => event => {
-      setValue({
-          ...value,
-          [name]: event.target.value
-      })
+    setValue({
+      ...value,
+      [name]: event.target.value
+    })
   }
 
   const handleSubmit = (e) => {
-      e.preventDefault()
-      Signin({email, password})
+    e.preventDefault()
+    Signin({ email, password })
   }
 
   const showLoading = () => (
-      state.loading && (
-          <LinearProgress style={{ top: 27,  alignItems: 'center', }}/>
-      )
+    state.loading && (
+      <LinearProgress style={{ top: 27, alignItems: 'center', }} />
+    )
   )
 
   const textButtonSubmit = () => {
-    if(state.loading){
+    if (state.loading) {
       return state.message
-    }else{
+    } else {
       return 'MASUK'
     }
   }
@@ -86,20 +99,38 @@ export default function Signin(props) {
           <Typography component="h1" variant="h5">
             TOKO ROTI AMAYA
           </Typography>
-          
+
           <form className={classes.form} onSubmit={handleSubmit} >
-            
             <TextField value={email} onChange={handleChange('email')} variant="outlined" margin="normal" required fullWidth label="Email Pengguna" autoComplete="email" autoFocus />
-            <TextField value={password} onChange={handleChange('password')} variant="outlined" margin="normal" required fullWidth label="Kata Sandi" type="password" autoComplete="current-password" />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            {showLoading()}
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={state.loading}>
-              {textButtonSubmit()}
-            </Button>
-            
+            <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined" required fullWidth>
+              <InputLabel>Kata Sandi</InputLabel>
+              <OutlinedInput
+                autoComplete="current-password"
+                type={value.showPassword ? 'text' : 'password'}
+                value={value.password}
+                onChange={handleChange('password')}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {value.showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              {showLoading()}
+              <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={state.loading}>
+                {textButtonSubmit()}
+              </Button>
+            </FormControl>
+
             {/* <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -125,6 +156,9 @@ export default function Signin(props) {
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
+  },
+  margin: {
+    margin: "normal",
   },
   image: {
     // backgroundImage: 'url(https://source.unsplash.com/random)',
