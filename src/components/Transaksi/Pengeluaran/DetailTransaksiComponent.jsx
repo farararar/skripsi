@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Context as AuthContext } from "../../services/Context/AuthContext";
-import { Context as CustomerContext } from "../../services/Context/CustomerContext";
-import { Context as AccountContext } from "../../services/Context/AccountContext";
-import { Context as IncomeContext } from "../../services/Context/IncomeContext";
-import { Context as ProductContext } from "../../services/Context/ProductContext";
+import { Context as AuthContext } from "../../../services/Context/AuthContext";
+import { Context as CustomerContext } from "../../../services/Context/CustomerContext";
+import { Context as AccountContext } from "../../../services/Context/AccountContext";
+import { Context as IncomeContext } from "../../../services/Context/IncomeContext";
+import { Context as OutcomeContext } from "../../../services/Context/OutcomeContext";
+import { Context as ProductContext } from "../../../services/Context/ProductContext";
+
 import {
   Button,
   TextField,
@@ -24,21 +26,22 @@ import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from "mdbreact";
 import NumberFormat from "react-number-format";
 import { withRouter } from "react-router-dom";
 
-const TransaksiMasukComponent = (props) => {
+const TransaksiMasukComponent = ({ props, data, Next }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const {
     state: { listAccount },
     ListAccount,
   } = useContext(AccountContext);
   const {
-    state: { listCustomer },
-    ListCustomer,
-  } = useContext(CustomerContext);
+    state: { detailOutcome },
+    DetailOutcome,
+    UpdateOutcome
+  } = useContext(OutcomeContext);
   const {
     state: { listProduct },
     ListProduct,
   } = useContext(ProductContext);
-  const { state, AddIncome } = useContext(IncomeContext);
+  const { state, AddIncome, UpdateIncome } = useContext(IncomeContext);
   const [openDialogApprove, setOpenDialogApprove] = useState(false);
   const [dataTanggal, setDataTanggal] = useState([]);
   const [tanggal, setTanggal] = useState("");
@@ -49,6 +52,7 @@ const TransaksiMasukComponent = (props) => {
   const defaultData = {
     customer: "",
     account_id: "",
+    user_id: null,
     invoice_number: "",
     description: "",
     payment_method: "",
@@ -60,10 +64,11 @@ const TransaksiMasukComponent = (props) => {
   const [value, setValue] = useState(defaultData);
   let today = new Date();
   const handleChange = (name, ket, stok) => (event) => {
+    console.log('firs render = ', value[name] ? value[name] : "0");
     if (ket) {
       if (
         Number(
-          `${value[name] ? value[name] : "0"}${event.target.value.slice(
+          `${value[name] ? value[name] : ""}${event.target.value.slice(
             event.target.value.length - 1
           )}`
         ) <= Number(stok)
@@ -73,9 +78,17 @@ const TransaksiMasukComponent = (props) => {
           [name]: event.target.value.replace(/[^0-9]/g, ""),
         });
       } else {
+        if(value[name]===undefined ||value[name]===null){
+          setValue({
+            ...value,
+            [name]: '',
+          });   
+        }
         console.log("masuk error");
+        return 0;
       }
     } else {
+      console.log('elseee')
       setValue({
         ...value,
         [name]: event.target.value,
@@ -91,14 +104,49 @@ const TransaksiMasukComponent = (props) => {
     }
   };
 
+  // useEffect(()=>{
+  //   setValue(data);
+  //   console.log('data  ==  ',data)
+  // },[])
+  const month = [
+    "Januari",
+    "Pebruari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  const [updated, setUpdated] = useState(true);
+
+  useEffect(()=>{
+    DetailOutcome(data.id);
+    setUpdated(isAuthenticated().data.level === 'Admin'?false: true)
+  },[])
+
   useEffect(() => {
     ListAccount();
     // ListCustomer();
     ListProduct();
-    setValue({
-      ...value,
-      user_id: isAuthenticated().data.id,
+    setValue(data);
+
+    setImage([data.image]);
+    setTanggal(data.date.split(" ")[0]);
+    var bln = 0;
+    month.map((res, i) => {
+      console.log(res);
+      if (res === data.date.split(" ")[1]) {
+        bln = i + 1;
+      }
     });
+    setBulan(bln);
+    console.log("data  ==  ", data);
     const loopingTanggal = () => {
       let tanggal = "";
       let data_tanggal = [];
@@ -108,7 +156,7 @@ const TransaksiMasukComponent = (props) => {
       setDataTanggal(data_tanggal);
     };
     loopingTanggal();
-  }, []);
+  }, [state.detailOutcome]);
 
   const dialogApprove = () => (
     <Dialog
@@ -151,18 +199,68 @@ const TransaksiMasukComponent = (props) => {
 
   const handleApproveProccess = async () => {
     let formdata = new FormData();
-    const tamp = await Object.keys(value).map((res) => {
-      console.log(res);
+    const tamp = await Object.keys(value).map(async (res) => {
+      console.log(value[res]);
 
       if (res === "date") {
         formdata.append(res, today.getFullYear() + "-" + bulan + "-" + tanggal);
-      } else {
+      } else if (
+        // res === "user_id" ||
+        res === "shift" ||
+        res === "customer" ||
+        res === "invoice_number" ||
+        res === "information" ||
+        res === "payment_method" ||
+        res === "description"
+      ) {
+        formdata.append(res, value[res]);
+      } else if (res === "image") {
+        if (typeof value[res] === "string") {
+          const tt = await urlToObject(
+            "https://newdemo.aplikasiskripsi.com/farah_accounting/public/" +
+              data.image
+          ).then((result) => result);
+          formdata.append(res, tt);
+        } else {
+          formdata.append(res, value[res]);
+        }
+      } else if (res !== "user_id") {
         formdata.append(res, value[res]);
       }
     });
+    formdata.append("_method", "PUT");
+    formdata.append("user_id", data.user_id);
     Promise.all(tamp).then(() => {
-      AddIncome(formdata, () => setValue(defaultData));
+      // console.log('data send = ', form)
+      UpdateOutcome(data.id, formdata, Next);
       setOpenDialogApprove(false);
+    });
+  };
+
+  const urlToObject = async (inputURI) => {
+    var binaryVal;
+
+    // mime extension extraction
+    var inputMIME = inputURI.split(",")[0].split(":")[1].split(";")[0];
+
+    // Extract remaining part of URL and convert it to binary value
+    if (inputURI.split(",")[0].indexOf("base64") >= 0)
+      binaryVal = atob(inputURI.split(",")[1]);
+    // Decoding of base64 encoded string
+    else binaryVal = unescape(inputURI.split(",")[1]);
+
+    // Computation of new string in which hexadecimal
+    // escape sequences are replaced by the character
+    // it represents
+
+    // Store the bytes of the string to a typed array
+    var blobArray = [];
+    for (var index = 0; index < binaryVal.length; index++) {
+      blobArray.push(binaryVal.charCodeAt(index));
+    }
+
+    return new Blob([blobArray], {
+      type: inputMIME,
     });
   };
 
@@ -187,30 +285,17 @@ const TransaksiMasukComponent = (props) => {
         return null;
       }
     } else {
-      //   return process.env.REACT_APP_API_DOMAIN + media.path;
-      return "kosong";
+      console.log("masuk else", media);
+      return (
+        "https://newdemo.aplikasiskripsi.com/farah_accounting/public/" + media
+      );
     }
   }
 
-  function numberWithCommas(x) {
-    if (x) {
-      let regex = new RegExp(/\B(?=(\d{3})+(?!\d))/g)
-      let match = regex.exec(x);
-      if (!match) return false;
-      let matches = match.toString();
-      while (x !== ",") {
-        matches = matches.replace(".")
-      }
-      return matches;
-    } else {
-      return false;
-    }
-    //return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
   return (
     <div>
       {/* {today.getFullYear()} */}
-      <h4>Input Transaksi Masuk</h4>
+      <h4>Detail Transaksi</h4>
       <hr className="" />
       <MDBCard className="mb-2">
         {dialogApprove()}
@@ -223,85 +308,14 @@ const TransaksiMasukComponent = (props) => {
                   fullWidth
                   label="No. Transaksi / Invoice"
                   variant="outlined"
+                  disabled={updated}
                   margin="normal"
                   value={value.invoice_number}
                   onChange={handleChange("invoice_number")}
                 />
                 <br></br>
                 <br></br>
-                <InputLabel>Produk</InputLabel>
-                {listProduct.map((item, i) => (
-                  <>
-                    <TextField
-                      fullWidth
-                      label={`${item.name}`}
-                      variant="outlined"
-                      margin="normal"
-                      onKeyUp={(event) => {
-                        console.log(event.key);
-                        if (event.key === "Backspace") {
-                          setValue({
-                            ...value,
-                            [`product[${item.id}]`]: value[
-                              `product[${item.id}]`
-                            ].slice(0, -1),
-                          });
-                        }
-                      }}
-                      value={value[`product[${item.id}]`]}
-                      onChange={handleChange(
-                        `product[${item.id}]`,
-                        true,
-                        item.stok
-                      )}
-                    />
-                    <p>
-                      Stok tersisa{" "}
-                      {value[`product[${item.id}]`]
-                        ? item.stok - value[`product[${item.id}]`]
-                        : item.stok}
-                    </p>
-                    <p>
-                      Total Harga ({value[`product[${item.id}]`] || "0"}{" "}
-                      {item.unit_product} x Rp.{" "}
-                      {numberWithCommas(item.unit_price)}/{item.unit_product} =
-                      Rp.{" "}
-                      {value[`product[${item.id}]`]
-                        ? numberWithCommas(
-                          value[`product[${item.id}]`] *
-                          Number(item.unit_price)
-                        )
-                        : "0"}
-                      )
-                    </p>
-                    <br></br>
-                  </>
-                ))}
-                {/* <Select
-                  fullWidth
-                  value={value.product_id}
-                  onChange={handleChange("product_id")}
-                >
-                  <MenuItem value="">
-                    <em>Pilih Produk</em>
-                  </MenuItem>
-                  {listProduct.map((item, i) => (
-                    <>
-                      <TextField
-                        fullWidth
-                        label="Deskripsi Transaksi"
-                        variant="outlined"
-                        margin="normal"
-                        multiline
-                        rowsMax={4}
-                        value={value.description}
-                        onChange={handleChange("description")}
-                      />
-                      <br></br>
-                    </>
-                  ))}
-                </Select>
-                 */}
+                
 
                 <TextField
                   fullWidth
@@ -310,6 +324,7 @@ const TransaksiMasukComponent = (props) => {
                   margin="normal"
                   multiline
                   rowsMax={4}
+                  disabled={updated}
                   value={value.description}
                   onChange={handleChange("description")}
                 />
@@ -320,6 +335,7 @@ const TransaksiMasukComponent = (props) => {
                     <InputLabel>Tanggal</InputLabel>
                     <Select
                       fullWidth
+                      disabled={updated}
                       value={tanggal}
                       onChange={(event) => setTanggal(event.target.value)}
                     >
@@ -337,6 +353,7 @@ const TransaksiMasukComponent = (props) => {
                     <InputLabel>Bulan</InputLabel>
                     <Select
                       fullWidth
+                      disabled={updated}
                       value={bulan}
                       onChange={(event) => setBulan(event.target.value)}
                     >
@@ -359,7 +376,7 @@ const TransaksiMasukComponent = (props) => {
                   </MDBCol>
                   <MDBCol lg="4">
                     <InputLabel>Tahun</InputLabel>
-                    <Select fullWidth value={2020}>
+                    <Select fullWidth value={2020} disabled={updated} >
                       <MenuItem value={2020}>
                         <em>2020</em>
                       </MenuItem>
@@ -367,12 +384,14 @@ const TransaksiMasukComponent = (props) => {
                   </MDBCol>
                 </MDBRow>
                 <br></br>
+
                 <TextField
                   fullWidth
                   label="Nama Customer"
                   variant="outlined"
+                  disabled={updated}
                   margin="normal"
-                  value={value.customer}
+                  value={value.user?value.user.name:'-'}
                   onChange={handleChange("customer")}
                 />
 
@@ -401,8 +420,9 @@ const TransaksiMasukComponent = (props) => {
                     </InputLabel>
                     <Select
                       label="Metode Pembayaran"
-                      value={value.account_id}
-                      onChange={handleChange("shift")}
+                      value={value.shift}
+                      // onChange={handleChange("shift")}
+                      disabled={updated}
                     >
                       <MenuItem value="">
                         <em>Pilih Shift</em>
@@ -423,16 +443,16 @@ const TransaksiMasukComponent = (props) => {
 
                   <div>
                     <p style={{ color: "grey", fontSize: "15px" }}>
-                      Upload Gambar
+                      Gambar
                     </p>
                     <input
                       type="file"
                       name="images[]"
                       id="button-file"
-                      // className="display-none"
+                      className="display-none"
                       style={{ display: "none" }}
                       accept="image/*"
-                      onChange={handleImage}
+                      onChange={!updated?handleImage:{}}
                     />
                     <div className="flex justify-center sm:justify-start flex-wrap">
                       {image.length !== 1 && (
@@ -446,9 +466,9 @@ const TransaksiMasukComponent = (props) => {
                             boxShadow:
                               "0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)",
                           }}
-                        // className={
-                        //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
-                        // }
+                          // className={
+                          //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
+                          // }
                         >
                           <Icon
                             className={{
@@ -470,7 +490,7 @@ const TransaksiMasukComponent = (props) => {
                         image.map((media, index) => {
                           return (
                             <img
-                              onClick={() => removeImage(image, media)}
+                              onClick={() => !updated?removeImage(image, media):{}}
                               style={{
                                 width: "120px",
                                 marginBottom: "20px",
@@ -479,7 +499,12 @@ const TransaksiMasukComponent = (props) => {
                                 backgroundColor: "red",
                                 margin: "10px",
                               }}
-                              src={createObjectURL(media)}
+                              src={
+                                typeof image === "string"
+                                  ? "https://newdemo.aplikasiskripsi.com/farah_accounting/public/" +
+                                    media
+                                  : createObjectURL(media)
+                              }
                               alt="product2"
                             />
                           );
@@ -490,51 +515,7 @@ const TransaksiMasukComponent = (props) => {
               </form>
             </MDBCol>
             <MDBCol lg="5">
-              {/* <MDBBox display="flex" justifyContent="center">
-                                <MDBCardImage className="img-fluid" src="https://docs.devexpress.com/XtraReports/images/invoice-preview.png" style={{ height: 300 }} />
-                            </MDBBox> */}
-              {/* <TextField fullWidth label="Pesan" defaultValue="Default Value" variant="outlined" margin="normal" multiline rowsMax={4} /> */}
-              {/* <MDBRow className="m-12">
-                <MDBCol lg="4">
-                  <TextField
-                    fullWidth
-                    label="Jumlah Item"
-                    defaultValue="Default Value"
-                    variant="outlined"
-                    margin="normal"
-                    type="number"
-                    value={value.unit}
-                    onChange={handleChange("unit")}
-                  />
-                </MDBCol>
-                <MDBCol lg="8">
-                  <TextField
-                    fullWidth
-                    label="Harga Satuan"
-                    defaultValue="Default Value"
-                    variant="outlined"
-                    margin="normal"
-                    type="number"
-                    value={value.unit_price}
-                    onChange={handleChange("unit_price")}
-                  />
-                </MDBCol>
-              </MDBRow> */}
-              {/* <MDBRow className="mt-3 mb-2">
-                <MDBCol lg="8">
-                  <b>TOTAL</b>
-                </MDBCol>
-                <MDBCol lg="4">
-                  <b>
-                    <NumberFormat
-                      value={ammount}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      prefix={"Rp. "}
-                    />
-                  </b>
-                </MDBCol>
-              </MDBRow> */}
+              
               <Divider />
               <Divider />
               <FormControl variant="outlined" margin="normal" fullWidth>
@@ -543,6 +524,7 @@ const TransaksiMasukComponent = (props) => {
                 </InputLabel>
                 <Select
                   label="Metode Pembayaran"
+                  disabled={updated}
                   value={value.payment_method}
                   onChange={handleChange("payment_method")}
                 >
@@ -566,6 +548,7 @@ const TransaksiMasukComponent = (props) => {
               <TextField
                 fullWidth
                 label="Keterangan"
+                disabled={updated}
                 variant="outlined"
                 margin="normal"
                 multiline
@@ -582,17 +565,10 @@ const TransaksiMasukComponent = (props) => {
                       onClick={() => handleApproveDialog("approve")}
                       disabled={state.loading}
                     >
-                      Simpan Transaksi
+                      Update Transaksi
                     </MDBBtn>
                   </MDBBox>
                 </MDBCol>
-                {/* <MDBCol lg="6">
-                                    <MDBBox display="flex" justifyContent="start">
-                                        <MDBBtn color="danger" >
-                                            Batal
-                                        </MDBBtn>
-                                    </MDBBox>
-                                </MDBCol> */}
               </MDBRow>
             </MDBCol>
           </MDBRow>

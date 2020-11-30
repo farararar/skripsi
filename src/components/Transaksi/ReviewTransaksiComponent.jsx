@@ -6,16 +6,17 @@ import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBIcon } from 'mdbreact'
 import {useParams} from "react-router-dom";
 import NumberFormat from 'react-number-format';
 
-const ReviewTransaksiComponent = () => {
+const ReviewTransaksiComponent = ({userId}) => {
     let { id } = useParams();
     const { isAuthenticated } = useContext(AuthContext)
     const {state, GetDetailIncome, ReviewIncome} = useContext(IncomeContext)
     const [, setDataTanggal] = useState([])
     const [, setDataBulan] = useState([])
     const [openDialogApprove, setOpenDialogApprove] = useState(false)
+    const [form, setForm] = useState([]);
 
     useEffect(() => {
-        GetDetailIncome(id)
+        GetDetailIncome(userId)
         const loopingTanggal = () => {
             let tanggal = '';
             let data_tanggal = [];
@@ -35,6 +36,22 @@ const ReviewTransaksiComponent = () => {
         loopingTanggal()
         loopingBulan()
     }, []);
+
+    useEffect(()=>{
+        const obj = {
+            email: `${state.detailUser.name} | ${state.detailUser.email}`,
+            desc: state.detailIncome.description,
+            date: state.detailIncome.date,
+            customerName: state.detailCustomer?state.detailCustomer.name:'',
+            accountName: state.detailAccount?state.detailAccount.name :'',
+            unit: state.detailIncome.unit,
+            unitPrice:state.detailIncome.unit_price,
+            ammount: state.detailIncome.ammount,
+            paymentMethod: state.detailIncome.payment_method,
+            information: `Keterangan: ${state.detailIncome.information}`
+        }
+        setForm(obj);
+    },[state])
 
     const dialogApprove = () => (
         <Dialog open={openDialogApprove} onClose={handleApproveCancle} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
@@ -69,7 +86,7 @@ const ReviewTransaksiComponent = () => {
             reviewer_id: isAuthenticated().data.id
         }
         setOpenDialogApprove(false)
-        ReviewIncome(id, data)
+        ReviewIncome(userId, data)
     } 
 
     const handleRejectedProccess = () => {
@@ -81,6 +98,14 @@ const ReviewTransaksiComponent = () => {
         ReviewIncome(id, data)
     }
 
+    const onchange=(event)=>{
+        const value = event.target.value;
+
+        setForm({
+            ...form, 
+            [event.target.name]: value
+        })
+    }
     return (
         <div>
             <h4>Transaksi Pusat ID {id}</h4>
@@ -157,21 +182,21 @@ const ReviewTransaksiComponent = () => {
                         <MDBCol lg="7">
                             {/* {JSON.stringify(state.detailReviewer)} */}
                             <form>
-                                <TextField fullWidth value={`${state.detailUser.name} | ${state.detailUser.email}`} margin="normal" readonly /><br></br>
-                                <TextField fullWidth value={state.detailIncome.description} margin="normal" readonly /><br></br>
-                                <TextField fullWidth value={state.detailIncome.date} margin="normal" readonly /><br></br>
-                                <TextField fullWidth value={state.detailCustomer.name} margin="normal" readonly /><br></br>
-                                <TextField fullWidth value={state.detailAccount.name} margin="normal" readonly /><br></br>
+                                <TextField fullWidth value={form.email} name={'email'} margin="normal" onChange={onchange} /><br></br>
+                                <TextField fullWidth value={form.desc} name={'desc'} margin="normal" onChange={onchange} /><br></br>
+                                <TextField fullWidth value={form.date} name={'date'} margin="normal" onChange={onchange} /><br></br>
+                                <TextField fullWidth value={form.customerName} name={'customerName'} margin="normal" onChange={onchange} /><br></br>
+                                <TextField fullWidth value={form.accountName} name={'accountName'} margin="normal" onChange={onchange} /><br></br>
                             </form>
                         </MDBCol>
 
                         <MDBCol lg="5">
                             <MDBRow className='m-12'>
                                 <MDBCol lg="4">
-                                    <TextField fullWidth defaultValue="Default Value" margin="normal" type='number' value={state.detailIncome.unit}  />
+                                    <TextField fullWidth defaultValue="Default Value" margin="normal" type='number' value={form.unit} name={'unit'} onChange={onchange} />
                                 </MDBCol>
                                 <MDBCol lg="8">
-                                    <TextField fullWidth margin="normal" type='number' value={state.detailIncome.unit_price} />
+                                    <TextField fullWidth margin="normal" type='number' value={form.unitPrice} name={'unitPrice'} onChange={onchange} />
                                 </MDBCol>
                             </MDBRow>
                             <MDBRow className='mt-3 mb-2'>
@@ -179,12 +204,12 @@ const ReviewTransaksiComponent = () => {
                                     <b>TOTAL</b>
                                 </MDBCol>
                                 <MDBCol lg="4">
-                                    <b><NumberFormat displayType={'text'} thousandSeparator={true} prefix={'Rp. '} value={state.detailIncome.ammount} /></b>
+                                    <b><NumberFormat displayType={'text'} thousandSeparator={true} prefix={'Rp. '} value={form.ammount} /></b>
                                 </MDBCol>
                             </MDBRow>
                             <Divider /><Divider />
-                            <TextField fullWidth value={state.detailIncome.payment_method} margin="normal" readonly />
-                            <TextField fullWidth  variant="outlined" margin="normal" multiline rows={3} rowsMax={5} value={`Keterangan: ${state.detailIncome.information}`} readonly />
+                            <TextField fullWidth value={form.paymentMethod} name={'paymentMethod'} margin="normal" onChange={onchange}  />
+                            <TextField fullWidth  variant="outlined" margin="normal" multiline rows={3} rowsMax={5} value={form.information} name={'information'} onChange={onchange} />
                             
                         </MDBCol>
                     </MDBRow>

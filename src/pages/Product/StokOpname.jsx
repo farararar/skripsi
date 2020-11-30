@@ -6,7 +6,7 @@ import ListComponent from '../../components/StockOpname/ListComponent';
 export default function StockOpname() {
     return (
         <Fragment>
-            <MDBBreadcrumb >
+            <MDBBreadcrumb>
                 <MDBBreadcrumbItem><b>Stock Opname Produk</b></MDBBreadcrumbItem>
             </MDBBreadcrumb>
             <MDBContainer className="mt-0" fluid>

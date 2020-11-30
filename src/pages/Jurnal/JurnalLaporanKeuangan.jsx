@@ -1,16 +1,15 @@
 import React, { Fragment } from 'react'
 import { MDBContainer, MDBBreadcrumb, MDBBreadcrumbItem, } from "mdbreact";
-import ReviewTransaksiComponent from '../../components/Transaksi/ReviewTransaksiComponent';
+import BukuBesarKeuanganComponent from '../../components/BukuBesar/BukuBesarKeuanganComponent';
 
-
-export default function ReviewTransaksi({props, id}) {
+export default function LaporanKeuangan() {
     return (
         <Fragment>
             <MDBBreadcrumb >
-                <MDBBreadcrumbItem><b>Review Transaksi</b></MDBBreadcrumbItem>
+                <MDBBreadcrumbItem><b>Laporan Keuangan</b></MDBBreadcrumbItem>
             </MDBBreadcrumb>
             <MDBContainer className="mt-0" fluid>
-                <ReviewTransaksiComponent userId={id} />
+                <BukuBesarKeuanganComponent />
             </MDBContainer>
         </Fragment>
     )

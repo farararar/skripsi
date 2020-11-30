@@ -7,24 +7,45 @@ import { Context as RawMaterialContext } from '../../services/Context/RawMateria
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useHistory } from 'react-router-dom';
-
-const ListComponent = () => {
+import DateFnsUtils from "@date-io/date-fns";
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker,
+} from "@material-ui/pickers";
+import Grid from "@material-ui/core/Grid";
+const ListReportComponent = () => {
     const classes = useStyles();
-    const { state, ListRawMaterial, DeleteBahanBaku } = useContext(RawMaterialContext)
+    const { state, ListReportMaterial, DeleteBahanBaku } = useContext(RawMaterialContext)
     const [search, setSearch] = useState('')
-    const [filter, setFilter] = useState('')
+    
+    const filterredDate=(date)=>{
+        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    }
+    
+    const [filter, setFilter] = useState({
+        since: new Date,
+        until: new Date
+    })
+
+    const FilterRow=(data)=>{
+        return {
+            since: filterredDate(filter.since),
+            until: filterredDate(filter.until)
+        }
+    }
+
     const history = useHistory();
-    // useEffect(() => {
-    //     ListRawMaterial(filter)
-    // }, [filter]);
+    useEffect(() => {
+        ListReportMaterial(FilterRow(filter))
+    }, [filter]);
 
     useEffect(() => {
-        ListRawMaterial(filter)
+        ListReportMaterial(FilterRow(filter))
     }, []);
 
     const handleFilter = (value) => {
         setFilter(value)
-        ListRawMaterial(value)
+        ListReportMaterial(value)
     }
 
     const handleSearch = () => {
@@ -38,13 +59,31 @@ const ListComponent = () => {
         setSearch('')
     }
 
-    const handleDelete=(id)=>{
-        DeleteBahanBaku(id, ()=>ListRawMaterial(filter));
+    const handleDelete = (id) => {
+        // DeleteBahanBaku(id, () => ListRawMaterial(filter));
     }
 
-    const handleEdit=(data)=>{
-        history.push('/AddRawMaterial', {data: data});
+    const handleEdit = (data) => {
+        history.push('/AddRawMaterial', { data: data });
     }
+
+    const [selectedDate, setSelectedDate] = React.useState(
+        new Date()
+    );
+    const [date, setDate] = useState('');
+
+    const handleDateChange = (ket,date) => {
+        console.log(filter);
+        let formattedDate =
+            date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        setFilter({
+            ...filter,
+            [ket]: date
+        })
+            // setSelectedDate(date);
+        // setDate(formattedDate);
+    };
+
     return (
         <Fragment>
             <MDBContainer fluid>
@@ -53,28 +92,40 @@ const ListComponent = () => {
                         <MDBBox display="flex" justifyContent="start">
                             <MDBCol md="6">
                                 <InputLabel>Filter Bahan Baku</InputLabel>
-                                <Select fullWidth value={filter} onChange={(event) => handleFilter(event.target.value)}>
-                                    <MenuItem value="">
-                                        <em>Pilih Jenis </em>
-                                    </MenuItem>
-                                    <MenuItem value={1}>Bahan Baku Langsung</MenuItem>
-                                    <MenuItem value={2}>Bahan Baku Tidak Langsung</MenuItem>
-                                </Select>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    {/* <Grid container justify="space-around"> */}
+                                    <div style={{display:"flex"}}>
+                                        <KeyboardDatePicker
+                                            margin="normal"
+                                            id="date-picker-dialog"
+                                            label="Since"
+                                            format="dd/MM/yyyy"
+                                            value={filter.since}
+                                            onChange={(value)=>handleDateChange('since', value)}
+                                            KeyboardButtonProps={{
+                                                "aria-label": "change date",
+                                            }}
+                                        />
+                                        <KeyboardDatePicker
+                                            margin="normal"
+                                            id="date-picker-dialog"
+                                            label="Until"
+                                            style={{marginLeft: '20px'}}
+                                            format="dd/MM/yyyy"
+                                            value={filter.until}
+                                            onChange={(value)=>handleDateChange('until', value)}
+                                            KeyboardButtonProps={{
+                                                "aria-label": "change date",
+                                            }}
+                                        />
+                                        </div>
+                                    {/* </Grid> */}
+                                    
+                                </MuiPickersUtilsProvider>
                             </MDBCol>
                         </MDBBox>
                     </MDBCol>
-                    <MDBCol size="9">
-                        <MDBBox display="flex" justifyContent='end'>
-                            <MDBCol md="12">
-                                <MDBFormInline className="md-form mr-auto mb-2">
-                                    <input className="form-control mr-sm-2" type="text" placeholder="Cari Transaksi" aria-label="Search" />
-                                    <MDBBtn gradient="aqua" rounded size="sm" type="submit" className="mr-auto">
-                                        Cari
-                                </MDBBtn>
-                                </MDBFormInline>
-                            </MDBCol>
-                        </MDBBox>
-                    </MDBCol>
+                
                 </MDBBox>
 
 
@@ -92,11 +143,13 @@ const ListComponent = () => {
                             <StyledTableCell align="left">Satuan Beli</StyledTableCell>
                             <StyledTableCell align="left">Satuan Guna</StyledTableCell>
                             <StyledTableCell align="left">Unit Konversi</StyledTableCell>
-                            <StyledTableCell align="left">Actions</StyledTableCell>
+                            {/* <StyledTableCell align="left">Actions</StyledTableCell> */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {state.listMaterialRaw.map((row) => (
+                        {state.listReportMaterial.map((row) => {
+                            console.log("roooww = ",row)
+                            return(
                             <StyledTableRow key={row.name}>
                                 <StyledTableCell component="th" scope="row">
                                     {row.name}
@@ -106,7 +159,7 @@ const ListComponent = () => {
                                 <StyledTableCell align="left">{row.unit_buy}</StyledTableCell>
                                 <StyledTableCell align="left">{row.unit_use}</StyledTableCell>
                                 <StyledTableCell align="left">{row.unit_conversion}</StyledTableCell>
-                                <StyledTableCell align="left"><>
+                                {/* <StyledTableCell align="left"><>
                                     <EditIcon
                                         color="dark-green"
                                         size="sm"
@@ -118,9 +171,9 @@ const ListComponent = () => {
                                         // size="sm"
                                         style={{ color: "red", margin: "10px" }}
                                         onClick={() => handleDelete(row.raw_material_category_id)}
-                                    /></></StyledTableCell>
+                                    /></></StyledTableCell> */}
                             </StyledTableRow>
-                        ))}
+                        )})}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -128,7 +181,7 @@ const ListComponent = () => {
     );
 }
 
-export default ListComponent
+export default ListReportComponent
 
 
 const StyledTableCell = withStyles((theme) => ({

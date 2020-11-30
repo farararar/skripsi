@@ -4,22 +4,31 @@ import { TextField, Select, MenuItem, InputLabel, FormControl, LinearProgress } 
 import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from 'mdbreact';
 import {Context as MaterialCategoryContext} from '../../services/Context/MaterialCategoryContext'
 import {Context as RawMaterialContext} from '../../services/Context/RawMaterialContext'
+import { useLocation } from "react-router-dom";
 
-const FormComponent = () => {
+const FormComponent = ({props}) => {
+    const location = useLocation();
+
     const classes = useStyles();
     const {state:{listMaterialCategory}, ListMaterialCategory} = useContext(MaterialCategoryContext)
-    const {state, AddRawMaterial} = useContext(RawMaterialContext)
-    const [value, setValue] = useState({
+    const {state, AddRawMaterial, ListUnit} = useContext(RawMaterialContext)
+    const params= {
         raw_material_category_id: '',
         name : '',
         code : '',
         type : '', 
         unit_buy : '',
         unit_use : '',
-    })
+    }
+    const [value, setValue] = useState(params);
+    const [Update, setUpdate] = useState(true);
 
     useEffect(() => {
-        ListMaterialCategory()
+        ListMaterialCategory();
+        ListUnit();
+        console.log('history = ', location);
+        setValue(location.state?location.state.data:params)
+        setUpdate(location.state?true:false);
     }, []);
 
     const handleChange = name => event => {
@@ -48,13 +57,14 @@ const FormComponent = () => {
             type : value.type, 
             unit_buy : value.unit_buy,
             unit_use : value.unit_buy,
+            unit_conversion: value.unit_conversion
         }
         AddRawMaterial(data, () => handleReset())
     }
 
     return (
         <div>
-            <h4>Tambah Data Bahan Baku</h4>
+            <h4>{!Update?'Tambah':'Edit'} Data Bahan Baku</h4>
             <hr className="" />
             {/* {JSON.stringify(value)} */}
             {state.loading && (
@@ -96,8 +106,9 @@ const FormComponent = () => {
                                     <MenuItem value="">
                                         <em>None</em>
                                     </MenuItem>
-                                    <MenuItem value='Kilogram'>Kilogram</MenuItem>
-                                    <MenuItem value='Pcs'>Pcs</MenuItem>
+                                    {state.listUnit&&state.listUnit.map((res)=>(
+                                        <MenuItem value={res}>{res}</MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                             <FormControl fullWidth className={classes.formControl}>
@@ -106,10 +117,12 @@ const FormComponent = () => {
                                     <MenuItem value="">
                                         <em>None</em>
                                     </MenuItem>
-                                    <MenuItem value='Gram'>Gram</MenuItem>
-                                    <MenuItem value='Butir'>Butir</MenuItem>
+                                    {state.listUnit&&state.listUnit.map((res)=>(
+                                        <MenuItem value={res}>{res}</MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
+                            <TextField fullWidth label="Unit Konversi" variant="outlined" margin="normal" type={'number'} value={value.unit_conversion} onChange={handleChange('unit_conversion')} />
                             <MDBRow className='mt-3 mb-2'>
                                 <MDBCol lg="6">
                                     <MDBBox display="flex" justifyContent="start">
