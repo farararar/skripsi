@@ -13,6 +13,7 @@ import ReviewTransaksi from './pages/Transaksi/ReviewTransaksi';
 import GeneratePDF from './pages/GenereatePDF/App';
 import JurnalPerHari from './pages/Jurnal/JurnalPerhari';
 import BukuBesar from './pages/BukuBesar/BukuBesar';
+import LaporanKeuangan from './pages/Jurnal/JurnalLaporanKeuangan';
 import MarketingRoute from './services/Route/MarketingRoute';
 import TransaksiMasuk from './pages/Transaksi/Pusat/TransaksiMasuk';
 import JurnalPerBulan from './pages/Jurnal/JurnalPerBulan';
@@ -25,8 +26,10 @@ import ProccessProduct from './pages/Product/ProccessProduct';
 import AddBahanBaku from './pages/BahanBaku/AddBahanBaku';
 import KategoriBahanBaku from './pages/BahanBaku/KategoriBahanBaku';
 import ListBahanBaku from './pages/BahanBaku/ListBahanBaku';
+import ListReportBahanBaku from './pages/BahanBaku/ListReportBahanBaku'
+import StokBahanBaku from './pages/BahanBaku/StokBahanBaku'
 import EditProduct from './pages/Product/EditProduct';
-
+import DetailProdukComponent from './components/BahanBaku/DetailProdukComponent';
 
 const Router = () => {
     return (
@@ -45,6 +48,7 @@ const Router = () => {
                         <AccountantRoute path='/jurnal-perhari/:tanggal' exact component={JurnalPerHari} />
                         <AccountantRoute path='/jurnal-perbulan/' exact component={JurnalPerBulan} /> 
                         <AccountantRoute path='/buku-besar' exact component={BukuBesar} />
+                        <AccountantRoute path='/laporan-keuangan' exact component={LaporanKeuangan} />
                         <AdminRoute path='/AddProduct' exact component={AddProduct} />
                         <AdminRoute path='/EditProduct/:id' exact component={EditProduct} />
                         <PrivateRoute path='/generate-pdf' exact component={GeneratePDF}/>
@@ -54,6 +58,9 @@ const Router = () => {
                         <AdminRoute path='/AddRawMaterial' exact component={AddBahanBaku} />
                         <AdminRoute path='/RawMaterialCategories' exact component={KategoriBahanBaku} />
                         <AdminRoute path='/RawMaterialList' exact component={ListBahanBaku} />
+                        <AdminRoute path='/ReportMaterialList' exact component={ListReportBahanBaku} />
+                        <AdminRoute path='/StokBahanBaku' exact component={StokBahanBaku} />
+                        <AdminRoute path='/list-pengeluaran-admin' exact component={ListTransaksiKeluar} />
                     </Layout>
                 </Switch>
         </BrowserRouter>
