@@ -193,19 +193,7 @@ const TransaksiMasukComponent = (props) => {
   }
 
   function numberWithCommas(x) {
-    if (x) {
-      let regex = new RegExp(/\B(?=(\d{3})+(?!\d))/g)
-      let match = regex.exec(x);
-      if (!match) return false;
-      let matches = match.toString();
-      while (x !== ",") {
-        matches = matches.replace(".")
-      }
-      return matches;
-    } else {
-      return false;
-    }
-    //return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
   return (
     <div>
@@ -268,9 +256,9 @@ const TransaksiMasukComponent = (props) => {
                       Rp.{" "}
                       {value[`product[${item.id}]`]
                         ? numberWithCommas(
-                          value[`product[${item.id}]`] *
-                          Number(item.unit_price)
-                        )
+                            value[`product[${item.id}]`] *
+                              Number(item.unit_price)
+                          )
                         : "0"}
                       )
                     </p>
@@ -446,9 +434,9 @@ const TransaksiMasukComponent = (props) => {
                             boxShadow:
                               "0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)",
                           }}
-                        // className={
-                        //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
-                        // }
+                          // className={
+                          //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
+                          // }
                         >
                           <Icon
                             className={{

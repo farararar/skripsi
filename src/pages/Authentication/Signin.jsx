@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import clsx from 'clsx';
 import { Context as AuthContext } from '../../services/Context/AuthContext'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -16,13 +15,14 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';
 import { LinearProgress } from '@material-ui/core';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import clsx from 'clsx';
 import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 function Copyright() {
   return (
@@ -41,8 +41,7 @@ export default function Signin(props) {
   const { state, isAuthenticated, Signin } = useContext(AuthContext)
   const [value, setValue] = useState({
     email: '',
-    password: '',
-    showPassword: false
+    password: ''
   })
   const { email, password } = value
 
@@ -55,10 +54,6 @@ export default function Signin(props) {
       return false
     }
   }
-
-  const handleClickShowPassword = () => {
-    setValue({ ...value, showPassword: !value.showPassword });
-  };
 
   const handleChange = name => event => {
     setValue({
@@ -101,35 +96,37 @@ export default function Signin(props) {
           </Typography>
 
           <form className={classes.form} onSubmit={handleSubmit} >
+
             <TextField value={email} onChange={handleChange('email')} variant="outlined" margin="normal" required fullWidth label="Email Pengguna" autoComplete="email" autoFocus />
-            <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined" required fullWidth>
+            <FormControl className={clsx(classes.margin, classes.textField)} margin="normal" variant="outlined" required fullWidth label="Kata Sandi">
               <InputLabel>Kata Sandi</InputLabel>
               <OutlinedInput
                 autoComplete="current-password"
                 type={value.showPassword ? 'text' : 'password'}
-                value={value.password}
+                value={password}
                 onChange={handleChange('password')}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
+                      onClick={handleChange('password')}
                       edge="end"
                     >
                       {value.showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 }
+                labelWidth={70}
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              {showLoading()}
-              <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={state.loading}>
-                {textButtonSubmit()}
-              </Button>
             </FormControl>
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            {showLoading()}
+            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={state.loading}>
+              {textButtonSubmit()}
+            </Button>
 
             {/* <Grid container>
               <Grid item xs>
@@ -156,9 +153,6 @@ export default function Signin(props) {
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
-  },
-  margin: {
-    margin: "normal",
   },
   image: {
     // backgroundImage: 'url(https://source.unsplash.com/random)',

@@ -17,7 +17,7 @@ import { CircularProgress, Icon } from "@material-ui/core";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useHistory } from "react-router-dom";
-import DoneIcon from '@material-ui/icons/Done';
+
 import EditIcon from "@material-ui/icons/Edit";
 const ListTransaksiComponent = ({ props, dataTamp, Next, NextR }) => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -111,7 +111,7 @@ const ListTransaksiComponent = ({ props, dataTamp, Next, NextR }) => {
             <MDBRow>
               <MDBCol lg="9">
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  {item.is_valid===1 && <DoneIcon />}
+                  {item.review_status && <AssignmentTurnedInIcon />}
                   <MDBTypography tag="h5" className="pt-2 mx-2">
                     {" "}
                     {item.invoice_number}{" "}
@@ -184,7 +184,27 @@ const ListTransaksiComponent = ({ props, dataTamp, Next, NextR }) => {
                     </MDBBtn>
                   </>
                 ) : (
-                    <div/>
+                  login.data.name === "Administrator" && (
+                    <>
+                      {item.is_valid === 1 ? (
+                        <MDBBtn
+                          color="red"
+                          size="sm"
+                          onClick={() => handleValidate(item.id, 0)}
+                        >
+                          Invalidate
+                        </MDBBtn>
+                      ) : (
+                        <MDBBtn
+                          color="red"
+                          size="sm"
+                          onClick={() => handleValidate(item.id, 1)}
+                        >
+                          Validate
+                        </MDBBtn>
+                      )}
+                    </>
+                  )
                 )}
               </MDBCol>
             </MDBRow>

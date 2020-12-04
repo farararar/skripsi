@@ -112,7 +112,6 @@ function ListMenu(props) {
           <Collapse in={!open1} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               {isAuthenticated() && isAuthenticated().data.level === 'Admin' && (
-                <>
                 <Link to={`/transaksi-keluar`} className={classes.link}>
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
@@ -121,15 +120,6 @@ function ListMenu(props) {
                     <ListItemText primary="Transaksi Keluar" />
                   </ListItem>
                 </Link>
-                <Link to={`/list-pengeluaran-admin`} className={classes.link}>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <ListIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Daftar Pengeluaran" />
-                  </ListItem>
-                </Link>
-                </>
               )}
               {isAuthenticated() && isAuthenticated().data.level === 'Accountant' && (
                 <Link to={`/list-pengeluaran`} className={classes.link}>
@@ -212,14 +202,14 @@ function ListMenu(props) {
               <ListItemText primary="Buku Besar" />
             </ListItem>
           </Link> */}
-          <Link to={`/laporan-keuangan`} className={classes.link} >
+
           <ListItem button>
             <ListItemIcon>
               <AssessmentIcon />
             </ListItemIcon>
             <ListItemText primary="Laporan Keuangan" />
           </ListItem>
-          </Link>
+
         </Fragment>
       )}
 
@@ -233,7 +223,14 @@ function ListMenu(props) {
             <ListItemText primary="Produk" />
             {produkMenu ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
-          
+          <Link to={`/list-transaksi-pusat`} className={classes.link}>
+          <ListItem button>
+            <ListItemIcon>
+              <PaymentIcon />
+            </ListItemIcon>
+            <ListItemText primary="List Transaksi" />
+          </ListItem>
+        </Link>
           <Collapse in={!produkMenu} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <Link to={`/AddProduct`} className={classes.link}>
@@ -288,25 +285,6 @@ function ListMenu(props) {
                   <ListItemText primary="Tambah Bahan" />
                 </ListItem>
               </Link>
-              <Link to={`/ReportMaterialList`} className={classes.link}>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <ListIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="List Report Bahan" />
-                </ListItem>
-              </Link>
-            
-
-              <Link to={`/StokBahanBaku`} className={classes.link}>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <ListIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Stok Bahan Baku" />
-                </ListItem>
-              </Link>
-
               <Link to={`/RawMaterialList`} className={classes.link}>
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
@@ -325,14 +303,6 @@ function ListMenu(props) {
               </Link>
             </List>
           </Collapse>
-          <Link to={`/list-transaksi-pusat`} className={classes.link}>
-          <ListItem button>
-            <ListItemIcon>
-              <PaymentIcon />
-            </ListItemIcon>
-            <ListItemText primary="List Transaksi" />
-          </ListItem>
-        </Link>
           <Divider />
 
           {/* <ListItem button>

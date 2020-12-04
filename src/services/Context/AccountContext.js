@@ -32,7 +32,7 @@ const ListAccount = dispatch => () => {
       .then(res => {
         if(res.data.success){
             dispatch({type: 'NO-LOADING'})
-            dispatch({type: 'LIST-ACCOUNT', payload:res.data.data})
+            dispatch({type: 'LIST-ACCOUNT', payload:res.data.data.data})
         }else{
             alert(res.data.message)
             dispatch({type: 'NO-LOADING'})
