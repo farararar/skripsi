@@ -55,6 +55,10 @@ export default function Signin(props) {
     }
   }
 
+  const handleClickShowPassword = () => {
+    setValue({ ...value, showPassword: !value.showPassword });
+  };
+
   const handleChange = name => event => {
     setValue({
       ...value,
@@ -96,20 +100,19 @@ export default function Signin(props) {
           </Typography>
 
           <form className={classes.form} onSubmit={handleSubmit} >
-
             <TextField value={email} onChange={handleChange('email')} variant="outlined" margin="normal" required fullWidth label="Email Pengguna" autoComplete="email" autoFocus />
-            <FormControl className={clsx(classes.margin, classes.textField)} margin="normal" variant="outlined" required fullWidth label="Kata Sandi">
+            <FormControl className={classes.textField} margin="normal" variant="outlined" required fullWidth label="Kata Sandi">
               <InputLabel>Kata Sandi</InputLabel>
               <OutlinedInput
                 autoComplete="current-password"
-                type={value.showPassword}
+                type={value.showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={handleChange('password')}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleChange('password')}
+                      onClick={handleClickShowPassword}
                       edge="end"
                     >
                       {value.showPassword ? <Visibility /> : <VisibilityOff />}
