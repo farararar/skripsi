@@ -2,20 +2,20 @@ import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Select, MenuItem, InputLabel, FormControl, LinearProgress } from '@material-ui/core';
 import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from 'mdbreact';
-import { Context as MaterialCategoryContext } from '../../services/Context/MaterialCategoryContext'
-import { Context as RawMaterialContext } from '../../services/Context/RawMaterialContext'
+import {Context as MaterialCategoryContext} from '../../services/Context/MaterialCategoryContext'
+import {Context as RawMaterialContext} from '../../services/Context/RawMaterialContext'
 
 const FormComponent = () => {
     const classes = useStyles();
-    const { state: { listMaterialCategory }, ListMaterialCategory } = useContext(MaterialCategoryContext)
-    const { state, AddRawMaterial } = useContext(RawMaterialContext)
+    const {state:{listMaterialCategory}, ListMaterialCategory} = useContext(MaterialCategoryContext)
+    const {state, AddRawMaterial} = useContext(RawMaterialContext)
     const [value, setValue] = useState({
         raw_material_category_id: '',
-        name: '',
-        code: '',
-        type: '',
-        unit_buy: '',
-        unit_use: '',
+        name : '',
+        code : '',
+        type : '', 
+        unit_buy : '',
+        unit_use : '',
     })
 
     useEffect(() => {
@@ -32,22 +32,22 @@ const FormComponent = () => {
     const handleReset = () => {
         setValue({
             raw_material_category_id: '',
-            name: '',
-            code: '',
-            type: '',
-            unit_buy: '',
-            unit_use: '',
+            name : '',
+            code : '',
+            type : '', 
+            unit_buy : '',
+            unit_use : '',
         })
     }
 
     const handleSave = () => {
         let data = {
             raw_material_category_id: value.raw_material_category_id,
-            name: value.name,
-            code: value.code,
-            type: value.type,
-            unit_buy: value.unit_buy,
-            unit_use: value.unit_buy,
+            name : value.name,
+            code : value.code,
+            type : value.type, 
+            unit_buy : value.unit_buy,
+            unit_use : value.unit_buy,
         }
         AddRawMaterial(data, () => handleReset())
     }
@@ -65,7 +65,7 @@ const FormComponent = () => {
                     <MDBRow className='m-3'>
                         <MDBCol lg="7">
                             <TextField fullWidth label="Nama Bahan Baku" variant="outlined" margin="normal" value={value.name} onChange={handleChange('name')} />
-                            <TextField fullWidth label="Kode Bahan Baku" variant="outlined" margin="normal" value={value.code} onChange={handleChange('code')} />
+                            <TextField fullWidth label="Kode Bahan Baku" variant="outlined" margin="normal" value={value.code} onChange={handleChange('code')}/>
                             <FormControl fullWidth className={classes.formControl}>
                                 <InputLabel>Kategori Bahan Baku</InputLabel>
                                 <Select onChange={handleChange('raw_material_category_id')}>
@@ -73,14 +73,7 @@ const FormComponent = () => {
                                         <em>None</em>
                                     </MenuItem>
                                     {listMaterialCategory.map(item => (
-                                        <MenuItem value={item.id}>{item.name}
-                                            {(() => {
-                                                if (item.id === value.raw_material_category_id) {
-                                                    return value.raw_material_category_id = { ...item.id }
-                                                }
-                                            })()}
-                                            {  /*item.id === value.raw_material_category_id ? 'selected' : 'raw_material_category_id'*/}
-                                        </MenuItem>
+                                        <MenuItem value={item.id}>{item.name}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
