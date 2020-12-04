@@ -12,7 +12,7 @@ export default function TransaksiPusat() {
             <MDBContainer className="mt-0" fluid>
                 {Goto===5&&<ReviewTransaksi id={data.id} />}
                 {Goto===0&&<ListTransaksiComponent dataTamp={(value)=>setData(value)} Next={()=>setGoto(Goto+1)} NextR={()=>setGoto(5)} />}
-                {Goto===2&&<EditTransaksiComponent data={data} Next={()=>setGoto(Goto-1)} />}
+                {Goto===1&&<EditTransaksiComponent data={data} Next={()=>setGoto(Goto-1)} />}
                 
             </MDBContainer>
         </Fragment>

@@ -27,7 +27,6 @@ const StokComponent = () => {
         until: new Date
     })
 
-
     const handleClickOpen = (data) => {
         setTempData(data);
         setOpen(true);
@@ -60,17 +59,10 @@ const StokComponent = () => {
         // setDate(formattedDate);
     };
 
-    const [stok, setStok] = useState([]);
+    const [stok, setStok] = useState(null);
 
-    const updateStok = (id) => event => {
-        setStok({
-            ...stok,
-            [`stok${id}`]: event.target.value
-        })
-    }
-
-    const tambahStok=()=>{
-
+    const updateStok = event => {
+        setStok(event.target.value);
     }
 
     useEffect(() => {
@@ -81,20 +73,26 @@ const StokComponent = () => {
 
     const [status, setStatus] = useState('');
 
-    const fetchUpdateStok=()=>{
+    const fetchUpdateStok = () => {
         const date = new Date;
         const data = {
             date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
-            material_id: tempData.raw_material_id,
+            material_id: material.id,
             status: status,
-            stock: stok[`stok${tempData.id}`] || tempData.stock,
+            stock: stok,
         }
-        UpdateStok(data, ()=>ListStok())
+        UpdateStok(data, () => {
+            ListStok()
+            setOpen(false)
+        })
     }
-
-    const changeStatus=(event)=>{
+    const [material, setMaterial] = useState(null);
+    const changeStatus = (event) => {
         console.log(event);
-        setStatus(event.target.value)
+        if (event.target.name) {
+            setMaterial(event.target.value)
+        } else
+            setStatus(event.target.value)
     }
     return (
         <Fragment>
@@ -104,7 +102,7 @@ const StokComponent = () => {
                 <LinearProgress />
             )}
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth>
-            <DialogTitle id="form-dialog-title">Update Stok {tempData.material_name}</DialogTitle>
+                <DialogTitle id="form-dialog-title">Tambah Stok</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -113,30 +111,43 @@ const StokComponent = () => {
                         label="Stok"
                         type="number"
                         fullWidth
-                        value={stok[`stok${tempData.id}`]||tempData.stock}
-                        onChange={updateStok(`${tempData.id}`)}
+                        value={stok}
+                        onChange={updateStok}
                     />
                     <FormControl fullWidth className={classes.formControl}>
-                                <InputLabel>Jenis</InputLabel>
-                                <Select onChange={changeStatus} value={status} >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {state.listStatus.map((res)=>(
-                                        <MenuItem value={res}>{res}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                        <InputLabel>Jenis</InputLabel>
+                        <Select onChange={changeStatus} value={status} >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {state.listStatus.map((res) => (
+                                <MenuItem value={res}>{res}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth className={classes.formControl}>
+                        <InputLabel>Material</InputLabel>
+                        <Select onChange={changeStatus} name={'material'} value={material} >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {state.listStok.map((res) => (
+                                <MenuItem value={res}>{res.material.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
           </Button>
-                    <Button onClick={fetchUpdateStok} color="primary">
+                    <Button onClick={fetchUpdateStok} color="primary" disabled={!(Boolean(stok)&&Boolean(status)&&Boolean(material))} >
                         Tambah
           </Button>
                 </DialogActions>
             </Dialog>
+            <MDBBtn onClick={() => handleClickOpen([])}>Tambah Stok</MDBBtn>
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="customized table">
                     <TableHead>
@@ -148,7 +159,7 @@ const StokComponent = () => {
                             <StyledTableCell align="left">Satuan Guna</StyledTableCell>
                             <StyledTableCell align="left">Unit Konversi</StyledTableCell>
                             <StyledTableCell align="left">Stok</StyledTableCell>
-                            <StyledTableCell align="left">Tambah Stok</StyledTableCell>
+                            {/* <StyledTableCell align="left">Tambah Stok</StyledTableCell> */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -166,14 +177,14 @@ const StokComponent = () => {
                                     <StyledTableCell align="left">{row.material.unit_conversion || '-'}</StyledTableCell>
                                     <StyledTableCell align="left">{row.stock || '-'}</StyledTableCell>
                                     {/* <TextField  type='number' margin="normal" variant="outlined" onChange={updateStok(`${row.id}`)} value={stok[`stok${row.id}`]||row.stock} /> */}
-                                    <StyledTableCell align="left"><>
+                                    {/* <StyledTableCell align="left"><>
                                         <EditIcon
                                             color="dark-green"
                                             size="sm"
                                             style={{ color: "green", margin: "10px" }}
                                             onClick={()=>handleClickOpen(row)}
                                         />
-                                    </></StyledTableCell>
+                                    </></StyledTableCell> */}
                                 </StyledTableRow>
                             )
                         })}

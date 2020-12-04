@@ -26,7 +26,7 @@ const TransaksiKeluarComponent = (props) => {
     state: { listAccount },
     ListAccount,
   } = useContext(AccountContext);
-  const { state, ListOutcomeTypeBy, AddOutcome } = useContext(OutcomeContext);
+  const { state, ListOutcomeTypeBy, AddOutcome, PaymentMethod } = useContext(OutcomeContext);
   const [openDialogApprove, setOpenDialogApprove] = useState(false);
   const [dataTanggal, setDataTanggal] = useState([]);
   const [tanggal, setTanggal] = useState("");
@@ -34,13 +34,15 @@ const TransaksiKeluarComponent = (props) => {
   const [typeOutcome, setTypeOutcome] = useState("");
   const [image, setImage] = useState([]);
   const [value, setValue] = useState({
-    account_id: "",
-    outcome_type_id: "",
+    // account_id: "",
+    type: "",
     invoice_number: "",
     description: "",
+    unit_price: '',
     payment_method: "",
-    date: "",
-    ammount: "",
+    qty: '',
+    // ammount: "",
+    // user_id: '',
     information: "",
   });
   let today = new Date();
@@ -48,8 +50,9 @@ const TransaksiKeluarComponent = (props) => {
   const handleChange = (name) => (event) => {
     if (
       name === "ammount" ||
-      name === "harga_satuan" ||
-      name === "total_invoice"
+      name === "unit_price" ||
+      name === "total_invoice" ||
+      name === "qty"
     ) {
       setValue({
         ...value,
@@ -69,6 +72,7 @@ const TransaksiKeluarComponent = (props) => {
 
   useEffect(() => {
     ListAccount();
+    PaymentMethod();
     const loopingTanggal = () => {
       let tanggal = "";
       let data_tanggal = [];
@@ -118,19 +122,33 @@ const TransaksiKeluarComponent = (props) => {
     setOpenDialogApprove(false);
   };
 
-  const handleApproveProccess = () => {
-    let data = {
-      user_id: isAuthenticated().data.id,
-      outcometype_id: value.outcome_type_id,
-      account_id: value.account_id,
-      invoice_number: value.invoice_number,
-      ammount: value.ammount,
-      information: value.information,
-      description: value.description,
-      payment_method: value.payment_method,
-      date: today.getFullYear() + "-" + bulan + "-" + tanggal,
-    };
-    AddOutcome(data, () =>
+  const handleApproveProccess = async() => {
+    // let data = {
+    //   user_id: isAuthenticated().data.id,
+    //   type: value.type,
+    //   // account_id: value.account_id,
+    //   category: typeOutcome=="Logistik"?"Logistik":"Operasional",
+    //   shift: value.shift,
+    //   invoice_number: value.invoice_number,
+    //   ammount: value.ammount,
+    //   unit_price: value.unit_price,
+    //   qty: value.qty,
+    //   information: value.information,
+    //   description: value.description,
+    //   payment_method: value.payment_method,
+    //   image:  image[0],
+    //   date: today.getFullYear() + "-" + bulan + "-" + tanggal,
+    // };
+
+    let formData = new FormData();
+    Object.keys(value).map((res)=>{
+        formData.append(res, value[res]);
+    })
+    formData.append('date', today.getFullYear() + "-" + bulan + "-" + tanggal)
+    formData.append('category', typeOutcome=="Logistik"?"Logistik":"Operasional")
+    formData.append('image', image[0]);
+    formData.append('user_id', isAuthenticated().data.id);
+    AddOutcome(formData, () =>
       setValue({
         outcometype_id: "",
         account_id: "",
@@ -277,31 +295,31 @@ const TransaksiKeluarComponent = (props) => {
                 </FormControl> */}
                 <FormControl variant="outlined" margin="normal" fullWidth>
                   <InputLabel id="demo-simple-select-outlined-label">
-                    Sift Kerja
+                    Shift Kerja
                   </InputLabel>
                   <Select
                     label="Metode Pembayaran"
-                    value={value.sift}
-                    onChange={handleChange("sift")}
+                    value={value.shift}
+                    onChange={handleChange("shift")}
                   >
                     <MenuItem value="">
-                      <em>Pilih Sift</em>
+                      <em>Pilih shift</em>
                     </MenuItem>
                     {/* {listAccount.map((item, i) => (
                                             <MenuItem key={i} value={item.id}>{item.name}</MenuItem>
                                         ))} */}
                     {[
-                      { id: 1, sif: "sift Pagi" },
-                      { id: 2, sif: "Sift Siang" },
+                      { id: 1, sif: "Pagi" },
+                      { id: 2, sif: "Siang" },
                     ].map((item, i) => (
-                      <MenuItem key={i} value={item.id}>
+                      <MenuItem key={i} value={item.sif}>
                         {item.sif}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
 
-                <MDBRow className="m-12">
+                {/* <MDBRow className="m-12">
                   <MDBCol lg="12">
                     <TextField
                       fullWidth
@@ -312,6 +330,21 @@ const TransaksiKeluarComponent = (props) => {
                       //   type="number"
                       value={value.ammount}
                       onChange={handleChange("ammount")}
+                    />
+                  </MDBCol>
+                </MDBRow> */}
+
+                <MDBRow className="m-12">
+                  <MDBCol lg="12">
+                    <TextField
+                      fullWidth
+                      label="Quantity"
+                      // defaultValue="Default Value"
+                      variant="outlined"
+                      margin="normal"
+                      //   type="number"
+                      value={value.qty}
+                      onChange={handleChange("qty")}
                     />
                   </MDBCol>
                 </MDBRow>
@@ -325,8 +358,8 @@ const TransaksiKeluarComponent = (props) => {
                       variant="outlined"
                       margin="normal"
                       //   type="number"
-                      value={value.harga_satuan}
-                      onChange={handleChange("harga_satuan")}
+                      value={value.unit_price}
+                      onChange={handleChange("unit_price")}
                     />
                   </MDBCol>
                 </MDBRow>
@@ -449,8 +482,8 @@ const TransaksiKeluarComponent = (props) => {
                     </InputLabel>
                     <Select
                       label="Metode Pembayaran"
-                      value={value.outcome_type_id}
-                      onChange={handleChange("outcome_type_id")}
+                      value={value.type}
+                      onChange={handleChange("type")}
                     >
                       {typeOutcome === "" ? (
                         <MenuItem value="">
@@ -462,8 +495,8 @@ const TransaksiKeluarComponent = (props) => {
                         </MenuItem>
                       )}
                       {state.listOutcomeType.map((item, i) => (
-                        <MenuItem key={i} value={item.id}>
-                          {item.name}
+                        <MenuItem key={i} value={item}>
+                          {item}
                         </MenuItem>
                       ))}
                     </Select>
@@ -482,8 +515,10 @@ const TransaksiKeluarComponent = (props) => {
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value="Cash">Tunai</MenuItem>
-                  <MenuItem value="Transfer">Transfer</MenuItem>
+                  {state.paymentMethod&&state.paymentMethod.map((res)=>(
+                    <MenuItem value={res}>{res}</MenuItem>
+                  ))}
+                  
                 </Select>
               </FormControl>
               <TextField

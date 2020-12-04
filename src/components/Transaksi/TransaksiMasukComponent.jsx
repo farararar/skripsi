@@ -23,7 +23,10 @@ import {
 import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from "mdbreact";
 import NumberFormat from "react-number-format";
 import { withRouter } from "react-router-dom";
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Card from '@material-ui/core/Card';
 
+import CardContent from '@material-ui/core/CardContent'
 const TransaksiMasukComponent = (props) => {
   const { isAuthenticated } = useContext(AuthContext);
   const {
@@ -90,6 +93,26 @@ const TransaksiMasukComponent = (props) => {
       }
     }
   };
+
+  const handleChangeProduk= (name, index) => (event) => {
+    console.group('name', name);
+    console.log('event = ', event.target.value);
+    
+    if(name==='product'){
+      setValue({
+        ...value,
+        [`${name}[${event.target.value.id}]`]: '0',
+      });
+      setProduct({
+        ...product,
+        [index]: event.target.value.id
+      })
+    }else
+    setValue({
+      ...value,
+      [name]: event.target.value,
+    });
+  }
 
   useEffect(() => {
     ListAccount();
@@ -160,6 +183,7 @@ const TransaksiMasukComponent = (props) => {
         formdata.append(res, value[res]);
       }
     });
+    
     Promise.all(tamp).then(() => {
       AddIncome(formdata, () => setValue(defaultData));
       setOpenDialogApprove(false);
@@ -193,8 +217,14 @@ const TransaksiMasukComponent = (props) => {
   }
 
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    try {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");  
+    } catch (error) {
+      return '0';
+    }
   }
+  const [count1, setCount] = useState([]);
+  const [product, setProduct] = useState([]);
   return (
     <div>
       {/* {today.getFullYear()} */}
@@ -217,7 +247,41 @@ const TransaksiMasukComponent = (props) => {
                 />
                 <br></br>
                 <br></br>
-                <InputLabel>Produk</InputLabel>
+                <div style={{ display: 'flex', alignItems: "center", justifyContent: "space-between" }}>
+                  <p style={{ marginTop: '20px' }}>Tambah Produk</p>
+                  <AddCircleIcon onClick={() => setCount([...count1, 'A'])} />
+                </div>
+
+                {count1.map((res, index) => (
+                  <Card style={{marginTop: '10px'}}>
+                    <CardContent>
+                      <FormControl fullWidth >
+                        <InputLabel>Produk</InputLabel>
+                        <Select onChange={handleChangeProduk(`product`, index)}>
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          {listProduct.map((res) => (
+                            <MenuItem value={res}>{res.name}</MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+
+                      <TextField
+                        fullWidth
+                        label={"Produk"}
+                        variant="outlined"
+                        margin="normal"
+                        onChange={handleChangeProduk(`product[${product[index]}]`)}
+                        value={value[`product[${product[index]}]`]}
+                      />
+                    </CardContent>
+                  </Card>
+
+                ))}
+
+
+                {/* <InputLabel>Produk</InputLabel>
                 {listProduct.map((item, i) => (
                   <>
                     <TextField
@@ -265,31 +329,8 @@ const TransaksiMasukComponent = (props) => {
                     <br></br>
                   </>
                 ))}
-                {/* <Select
-                  fullWidth
-                  value={value.product_id}
-                  onChange={handleChange("product_id")}
-                >
-                  <MenuItem value="">
-                    <em>Pilih Produk</em>
-                  </MenuItem>
-                  {listProduct.map((item, i) => (
-                    <>
-                      <TextField
-                        fullWidth
-                        label="Deskripsi Transaksi"
-                        variant="outlined"
-                        margin="normal"
-                        multiline
-                        rowsMax={4}
-                        value={value.description}
-                        onChange={handleChange("description")}
-                      />
-                      <br></br>
-                    </>
-                  ))}
-                </Select>
                  */}
+
 
                 <TextField
                   fullWidth

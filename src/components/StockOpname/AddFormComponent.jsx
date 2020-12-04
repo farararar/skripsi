@@ -23,8 +23,9 @@ const AddFormComponent = () => {
   const {
     state: { listProduct },
     ListProduct,
+    
   } = useContext(ProductContext);
-  const { state, AddStockOpname, ListStockOpname } = useContext(
+  const { state, AddStockOpname, ListStockOpname, ListStatus } = useContext(
     StockOpnameContext
   );
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -38,6 +39,7 @@ const AddFormComponent = () => {
 
   useEffect(() => {
     ListProduct();
+    ListStatus();
   }, []);
 
   const handleDateChange = (date) => {
@@ -112,12 +114,17 @@ const AddFormComponent = () => {
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value="Stok Awal">Stok Awal</MenuItem>
-                  <MenuItem value="Penjulan">Penjualan</MenuItem>
+                  {state.listStatus&&state.listStatus.map((res)=>{
+                    return(
+                      <MenuItem value={res}>{res}</MenuItem>
+                    )
+                  })}
+                  
+                  {/* <MenuItem value="Penjulan">Penjualan</MenuItem>
                   <MenuItem value="Sisa Dibuang">Sisa Dibuang</MenuItem>
                   <MenuItem value="Produksi">Produksi</MenuItem>
                   <MenuItem value="Hasil Produksi">Hasil Produksi</MenuItem>
-                  <MenuItem value="Stock Akhir">Stock Akhir</MenuItem>
+                  <MenuItem value="Stock Akhir">Stock Akhir</MenuItem> */}
                 </Select>
               </FormControl>
             </MDBCol>

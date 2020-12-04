@@ -21,6 +21,11 @@ const StockOpnameReducer = (state, action) => {
                 ...state,
                 listStockOpname:action.payload
             }
+            case 'LIST-STATUS':
+                return {
+                    ...state,
+                    listStatus: action.payload
+                }
         default:
             return state
     }
@@ -52,6 +57,7 @@ const AddStockOpname = dispatch => (data, callback) => {
         //   alert(JSON.stringify(res)) 
         if(res.data.success){
             dispatch({type: 'NO-LOADING'})
+            alert(res.data.message)
             if(callback){
                 callback()
             }
@@ -88,9 +94,39 @@ const DeleteMaterialCategory = dispatch => (id, callback) => {
     })
 }
 
+const ListStatus = dispatch => () => {
+    dispatch({
+        type: 'LOADING',
+        payload: 'Menampilkan List Status'
+    })
+    axios.get(`${API}/stock-opname/produk/status`)
+        .then(res => {
+            //   alert(JSON.stringify(res.data.data.data))
+            if (res.data.success) {
+                dispatch({
+                    type: 'NO-LOADING'
+                })
+                dispatch({
+                    type: 'LIST-STATUS',
+                    payload: res.data.data
+                })
+            } else {
+                alert(res.data.message)
+                dispatch({
+                    type: 'NO-LOADING'
+                })
+            }
+        }).catch(error => {
+            dispatch({
+                type: 'NO-LOADING'
+            })
+            alert(error)
+            // console.log(error)
+        })
+}
 
 export const {Provider, Context} = CreateDataContext(
     StockOpnameReducer,
-    {ListStockOpname, AddStockOpname, DeleteMaterialCategory},
-    {loading: false, message:'', listStockOpname:[]}
+    {ListStockOpname, AddStockOpname, DeleteMaterialCategory, ListStatus},
+    {loading: false, message:'', listStockOpname:[], listStatus:[]}
 )

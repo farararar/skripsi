@@ -17,7 +17,7 @@ import { CircularProgress, Icon } from "@material-ui/core";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useHistory } from "react-router-dom";
-
+import DoneIcon from '@material-ui/icons/Done';
 import EditIcon from "@material-ui/icons/Edit";
 const ListTransaksiComponent = ({ props, dataTamp, Next, NextR }) => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -27,7 +27,7 @@ const ListTransaksiComponent = ({ props, dataTamp, Next, NextR }) => {
     ListIncomeNext,
     DeleteIncome,
     InvoiceIncome,
-    ValidateIncome,
+    ValidateIncome
   } = useContext(IncomeContext);
   const [search, setSearch] = useState("");
   const [, setListData] = useState([]);
@@ -82,7 +82,7 @@ const ListTransaksiComponent = ({ props, dataTamp, Next, NextR }) => {
   };
 
   const handleValidate = (data, param) => {
-    ValidateIncome(data, { is_valid: param }, () => {
+    ValidateIncome(data, { _method : "put",is_valid: param }, () => {
       ListIncome("");
     });
   };
@@ -105,13 +105,15 @@ const ListTransaksiComponent = ({ props, dataTamp, Next, NextR }) => {
 
   const listTransaksi = () => (
     <Fragment>
-      {state.listIncome.map((item, i) => (
+      {state.listIncome.map((item, i) => {
+        console.log('ite = ', item.is_valid);
+        return(
         <MDBCard key={i} className="mb-2">
           <MDBCardBody className="p-1">
             <MDBRow>
               <MDBCol lg="9">
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  {item.review_status && <AssignmentTurnedInIcon />}
+                  {item.is_valid==='1' && <DoneIcon />}
                   <MDBTypography tag="h5" className="pt-2 mx-2">
                     {" "}
                     {item.invoice_number}{" "}
@@ -184,33 +186,14 @@ const ListTransaksiComponent = ({ props, dataTamp, Next, NextR }) => {
                     </MDBBtn>
                   </>
                 ) : (
-                  login.data.name === "Administrator" && (
-                    <>
-                      {item.is_valid === 1 ? (
-                        <MDBBtn
-                          color="red"
-                          size="sm"
-                          onClick={() => handleValidate(item.id, 0)}
-                        >
-                          Invalidate
-                        </MDBBtn>
-                      ) : (
-                        <MDBBtn
-                          color="red"
-                          size="sm"
-                          onClick={() => handleValidate(item.id, 1)}
-                        >
-                          Validate
-                        </MDBBtn>
-                      )}
-                    </>
-                  )
+                    <div/>
                 )}
               </MDBCol>
             </MDBRow>
           </MDBCardBody>
         </MDBCard>
-      ))}
+      )})}
+   
     </Fragment>
   );
 

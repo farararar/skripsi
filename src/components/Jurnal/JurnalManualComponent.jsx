@@ -24,7 +24,7 @@ import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from "mdbreact";
 import NumberFormat from "react-number-format";
 import { withRouter } from "react-router-dom";
 
-const JurnalManualComponent = ({Change}) => {
+const JurnalManualComponent = ({Change, userData, status}) => {
   const { isAuthenticated } = useContext(AuthContext);
   const {
     state: { listAccount },
@@ -37,7 +37,8 @@ const JurnalManualComponent = ({Change}) => {
   const [bulan, setBulan] = useState("");
   const [ammount, setAmmount] = useState(0);
   const [image, setImage] = useState([]);
-  const [value, setValue] = useState({
+
+  const constData = {
     account_id: "",
     description: "",
     payment_method: "",
@@ -45,7 +46,8 @@ const JurnalManualComponent = ({Change}) => {
     debit: 0,
     credit: 0,
     akun:[]
-  });
+  }
+  const [value, setValue] = useState(constData);
   let today = new Date();
   const handleChange = (name) => (event) => {
     console.log('test = ', name)
@@ -59,8 +61,6 @@ const JurnalManualComponent = ({Change}) => {
       [name]: event.target.value,
     });
 
-    
-
     if (name === "unit_price") {
       let set_ammount = event.target.value * value.unit;
       setAmmount(set_ammount);
@@ -72,7 +72,9 @@ const JurnalManualComponent = ({Change}) => {
   };
 
   useEffect(() => {
+    console.log('user dtaa = ', userData);
     ListAccount();
+    setValue(userData?userData:constData);
     // ListCustomer();
     // ListProduct();
     const loopingTanggal = () => {
@@ -132,13 +134,14 @@ const JurnalManualComponent = ({Change}) => {
       debit: value.debit,
       credit: value.credit,
       description: value.description,
-      payment_method: value.payment_method,
+      // payment_method: value.payment_method,
+      invoice_number: value.invoice_number, 
       date: today.getFullYear() + "-" + bulan + "-" + tanggal,
     };
 
     // await setValue({...value, date: today.getFullYear() + "-" + bulan + "-" + tanggal})
     // alert(JSON.stringify(data))
-    JournalManual(data, Change)
+    JournalManual(data, Change, status, value.id)
     // AddIncome(data, () =>
     //   setValue({
     //     customer_id: "",
@@ -168,6 +171,19 @@ const JurnalManualComponent = ({Change}) => {
             <MDBCol lg="7">
               <form>
                 <MDBRow className="m-12">
+
+                {/* <MDBCol lg="6"> */}
+                    <TextField
+                      fullWidth
+                      label="Nomor Invoice"
+                      // defaultValue="Default Value"
+                      variant="outlined"
+                      margin="normal"
+                      // type="number"
+                      value={value.invoice_number}
+                      onChange={handleChange("invoice_number")}
+                    />
+                  {/* </MDBCol> */}
                   <MDBCol lg="6">
                     <TextField
                       fullWidth
@@ -180,6 +196,7 @@ const JurnalManualComponent = ({Change}) => {
                       onChange={handleChange("debit")}
                     />
                   </MDBCol>
+                  
                   <MDBCol lg="6">
                     <TextField
                       fullWidth
@@ -264,13 +281,13 @@ const JurnalManualComponent = ({Change}) => {
                     <em>None</em>
                   </MenuItem>
                   
-                  {listAccount.map((res, i)=>(
+                  {listAccount&&listAccount.map((res, i)=>(
                     <MenuItem value={res}>{res.name}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
 
-              <FormControl variant="outlined" margin="normal" fullWidth>
+              {/* <FormControl variant="outlined" margin="normal" fullWidth>
                 <InputLabel id="demo-simple-select-outlined-label">
                   Metode Pembayaran
                 </InputLabel>
@@ -295,7 +312,7 @@ const JurnalManualComponent = ({Change}) => {
                   </MenuItem>
                   <MenuItem value="Retur Penjualan">Retur Penjualan</MenuItem>
                 </Select>
-              </FormControl>
+              </FormControl> */}
               <TextField
                 fullWidth
                 label="Keterangan"

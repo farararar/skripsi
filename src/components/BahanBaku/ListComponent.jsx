@@ -4,14 +4,16 @@ import Table from '@material-ui/core/Table';
 import { TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, LinearProgress, InputLabel, Select, MenuItem } from '@material-ui/core'
 import { MDBRow, MDBCol, MDBBtn, MDBFormInline, MDBBox, MDBContainer } from 'mdbreact';
 import { Context as RawMaterialContext } from '../../services/Context/RawMaterialContext'
-
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { useHistory } from 'react-router-dom';
 
 const ListComponent = () => {
     const classes = useStyles();
-    const { state, ListRawMaterial } = useContext(RawMaterialContext)
+    const { state, ListRawMaterial, DeleteBahanBaku } = useContext(RawMaterialContext)
     const [search, setSearch] = useState('')
     const [filter, setFilter] = useState('')
-
+    const history = useHistory();
     // useEffect(() => {
     //     ListRawMaterial(filter)
     // }, [filter]);
@@ -34,6 +36,14 @@ const ListComponent = () => {
     }
     const handleResetSearch = () => {
         setSearch('')
+    }
+
+    const handleDelete=(id)=>{
+        DeleteBahanBaku(id, ()=>ListRawMaterial(filter));
+    }
+
+    const handleEdit=(data)=>{
+        history.push('/AddRawMaterial', {data: data});
     }
     return (
         <Fragment>
@@ -82,6 +92,7 @@ const ListComponent = () => {
                             <StyledTableCell align="left">Satuan Beli</StyledTableCell>
                             <StyledTableCell align="left">Satuan Guna</StyledTableCell>
                             <StyledTableCell align="left">Unit Konversi</StyledTableCell>
+                            <StyledTableCell align="left">Actions</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -94,6 +105,20 @@ const ListComponent = () => {
                                 <StyledTableCell align="left">{row.type == 1 ? 'Bahan Baku Langsung' : 'Bahan Baku Tidak Langsung'}</StyledTableCell>
                                 <StyledTableCell align="left">{row.unit_buy}</StyledTableCell>
                                 <StyledTableCell align="left">{row.unit_use}</StyledTableCell>
+                                <StyledTableCell align="left">{row.unit_conversion}</StyledTableCell>
+                                <StyledTableCell align="left"><>
+                                    <EditIcon
+                                        color="dark-green"
+                                        size="sm"
+                                        style={{ color: "green", margin: "10px" }}
+                                        onClick={() => handleEdit(row)}
+                                    />
+                                    <DeleteIcon
+                                        color="red"
+                                        // size="sm"
+                                        style={{ color: "red", margin: "10px" }}
+                                        onClick={() => handleDelete(row.raw_material_category_id)}
+                                    /></></StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>

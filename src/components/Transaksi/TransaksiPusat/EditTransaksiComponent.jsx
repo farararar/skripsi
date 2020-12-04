@@ -294,7 +294,12 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
   }
 
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    try {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");  
+    } catch (error) {
+      return '0';
+    }
+    
   }
   return (
     <div>

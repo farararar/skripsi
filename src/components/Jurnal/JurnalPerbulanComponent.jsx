@@ -11,31 +11,78 @@ import {
   MDBTableBody,
   MDBTableHead,
 } from "mdbreact";
+import { Context as AuthContext } from "../../services/Context/AuthContext";
 import { Context as JournalContext } from "../../services/Context/JournalContext";
-
-const JurnalPerbulanComponent = () => {
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+var d = new Date();
+const JurnalPerbulanComponent = ({Next, userData, params}) => {
+  const { isAuthenticated } = useContext(AuthContext);
   const [review] = useState(false);
   const [] = useState(false);
+  const [memo, setMemo] = useState("");
   const [] = useState(false);
   const [bulan, setBulan] = useState(0);
-  const { state, GetDailyJournal } = useContext(JournalContext);
-const [debit, setDebit] = useState(0)
-const [kredit, setKredit] = useState(0)
+  const [tahun, setTahun] = useState(d.getFullYear());
+  const { state, GetDailyJournal, PostingJournal, DeleteJournal } = useContext(JournalContext);
+  const [debit, setDebit] = useState(0);
+  const [kredit, setKredit] = useState(0);
+  const [date, setDate] = useState(params.tanggal);
   useEffect(() => {
-    var d = new Date();
-    var n = d.getFullYear();
-    GetDailyJournal(`${n}/${bulan}`);
-  }, [bulan]);
+    // var d = new Date();
+    // var n = d.getFullYear();
+    GetDailyJournal(`${tahun}/${bulan}`);
+  }, [bulan, tahun]);
+
+  useEffect(()=>{
+    console.log('add = ',state);
+    setMemo(state.additionalData.review?state.additionalData.review.memo:'')
+  },[state.additionalData]);
+
+  const [years, setYears] = useState([]);
 
   useEffect(() => {
-    var d = 0, c = 0
-    state.listJournalDaily.map((res)=>{
-        d+=Number(res.debit)
-        c+=Number(res.credit)
-    })
-    setDebit(d)
-    setKredit(c)
+    var d = 0,
+      c = 0;
+    state.listJournalDaily.map((res) => {
+      d += Number(res.debit);
+      c += Number(res.credit);
+    });
+    setDebit(d);
+    setKredit(c);
   }, [state.listJournalDaily]);
+
+  useEffect(() => {
+    const now = new Date().getUTCFullYear();
+    const years = Array(now - (now - 20))
+      .fill("")
+      .map((v, idx) => now - idx);
+    setYears(years);
+  }, []);
+
+  const handleDelete=(id)=>{
+    DeleteJournal(id, ()=>GetDailyJournal(`${tahun}/${bulan}`))
+  }
+  const handleEdit=(data)=>{
+    Next()
+    userData(data)
+  }
+
+  const handleSave = () => {
+    if (state.listJournalDaily.length > 0) {
+      // setSave(true);
+      // alert('Silahkan untuk melanjutkan posting!')
+      let data = {
+        reviewer_id: isAuthenticated().data.id,
+        memo: memo,
+        year: tahun,
+        month: bulan
+      };
+      PostingJournal(data, 'monthly');
+    } else {
+      alert("Tidak tersedia data jurnal untuk tanggal yang dipilih!");
+    }
+  };
 
   return (
     <div>
@@ -72,6 +119,23 @@ const [kredit, setKredit] = useState(0)
                 <MenuItem value={12}>Desember</MenuItem>
               </Select>
             </MDBCol>
+
+            <MDBCol lg="2" className="ml-4">
+              <InputLabel>Tahun</InputLabel>
+              <Select
+                fullWidth
+                value={tahun}
+                onChange={(event) => setTahun(event.target.value)}
+              >
+                <MenuItem value="">
+                  <em>Pilih Bulan</em>
+                </MenuItem>
+                {years.map((res, index) => (
+                  <MenuItem value={res}>{res}</MenuItem>
+                ))}
+              </Select>
+            </MDBCol>
+
             <MDBCol lg="3">
               <h5 className="pt-2 mx-2">
                 Bulan Transaksi<br></br>
@@ -81,7 +145,7 @@ const [kredit, setKredit] = useState(0)
             <MDBCol lg="3">
               <h5 className="pt-2 mx-2">
                 Status<br></br>
-                ............
+                {state.additionalData.review?state.additionalData.review.status:'-'}
               </h5>
             </MDBCol>
             <MDBCol lg="3">
@@ -110,23 +174,42 @@ const [kredit, setKredit] = useState(0)
                 <th>DESKRIPSI</th>
                 <th>KREDIT(Rp.)</th>
                 <th>DEBIT(Rp.)</th>
+                <th>Action</th>
               </tr>
             </MDBTableHead>
             <MDBTableBody>
               {state &&
                 state.listJournalDaily.map((res) => {
-                    
                   return (
                     <>
                       <tr>
                         <td>{res.account_id}</td>
                         <td>
-                          <b>{res.jreview_id}</b>
+                          <b>{res.account.reference_number}</b>
                         </td>
-                        <td>{res.review.memo}</td>
+                        <td>{res.account.name}</td>
                         <td>{res.description}</td>
                         <td>{res.credit}</td>
                         <td>{res.debit}</td>
+                        <td>
+                        {
+                          res.review_bulanan==0&&
+                          <>
+                          
+                          <EditIcon
+                          color="dark-green"
+                          size="sm"
+                          style={{ color: "green", margin: "10px" }}
+                          onClick={() => handleEdit(res)}
+                        />
+                        <DeleteIcon
+                          color="red"
+                          // size="sm"
+                          style={{ color: "red", margin: "10px" }}
+                          onClick={() => handleDelete(res.id)}
+                        /></>
+                        }
+                        </td>
                       </tr>
                     </>
                   );
@@ -157,20 +240,22 @@ const [kredit, setKredit] = useState(0)
             </MDBCol>
           </MDBRow>
           <hr></hr>
-          {review && (
+          {state.listJournalDaily.length > 0 && (
             <MDBRow className="mx-3">
               <MDBCol lg="6">
                 <TextField
                   fullWidth
                   label="Memo"
-                  defaultValue="Default Value"
+                  // defaultValue="Default Value"
                   variant="outlined"
                   margin="normal"
                   multiline
                   rows={3}
+                  value={memo}
                   rowsMax={4}
+                  onChange={(e) => setMemo(e.target.value)}
                 />
-                <MDBBtn color="dark-green" gradient="blue">
+                <MDBBtn color="dark-green" gradient="blue" onClick={handleSave} >
                   Simpan
                 </MDBBtn>
               </MDBCol>

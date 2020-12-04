@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   TextField,
@@ -7,14 +7,21 @@ import {
   InputLabel,
   FormControl,
   LinearProgress,
+  IconButton,
 } from "@material-ui/core";
 import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from "mdbreact";
 import { DropzoneArea } from "material-ui-dropzone";
 import { Context as ProductContext } from "../../services/Context/ProductContext";
+import { Context as RawMaterialContext } from "../../services/Context/RawMaterialContext";
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Card from '@material-ui/core/Card';
 
+import CardContent from '@material-ui/core/CardContent'
+console.disableYellowBox = true;
 const FormComponent = () => {
   const classes = useStyles();
   const { state, AddProduct } = useContext(ProductContext);
+  const { state: { listMaterialRaw }, ListRawMaterial } = useContext(RawMaterialContext);
   const [file, setFile] = useState("");
   const [value, setValue] = useState({
     product_category_id: "",
@@ -27,8 +34,26 @@ const FormComponent = () => {
   });
   const form = useRef(null);
 
-  const handleChange = (name) => (event) => {
-    if (name === "stok" || name === "harga_produk")
+  useEffect(() => {
+    ListRawMaterial('');
+  }, [])
+
+  const [material, setMaterial] = useState([]);
+  const handleChange = (name, index) => (event) => {
+    console.group('name', name);
+    console.log('event = ', event.target.value);
+    
+    if(name==='raw_material'){
+      setValue({
+        ...value,
+        [`${name}[${event.target.value.raw_material_category_id}]`]: '0',
+      });
+      setMaterial({
+        ...material,
+        [index]: event.target.value.raw_material_category_id
+      })
+    }
+    else if (name === "stok" || name === "harga_produk")
       setValue({
         ...value,
         [name]: event.target.value.replace(/[^0-9]/g, ""),
@@ -39,6 +64,10 @@ const FormComponent = () => {
         [name]: event.target.value,
       });
   };
+
+  useEffect(()=>{
+    console.log(value)
+  },[value])
   const handleReset = () => {
     setValue({
       product_category_id: "",
@@ -51,33 +80,26 @@ const FormComponent = () => {
     });
   };
 
-  // const handleSave = () => {
-  //     let formData = new FormData();
-  //     formData.append('product_category_id', value.product_category_id)
-  //     formData.append('name', value.name)
-  //     formData.append('code', value.code)
-  //     formData.append('unit_product', value.unit_product)
-  //     formData.append('stok', value.stok)
-  //     formData.append('image', file)
-  //     formData.append('information', value.information)
-  //     // alert(JSON.stringify(formData))
-  //     AddProduct(formData, () => handleReset())
-  // }
 
   const submit = (e) => {
     e.preventDefault();
     let formData = new FormData();
-    formData.append("product_category_id", value.product_category_id);
-    formData.append("name", value.name);
-    formData.append("code", value.code);
-    formData.append("unit_product", value.unit_product);
-    formData.append("product_price", value.harga_produk);
-    formData.append("product_menu", value.menu_produk);
+    Object.keys(value).map((res)=>{
+      formData.append(res, value[res]);
+    })
     formData.append("image", file);
-    formData.append("information", value.information);
     AddProduct(formData, () => handleReset());
   };
-
+  const [count1, setCount] = useState([]);
+  useEffect(()=>{
+    try {
+      // console.log(Object.keys(material))
+      console.log('material = ',material);
+    } catch (error) {
+      console.log('err  ',error)
+    }
+    
+  },[material])
   return (
     <div>
       <h4>Tambah Data Produk</h4>
@@ -130,6 +152,39 @@ const FormComponent = () => {
                     <MenuItem value="Item">Item</MenuItem>
                   </Select>
                 </FormControl>
+                <div style={{ display: 'flex', alignItems: "center", justifyContent: "space-between" }}>
+                  <p style={{ marginTop: '20px' }}>Tambah Material</p>
+                  <AddCircleIcon onClick={() => setCount([...count1, 'A'])} />
+                </div>
+
+                {count1.map((res, index) => (
+                  <Card style={{marginTop: '10px'}}>
+                    <CardContent>
+                      <FormControl fullWidth className={classes.formControl}>
+                        <InputLabel>Material</InputLabel>
+                        <Select onChange={handleChange(`raw_material`, index)}>
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          {listMaterialRaw.map((res) => (
+                            <MenuItem value={res}>{res.name}</MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+
+                      <TextField
+                        fullWidth
+                        label="Material 1"
+                        variant="outlined"
+                        margin="normal"
+                        onChange={handleChange(`raw_material[${material[index]}]`)}
+                        value={value[`raw_material[${material[index]}]`]}
+                      />
+                    </CardContent>
+                  </Card>
+
+                ))}
+
 
                 <TextField
                   fullWidth

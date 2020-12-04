@@ -117,7 +117,7 @@ const UpdateIncome = (dispatch) => (id, data, callback) => {
 const ValidateIncome = (dispatch) => (id, data, callback) => {
   dispatch({ type: "LOADING", payload: "Menyimpan Transaksi" });
   axios
-    .put(`${API}/income/${id}/validate`, data, {
+    .post(`${API}/income/${id}/validate`, data, {
       headers: {
         "Content-Type": "text/plain",
       },
