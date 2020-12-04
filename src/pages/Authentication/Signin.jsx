@@ -102,7 +102,7 @@ export default function Signin(props) {
               <InputLabel>Kata Sandi</InputLabel>
               <OutlinedInput
                 autoComplete="current-password"
-                type={value.showPassword ? 'text' : 'password'}
+                type={value.showPassword}
                 value={password}
                 onChange={handleChange('password')}
                 endAdornment={
