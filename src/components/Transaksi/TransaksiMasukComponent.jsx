@@ -22,12 +22,13 @@ import {
 } from "@material-ui/core";
 import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from "mdbreact";
 import NumberFormat from "react-number-format";
-import { withRouter } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Card from '@material-ui/core/Card';
-
 import CardContent from '@material-ui/core/CardContent'
+import RemoveCircleOutlinedIcon from '@material-ui/icons/RemoveCircleOutlined';
 const TransaksiMasukComponent = (props) => {
+  const history = useHistory()
   const { isAuthenticated } = useContext(AuthContext);
   const {
     state: { listAccount },
@@ -94,11 +95,11 @@ const TransaksiMasukComponent = (props) => {
     }
   };
 
-  const handleChangeProduk= (name, index) => (event) => {
+  const handleChangeProduk = (name, index) => (event) => {
     console.group('name', name);
     console.log('event = ', event.target.value);
-    
-    if(name==='product'){
+
+    if (name === 'product') {
       setValue({
         ...value,
         [`${name}[${event.target.value.id}]`]: '0',
@@ -107,11 +108,11 @@ const TransaksiMasukComponent = (props) => {
         ...product,
         [index]: event.target.value.id
       })
-    }else
-    setValue({
-      ...value,
-      [name]: event.target.value,
-    });
+    } else
+      setValue({
+        ...value,
+        [name]: event.target.value,
+      });
   }
 
   useEffect(() => {
@@ -183,9 +184,12 @@ const TransaksiMasukComponent = (props) => {
         formdata.append(res, value[res]);
       }
     });
-    
+
     Promise.all(tamp).then(() => {
-      AddIncome(formdata, () => setValue(defaultData));
+      // history.push('/transaksi-masuk')
+      // location.reload()
+      
+      AddIncome(formdata, () => window.location.reload());
       setOpenDialogApprove(false);
     });
   };
@@ -218,13 +222,23 @@ const TransaksiMasukComponent = (props) => {
 
   function numberWithCommas(x) {
     try {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");  
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     } catch (error) {
       return '0';
     }
   }
   const [count1, setCount] = useState([]);
   const [product, setProduct] = useState([]);
+  
+  const removeCard = (index) => {
+    console.log(index);
+    console.log(value[`product[${product[index]}]`])
+    delete value[`product[${product[index]}]`]
+    let newArr = [...count1];
+    newArr[index] = 'B';
+    setCount(newArr);
+  }
+
   return (
     <div>
       {/* {today.getFullYear()} */}
@@ -253,9 +267,11 @@ const TransaksiMasukComponent = (props) => {
                 </div>
 
                 {count1.map((res, index) => (
-                  <Card style={{marginTop: '10px'}}>
+                  <>
+                  {res==="A"&&<Card style={{ marginTop: '10px' }}>
                     <CardContent>
                       <FormControl fullWidth >
+                        <RemoveCircleOutlinedIcon onClick={() => removeCard(index)} style={{ color: 'red', alignItems: 'flex-end', position: "absolute", right: 0, top: 0, fontSize: 20, cursor: 'pointer' }} />
                         <InputLabel>Produk</InputLabel>
                         <Select onChange={handleChangeProduk(`product`, index)}>
                           <MenuItem value="">
@@ -276,8 +292,8 @@ const TransaksiMasukComponent = (props) => {
                         value={value[`product[${product[index]}]`]}
                       />
                     </CardContent>
-                  </Card>
-
+                  </Card>}
+                  </>
                 ))}
 
 
@@ -430,7 +446,7 @@ const TransaksiMasukComponent = (props) => {
                     </InputLabel>
                     <Select
                       label="Metode Pembayaran"
-                      value={value.account_id}
+                      value={value.shift}
                       onChange={handleChange("shift")}
                     >
                       <MenuItem value="">
@@ -475,9 +491,9 @@ const TransaksiMasukComponent = (props) => {
                             boxShadow:
                               "0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)",
                           }}
-                          // className={
-                          //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
-                          // }
+                        // className={
+                        //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
+                        // }
                         >
                           <Icon
                             className={{

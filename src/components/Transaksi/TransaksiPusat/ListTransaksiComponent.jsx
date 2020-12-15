@@ -161,7 +161,7 @@ const ListTransaksiComponent = ({ props, dataTamp, Next, NextR }) => {
                         color="red"
                         // size="sm"
                         style={{ color: "red", margin: "10px" }}
-                        onClick={() => handleDelete(item.user_id)}
+                        onClick={() => handleDelete(item.id)}
                       />
                     </>
                   }

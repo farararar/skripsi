@@ -10,13 +10,9 @@ import ListIcon from '@material-ui/icons/List';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
-import SettingsIcon from '@material-ui/icons/Settings';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PaymentIcon from '@material-ui/icons/Payment';
-import ShopIcon from '@material-ui/icons/Shop';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import EcoIcon from '@material-ui/icons/Eco';
 
 function ListMenu(props) {
   const { isAuthenticated } = useContext(AuthContext)
@@ -24,8 +20,6 @@ function ListMenu(props) {
   const [open, setOpen] = useState(true);
   const [open1, setOpen1] = useState(true);
   const [open2, setOpen2] = useState(true);
-  const [produkMenu, setProdukMenu] = useState(true)
-  const [bahanMenu, setBahanMenu] = useState(true)
 
   const handleClick = () => {
     setOpen(!open);
@@ -38,14 +32,6 @@ function ListMenu(props) {
   const handleClickOutcome = () => {
     setOpen1(!open1);
   };
-
-  const handleClickMenuProduct = () => {
-    setProdukMenu(!produkMenu)
-  }
-
-  const handleClickMenuBahan = () => {
-    setBahanMenu(!bahanMenu)
-  }
 
   let today = new Date()
   let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -80,24 +66,24 @@ function ListMenu(props) {
 
       {isAuthenticated() && isAuthenticated().data.level === 'Marketing' && (
         <>
-        <Link to={`/transaksi-masuk`} className={classes.link}>
-          <ListItem button>
-            <ListItemIcon>
-              <PaymentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Transaksi Masuk" />
-          </ListItem>
-        </Link>
+          <Link to={`/transaksi-masuk`} className={classes.link}>
+            <ListItem button>
+              <ListItemIcon>
+                <PaymentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Transaksi Masuk" />
+            </ListItem>
+          </Link>
 
-        <Link to={`/list-transaksi-pusat`} className={classes.link}>
-          <ListItem button>
-            <ListItemIcon>
-              <PaymentIcon />
-            </ListItemIcon>
-            <ListItemText primary="List Transaksi" />
-          </ListItem>
-        </Link>
-        
+          <Link to={`/list-transaksi-pusat`} className={classes.link}>
+            <ListItem button>
+              <ListItemIcon>
+                <PaymentIcon />
+              </ListItemIcon>
+              <ListItemText primary="List Transaksi" />
+            </ListItem>
+          </Link>
+
         </>
       )}
       {isAuthenticated() && isAuthenticated().data.level !== 'Marketing' && (
@@ -113,24 +99,25 @@ function ListMenu(props) {
             <List component="div" disablePadding>
               {isAuthenticated() && isAuthenticated().data.level === 'Admin' && (
                 <>
-                <Link to={`/transaksi-keluar`} className={classes.link}>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <PaymentIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Transaksi Keluar" />
-                  </ListItem>
-                </Link>
-                <Link to={`/list-pengeluaran-admin`} className={classes.link}>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <ListIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Daftar Pengeluaran" />
-                  </ListItem>
-                </Link>
+                  <Link to={`/transaksi-keluar`} className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                        <PaymentIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Transaksi Keluar" />
+                    </ListItem>
+                  </Link>
+                  <Link to={`/list-pengeluaran-admin`} className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                        <ListIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Daftar Pengeluaran" />
+                    </ListItem>
+                  </Link>
                 </>
               )}
+
               {isAuthenticated() && isAuthenticated().data.level === 'Accountant' && (
                 <Link to={`/list-pengeluaran`} className={classes.link}>
                   <ListItem button className={classes.nested}>
@@ -157,14 +144,6 @@ function ListMenu(props) {
           </ListItem>
           <Collapse in={!open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {/* <Link to='/list-transaksi-cabang' className={classes.link}>
-            <ListItem button className={classes.nested}>
-              <ListItemIcon>
-                <ListIcon />
-              </ListItemIcon>
-              <ListItemText primary="Cabang" />
-            </ListItem>
-          </Link> */}
               <Link to='/list-transaksi-pusat' className={classes.link}>
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
@@ -204,148 +183,24 @@ function ListMenu(props) {
             </List>
           </Collapse>
 
-          {/* <Link to={`/buku-besar`} className={classes.link}>
+          {<Link to={`/buku-besar`} className={classes.link}>
             <ListItem button>
               <ListItemIcon>
                 <MenuBookIcon />
               </ListItemIcon>
               <ListItemText primary="Buku Besar" />
             </ListItem>
-          </Link> */}
+          </Link>}
           <Link to={`/laporan-keuangan`} className={classes.link} >
-          <ListItem button>
-            <ListItemIcon>
-              <AssessmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Laporan Keuangan" />
-          </ListItem>
+            <ListItem button>
+              <ListItemIcon>
+                <AssessmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Laporan Keuangan" />
+            </ListItem>
           </Link>
         </Fragment>
       )}
-
-
-      {isAuthenticated() && isAuthenticated().data.level === 'Admin' && (
-        <Fragment>
-          <ListItem button onClick={handleClickMenuProduct}>
-            <ListItemIcon>
-              <ShopIcon />
-            </ListItemIcon>
-            <ListItemText primary="Produk" />
-            {produkMenu ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          
-          <Collapse in={!produkMenu} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <Link to={`/AddProduct`} className={classes.link}>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <AddBoxIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Tambah Produk" />
-                </ListItem>
-              </Link>
-              <Link to={`/ProductList`} className={classes.link}>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <ListIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="List Produk" />
-                </ListItem>
-              </Link>
-              <Link to={`/StockOpname`} className={classes.link}>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <ListIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Stok Opname" />
-                </ListItem>
-              </Link>
-              {/* <Link to={`/ProductInProccess`} className={classes.link}>
-                    <ListItem button className={classes.nested}>
-                      <ListItemIcon>
-                        <ListIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Produk Proses" />
-                    </ListItem>
-                  </Link> */}
-            </List>
-          </Collapse>
-
-          <ListItem button onClick={handleClickMenuBahan}>
-            <ListItemIcon>
-              <EcoIcon />
-            </ListItemIcon>
-            <ListItemText primary="Bahan Baku" />
-            {bahanMenu ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={!bahanMenu} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <Link to={`/AddRawMaterial`} className={classes.link}>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <AddBoxIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Tambah Bahan" />
-                </ListItem>
-              </Link>
-              <Link to={`/ReportMaterialList`} className={classes.link}>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <ListIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="List Report Bahan" />
-                </ListItem>
-              </Link>
-            
-
-              <Link to={`/StokBahanBaku`} className={classes.link}>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <ListIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Stok Bahan Baku" />
-                </ListItem>
-              </Link>
-
-              <Link to={`/RawMaterialList`} className={classes.link}>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <ListIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="List Bahan Baku" />
-                </ListItem>
-              </Link>
-              <Link to={`/RawMaterialCategories`} className={classes.link}>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <ListIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Kategori Bahan" />
-                </ListItem>
-              </Link>
-            </List>
-          </Collapse>
-          <Link to={`/list-transaksi-pusat`} className={classes.link}>
-          <ListItem button>
-            <ListItemIcon>
-              <PaymentIcon />
-            </ListItemIcon>
-            <ListItemText primary="List Transaksi" />
-          </ListItem>
-        </Link>
-          <Divider />
-
-          {/* <ListItem button>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Pengaturan" />
-          </ListItem> */}
-        </Fragment>
-      )}
-
-
-
       <ListItem button onClick={() => handleLogout()}>
         <ListItemIcon>
           <ExitToAppIcon />

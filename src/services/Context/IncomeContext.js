@@ -63,6 +63,12 @@ const IncomeReducer = (state, action) => {
         ...state,
         invoiceIncome: action.payload,
       };
+
+    case "GET-INCOME":
+      return {
+        ...state,
+        getIncome: action.payload,
+      }
     default:
       return state;
   }
@@ -244,7 +250,7 @@ const InvoiceIncome = (dispatch) => (id) => {
     .get(`${API}/invoice-income/${id}`)
     // axios.get(`${API}/income/${id}`)
     .then((res) => {
-    //   console.log(JSON.stringify(res.data));
+      //   console.log(JSON.stringify(res.data));
       if (res.data.success) {
         const tamp = res.data.data;
         const param = {
@@ -253,7 +259,7 @@ const InvoiceIncome = (dispatch) => (id) => {
           balance: "null",
           company: "TOKO ROTI AMAYA",
           email: "tes@amaya-cake.com",
-          phone: "+1 (872) 588-3809",
+          phone: "03415566778",
           address: "",
           trans_date: tamp.date,
           due_date: "-",
@@ -295,31 +301,46 @@ const ReviewIncome = (dispatch) => (id, data) => {
     });
 };
 
-// const GetDetailIncome = dispatch => async (id) => {
-//     dispatch({type: 'LOADING', payload: 'Menampilkan Data . . .'})
-//     try {
-//         let response = await fetch(`${API}/income/${id}`, {
-//             method: 'GET',
-//             headers: {
-//                 'Accept' : 'application/json',
-//                 'Content-Type': 'application/json',
-//             },
-//         })
-//         let responseJson = await response.json()
-//         // alert(JSON.stringify(responseJson))
-//         if(responseJson.success){
-//             dispatch({type: 'NO-LOADING'})
-//             dispatch({type: 'DETAIL-INCOME', payload:responseJson.data.account})
-//         }else{
-//             alert(responseJson.message)
-//             dispatch({type: 'NO-LOADING'})
-//         }
-//     } catch (err) {
-//         dispatch({type: 'NO-LOADING'})
-//         alert(err)
-//         // console.log(err)
-//     }
-// }
+const GetIncome = (dispatch) => () => {
+  /*dispatch({ type: "LOADING", payload: "Mengambil data..." });
+  this.setState({ loading: true });
+  axios
+    .get(`${API}/income`)
+    .then((res) => {
+      const data = res.data.value
+      this.setState({
+        loading: false,
+        value: res.data
+      });
+    });*/
+  dispatch({ type: "LOADING", payload: "Menampilkan data transaksi...." });
+  axios
+    .get(`${API}/dashboard-detail`)
+    .then((res) => {
+      //   alert(JSON.stringify(res))
+      if (res.data.success) {
+        dispatch({ type: "NO-LOADING" });
+        dispatch({ type: "LIST-INCOME", payload: res.data.data.data });
+        dispatch({ type: "PAGE-INFORMATION", payload: res.data.data });
+        if (callback) {
+          callback();
+        }
+        const dashboard_response = {
+          'data': res.data.data.data,
+          'additional_data': res.data.additional - data
+        }
+        return dashboard_response;
+      } else {
+        alert(res.data.message);
+        dispatch({ type: "NO-LOADING" });
+      }
+    })
+    .catch((error) => {
+      dispatch({ type: "NO-LOADING" });
+      alert(error);
+      // console.log(error)
+    });
+};
 
 export const { Provider, Context } = CreateDataContext(
   IncomeReducer,
@@ -333,6 +354,7 @@ export const { Provider, Context } = CreateDataContext(
     UpdateIncome,
     DeleteIncome,
     ValidateIncome,
+    GetIncome,
   },
   {
     loading: false,
@@ -346,5 +368,6 @@ export const { Provider, Context } = CreateDataContext(
     detailReviewer: "",
     currentPage: "",
     totalData: "",
+    getIncome: "",
   }
 );

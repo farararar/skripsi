@@ -33,9 +33,10 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
     ListAccount,
   } = useContext(AccountContext);
   const {
-    state: { detailOutcome },
+    state: { detailOutcome, listOutcomeType },
     DetailOutcome,
-    UpdateOutcome
+    UpdateOutcome,
+    ListOutcomeTypeBy
   } = useContext(OutcomeContext);
   const {
     state: { listProduct },
@@ -48,7 +49,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
   const [bulan, setBulan] = useState("");
   const [ammount, setAmmount] = useState(0);
   const [image, setImage] = useState([]);
-
+  const [typeOutcome, setTypeOutcome] = useState("");
   const defaultData = {
     customer: "",
     account_id: "",
@@ -78,11 +79,11 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
           [name]: event.target.value.replace(/[^0-9]/g, ""),
         });
       } else {
-        if(value[name]===undefined ||value[name]===null){
+        if (value[name] === undefined || value[name] === null) {
           setValue({
             ...value,
             [name]: '',
-          });   
+          });
         }
         console.log("masuk error");
         return 0;
@@ -125,10 +126,10 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
 
   const [updated, setUpdated] = useState(true);
 
-  useEffect(()=>{
+  useEffect(() => {
     DetailOutcome(data.id);
-    setUpdated(isAuthenticated().data.level === 'Admin'?false: true)
-  },[])
+    setUpdated(isAuthenticated().data.level === 'Admin' ? false : true)
+  }, [])
 
   useEffect(() => {
     ListAccount();
@@ -218,7 +219,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
         if (typeof value[res] === "string") {
           const tt = await urlToObject(
             "https://newdemo.aplikasiskripsi.com/farah_accounting/public/" +
-              data.image
+            data.image
           ).then((result) => result);
           formdata.append(res, tt);
         } else {
@@ -291,7 +292,10 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
       );
     }
   }
-
+  const handleChangeTypeOutcome = (value) => {
+    setTypeOutcome(value);
+    return ListOutcomeTypeBy(value);
+  };
   return (
     <div>
       {/* {today.getFullYear()} */}
@@ -315,7 +319,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                 />
                 <br></br>
                 <br></br>
-                
+
 
                 <TextField
                   fullWidth
@@ -391,7 +395,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                   variant="outlined"
                   disabled={updated}
                   margin="normal"
-                  value={value.user?value.user.name:'-'}
+                  value={value.user ? value.user.name : '-'}
                   onChange={handleChange("customer")}
                 />
 
@@ -441,6 +445,26 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                     </Select>
                   </FormControl>
 
+                  <TextField
+                    fullWidth
+                    label="Quantity"
+                    variant="outlined"
+                    disabled={updated}
+                    margin="normal"
+                    value={value.qty}
+                    onChange={handleChange("qty")}
+                  />
+
+                  <TextField
+                    fullWidth
+                    label="Harga Satuan"
+                    variant="outlined"
+                    disabled={updated}
+                    margin="normal"
+                    value={value.unit_price}
+                    onChange={handleChange("unit_price")}
+                  />
+
                   <div>
                     <p style={{ color: "grey", fontSize: "15px" }}>
                       Gambar
@@ -452,7 +476,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                       className="display-none"
                       style={{ display: "none" }}
                       accept="image/*"
-                      onChange={!updated?handleImage:{}}
+                      onChange={!updated ? handleImage : {}}
                     />
                     <div className="flex justify-center sm:justify-start flex-wrap">
                       {image.length !== 1 && (
@@ -466,9 +490,9 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                             boxShadow:
                               "0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)",
                           }}
-                          // className={
-                          //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
-                          // }
+                        // className={
+                        //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
+                        // }
                         >
                           <Icon
                             className={{
@@ -490,7 +514,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                         image.map((media, index) => {
                           return (
                             <img
-                              onClick={() => !updated?removeImage(image, media):{}}
+                              onClick={() => !updated ? removeImage(image, media) : {}}
                               style={{
                                 width: "120px",
                                 marginBottom: "20px",
@@ -502,7 +526,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                               src={
                                 typeof image === "string"
                                   ? "https://newdemo.aplikasiskripsi.com/farah_accounting/public/" +
-                                    media
+                                  media
                                   : createObjectURL(media)
                               }
                               alt="product2"
@@ -515,9 +539,65 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
               </form>
             </MDBCol>
             <MDBCol lg="5">
-              
-              <Divider />
-              <Divider />
+
+              {/* <Divider />
+              <Divider /> */}
+              <TextField
+                fullWidth
+                label="Nama Barang"
+                variant="outlined"
+                disabled={updated}
+                margin="normal"
+                value={value.nama_barang}
+                onChange={handleChange("nama_barang")}
+              />
+              <FormControl variant="outlined" margin="normal" fullWidth>
+                <InputLabel id="demo-simple-select-outlined-label">
+                  Tipe Jenis Pengeluaran
+                </InputLabel>
+                <Select
+                  label="Metode Pembayaran"
+                  value={typeOutcome}
+                  onChange={(e) => handleChangeTypeOutcome(e.target.value)}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value="Logistik">Logistik</MenuItem>
+                  <MenuItem value="Operasional-Perusahaan">
+                    Operasional Perusahaan
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <MDBRow className="m-12">
+                <MDBCol lg="12">
+                  <FormControl variant="outlined" margin="normal" fullWidth>
+                    <InputLabel id="demo-simple-select-outlined-label">
+                      Jenis Pengeluaran
+                    </InputLabel>
+                    <Select
+                      label="Metode Pembayaran"
+                      value={value.type}
+                      onChange={handleChange("type")}
+                    >
+                      {typeOutcome === "" ? (
+                        <MenuItem value="">
+                          <em>Pilih Jenis Akun Terlebih Dahulu</em>
+                        </MenuItem>
+                      ) : (
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                        )}
+                      {listOutcomeType&&listOutcomeType.map((item, i) => (
+                        <MenuItem key={i} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </MDBCol>
+              </MDBRow>
               <FormControl variant="outlined" margin="normal" fullWidth>
                 <InputLabel id="demo-simple-select-outlined-label">
                   Metode Pembayaran

@@ -15,7 +15,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';
 import { LinearProgress } from '@material-ui/core';
-import clsx from 'clsx';
 import IconButton from '@material-ui/core/IconButton';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -98,7 +97,6 @@ export default function Signin(props) {
           <Typography component="h1" variant="h5">
             TOKO ROTI AMAYA
           </Typography>
-
           <form className={classes.form} onSubmit={handleSubmit} >
             <TextField value={email} onChange={handleChange('email')} variant="outlined" margin="normal" required fullWidth label="Email Pengguna" autoComplete="email" autoFocus />
             <FormControl className={classes.textField} margin="normal" variant="outlined" required fullWidth label="Kata Sandi">
@@ -130,19 +128,6 @@ export default function Signin(props) {
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={state.loading}>
               {textButtonSubmit()}
             </Button>
-
-            {/* <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid> */}
             <Box mt={5}>
               <Copyright />
             </Box>

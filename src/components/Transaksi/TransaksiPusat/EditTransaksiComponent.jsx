@@ -11,6 +11,7 @@ import {
   MenuItem,
   InputLabel,
   Icon,
+  Grid,
   FormControl,
   Divider,
   Dialog,
@@ -23,29 +24,32 @@ import {
 import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from "mdbreact";
 import NumberFormat from "react-number-format";
 import { withRouter } from "react-router-dom";
-
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent'
+import { useHistory } from 'react-router-dom';
+import RemoveCircleOutlinedIcon from '@material-ui/icons/RemoveCircleOutlined';
 const TransaksiMasukComponent = ({ props, data, Next }) => {
   const { isAuthenticated } = useContext(AuthContext);
+  const history = useHistory();
   const {
     state: { listAccount },
     ListAccount,
   } = useContext(AccountContext);
   const {
-    state: { listCustomer },
-    ListCustomer,
-  } = useContext(CustomerContext);
-  const {
     state: { listProduct },
     ListProduct,
   } = useContext(ProductContext);
-  const { state, AddIncome, UpdateIncome } = useContext(IncomeContext);
+  const { state, AddIncome, UpdateIncome, GetDetailIncome } = useContext(IncomeContext);
   const [openDialogApprove, setOpenDialogApprove] = useState(false);
   const [dataTanggal, setDataTanggal] = useState([]);
   const [tanggal, setTanggal] = useState("");
   const [bulan, setBulan] = useState("");
   const [ammount, setAmmount] = useState(0);
   const [image, setImage] = useState([]);
-
+  const [count1, setCount] = useState([]);
+  const [product, setProduct] = useState([]);
+  const [tempProduct, setTempProduct] = useState({});
   const defaultData = {
     customer: "",
     account_id: "",
@@ -75,11 +79,11 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
           [name]: event.target.value.replace(/[^0-9]/g, ""),
         });
       } else {
-        if(value[name]===undefined ||value[name]===null){
+        if (value[name] === undefined || value[name] === null) {
           setValue({
             ...value,
             [name]: '',
-          });   
+          });
         }
         console.log("masuk error");
         return 0;
@@ -101,13 +105,6 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
     }
   };
 
-  const handleChangeText=(name)=>(event)=>{
-
-  }
-  // useEffect(()=>{
-  //   setValue(data);
-  //   console.log('data  ==  ',data)
-  // },[])
   const month = [
     "Januari",
     "Pebruari",
@@ -122,22 +119,35 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
     "November",
     "Desember",
   ];
+
+  useEffect(() => {
+    // setValue(state.detailIncome);
+    let temp = [];
+    let tp = {}
+    let ti = {}
+    let vp = {}
+    state.detailIncome && state.detailIncome.products.map((res, index) => {
+      tp[index] = res.product.name
+      ti[index] = res.product_id
+      vp[`${'product'}[${res.product_id}]`] = res.stock
+      temp.push("A");
+    });
+    setCount(temp);
+    setTempProduct(tp);
+    setProduct(ti);
+    setValue({
+      ...state.detailIncome,
+      ...vp,
+    });
+  }, [state.detailIncome])
+
   useEffect(() => {
     ListAccount();
-    // ListCustomer();
+    GetDetailIncome(data.id);
     ListProduct();
-    setValue(data);
-    // setValue({
-    //   ...value,
-    //   user_id: data.user_id,
-    // });
     console.log("update value = ", data);
     setImage([data.image]);
     setTanggal(data.date.split(" ")[0]);
-    // setValue({
-    //   ...value,
-    //   image: data.image
-    // })
     var bln = 0;
     month.map((res, i) => {
       console.log(res);
@@ -158,6 +168,34 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
     loopingTanggal();
   }, []);
 
+  const handleChangeProduk = (name, index) => (event) => {
+
+    if (name === 'product') {
+      let temp = '';
+      listProduct.map((res) => {
+
+        console.log('name = ', event.target.value);
+
+        if (event.target.value === res.name) {
+          console.log('filter = ', res);
+          temp = res.id
+        }
+      });
+
+      setValue({
+        ...value,
+        [`${name}[${temp}]`]: '0',
+      });
+      setProduct({
+        ...product,
+        [index]: temp
+      })
+    } else
+      setValue({
+        ...value,
+        [name]: event.target.value,
+      });
+  }
   const dialogApprove = () => (
     <Dialog
       open={openDialogApprove}
@@ -211,29 +249,30 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
         res === "invoice_number" ||
         res === "information" ||
         res === "payment_method" ||
-        res === "description"
+        res === "description" ||
+        res.includes('product[')
       ) {
         formdata.append(res, value[res]);
       } else if (res === "image") {
         if (typeof value[res] === "string") {
           const tt = await urlToObject(
             "https://newdemo.aplikasiskripsi.com/farah_accounting/public/" +
-              data.image
+            data.image
           ).then((result) => result);
           console.log("tt = ", tt);
           formdata.append(res, tt);
         } else {
+
           formdata.append(res, value[res]);
         }
-      } else if (res !== "user_id") {
-        formdata.append(res, value[res]);
       }
     });
     formdata.append("_method", "PUT");
     formdata.append("user_id", data.user_id);
     Promise.all(tamp).then(() => {
-      // console.log('data send = ', form)
-      UpdateIncome(data.user_id, formdata, Next);
+      UpdateIncome(data.id, formdata, Next, () => {
+        history.push('/list-transaksi-pusat')
+      });
       setOpenDialogApprove(false);
     });
   };
@@ -268,6 +307,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
   const removeImage = (form, img) => {
     setImage([...image.filter((q) => q !== img)]);
   };
+
   const handleImage = (event) => {
     setImage([...image, event.target.files[0]]);
     setValue({
@@ -295,12 +335,29 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
 
   function numberWithCommas(x) {
     try {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");  
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     } catch (error) {
       return '0';
     }
-    
+
   }
+
+  const removeCard = (index) => {
+    // const index = id;
+    // let d = [...count1]
+    console.log(index);
+    console.log(value[`product[${product[index]}]`])
+    delete value[`product[${product[index]}]`]
+    // let arr = [0,1,2,3,4,5]
+    let newArr = [...count1];
+    // newArr.splice(index,1);
+    newArr[index] = 'B';
+    setCount(newArr);
+  }
+
+  useEffect(() => {
+    console.log(count1);
+  }, [count1])
   return (
     <div>
       {/* {today.getFullYear()} */}
@@ -324,7 +381,42 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                 <br></br>
                 <br></br>
                 <InputLabel>Produk</InputLabel>
-                {listProduct.map((item, i) => (
+                <div style={{ display: 'flex', alignItems: "center", justifyContent: "space-between" }}>
+                  <p style={{ marginTop: '20px' }}>Tambah Produk</p>
+                  <AddCircleIcon onClick={() => setCount([...count1, 'A'])} style={{ cursor: 'pointer' }} />
+                </div>
+
+                {count1.map((res, index) => (
+                  <>
+                    {res === "A" && <Card style={{ marginTop: '10px' }}>
+                      <CardContent>
+                        <FormControl fullWidth >
+                          <RemoveCircleOutlinedIcon onClick={() => removeCard(index)} style={{ color: 'red', alignItems: 'flex-end', position: "absolute", right: 0, top: 0, fontSize: 20, cursor: 'pointer' }} />
+                          <InputLabel>Produk</InputLabel>
+                          <Select value={tempProduct[index]} onChange={handleChangeProduk(`product`, index)}>
+                            <MenuItem value="none">
+                              <em>None</em>
+                            </MenuItem>
+                            {listProduct.map((res, index) => (
+                              <MenuItem value={res.name}>{res.name}</MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+
+                        <TextField
+                          fullWidth
+                          label={"Produk"}
+                          variant="outlined"
+                          margin="normal"
+                          onChange={handleChangeProduk(`product[${product[index]}]`)}
+                          value={value[`product[${product[index]}]`]}
+                        />
+                      </CardContent>
+                    </Card>}
+                  </>
+                ))}
+
+                {/* {listProduct.map((item, i) => (
                   <>
                     <TextField
                       fullWidth
@@ -372,6 +464,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                     <br></br>
                   </>
                 ))}
+                 */}
                 {/* <Select
                   fullWidth
                   value={value.product_id}
@@ -542,9 +635,9 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                             boxShadow:
                               "0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)",
                           }}
-                          // className={
-                          //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
-                          // }
+                        // className={
+                        //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
+                        // }
                         >
                           <Icon
                             className={{
@@ -578,7 +671,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                               src={
                                 typeof image === "string"
                                   ? "https://newdemo.aplikasiskripsi.com/farah_accounting/public/" +
-                                    media
+                                  media
                                   : createObjectURL(media)
                               }
                               alt="product2"
@@ -699,7 +792,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
           </MDBRow>
         </MDBCardBody>
       </MDBCard>
-    </div>
+    </div >
   );
 };
 
