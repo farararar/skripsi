@@ -16,7 +16,7 @@ import { Context as JournalContext } from "../../services/Context/JournalContext
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 var d = new Date();
-const JurnalPerbulanComponent = ({Next, userData, params}) => {
+const JurnalPerbulanComponent = ({ Next, userData, params }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const [review] = useState(false);
   const [] = useState(false);
@@ -29,15 +29,13 @@ const JurnalPerbulanComponent = ({Next, userData, params}) => {
   const [kredit, setKredit] = useState(0);
   const [date, setDate] = useState(params.tanggal);
   useEffect(() => {
-    // var d = new Date();
-    // var n = d.getFullYear();
     GetDailyJournal(`${tahun}/${bulan}`);
   }, [bulan, tahun]);
 
-  useEffect(()=>{
-    console.log('add = ',state);
-    setMemo(state.additionalData.review?state.additionalData.review.memo:'')
-  },[state.additionalData]);
+  useEffect(() => {
+    console.log('add = ', state);
+    setMemo(state.additionalData.review ? state.additionalData.review.memo : '')
+  }, [state.additionalData]);
 
   const [years, setYears] = useState([]);
 
@@ -60,10 +58,10 @@ const JurnalPerbulanComponent = ({Next, userData, params}) => {
     setYears(years);
   }, []);
 
-  const handleDelete=(id)=>{
-    DeleteJournal(id, ()=>GetDailyJournal(`${tahun}/${bulan}`))
+  const handleDelete = (id) => {
+    DeleteJournal(id, () => GetDailyJournal(`${tahun}/${bulan}`))
   }
-  const handleEdit=(data)=>{
+  const handleEdit = (data) => {
     Next()
     userData(data)
   }
@@ -105,18 +103,18 @@ const JurnalPerbulanComponent = ({Next, userData, params}) => {
                 <MenuItem value="">
                   <em>Pilih Bulan</em>
                 </MenuItem>
-                <MenuItem value={1}>Januari</MenuItem>
-                <MenuItem value={2}>Pebruari</MenuItem>
-                <MenuItem value={3}>Maret</MenuItem>
-                <MenuItem value={4}>April</MenuItem>
-                <MenuItem value={5}>Mei</MenuItem>
-                <MenuItem value={6}>Juni</MenuItem>
-                <MenuItem value={7}>Juli</MenuItem>
-                <MenuItem value={8}>Agustus</MenuItem>
-                <MenuItem value={9}>September</MenuItem>
-                <MenuItem value={10}>Oktober</MenuItem>
-                <MenuItem value={11}>Nopember</MenuItem>
-                <MenuItem value={12}>Desember</MenuItem>
+                <MenuItem value="01">Januari</MenuItem>
+                <MenuItem value="02">Pebruari</MenuItem>
+                <MenuItem value="03">Maret</MenuItem>
+                <MenuItem value="04">April</MenuItem>
+                <MenuItem value="05">Mei</MenuItem>
+                <MenuItem value="06">Juni</MenuItem>
+                <MenuItem value="07">Juli</MenuItem>
+                <MenuItem value="08">Agustus</MenuItem>
+                <MenuItem value="09">September</MenuItem>
+                <MenuItem value="10">Oktober</MenuItem>
+                <MenuItem value="11">Nopember</MenuItem>
+                <MenuItem value="12">Desember</MenuItem>
               </Select>
             </MDBCol>
 
@@ -135,36 +133,17 @@ const JurnalPerbulanComponent = ({Next, userData, params}) => {
                 ))}
               </Select>
             </MDBCol>
-
-            <MDBCol lg="3">
-              <h5 className="pt-2 mx-2">
-                Bulan Transaksi<br></br>
-                <smal>Silahkan Pilih Bulan</smal>
-              </h5>
-            </MDBCol>
-            <MDBCol lg="3">
-              <h5 className="pt-2 mx-2">
+            {/*<MDBCol lg="2">
+              <h8 className="pt-2 mx-2">
                 Status<br></br>
-                {state.additionalData.review?state.additionalData.review.status:'-'}
-              </h5>
-            </MDBCol>
-            <MDBCol lg="3">
-              <h5 className="pt-2 mx-2">
-                Diperiksa Oleh<br></br>
-                ..........
-              </h5>
-            </MDBCol>
+                {state.additionalData.review ? state.additionalData.review.status : '-'}
+              </h8>
+            </MDBCol>*/}
           </MDBRow>
         </MDBCardBody>
       </MDBCard>
       <MDBCard className="mb-2">
         <MDBCardBody className="p-1">
-          {/* <MDBRow className='m-3'>
-                            <h5 className="pt-2 mx-2">
-                                Tanggal Transaksi<br></br>
-                                <small>11/07/2020</small>
-                            </h5>
-                        </MDBRow> */}
           <MDBTable>
             <MDBTableHead color="primary-color" textWhite>
               <tr>
@@ -192,23 +171,23 @@ const JurnalPerbulanComponent = ({Next, userData, params}) => {
                         <td>{res.credit}</td>
                         <td>{res.debit}</td>
                         <td>
-                        {
-                          res.review_bulanan==0&&
-                          <>
-                          
-                          <EditIcon
-                          color="dark-green"
-                          size="sm"
-                          style={{ color: "green", margin: "10px" }}
-                          onClick={() => handleEdit(res)}
-                        />
-                        <DeleteIcon
-                          color="red"
-                          // size="sm"
-                          style={{ color: "red", margin: "10px" }}
-                          onClick={() => handleDelete(res.id)}
-                        /></>
-                        }
+                          {
+                            res.review_bulanan == 0 &&
+                            <>
+
+                              <EditIcon
+                                color="dark-green"
+                                size="sm"
+                                style={{ color: "green", margin: "10px" }}
+                                onClick={() => handleEdit(res)}
+                              />
+                              <DeleteIcon
+                                color="red"
+                                // size="sm"
+                                style={{ color: "red", margin: "10px" }}
+                                onClick={() => handleDelete(res.id)}
+                              /></>
+                          }
                         </td>
                       </tr>
                     </>
@@ -240,7 +219,7 @@ const JurnalPerbulanComponent = ({Next, userData, params}) => {
             </MDBCol>
           </MDBRow>
           <hr></hr>
-          {state.listJournalDaily.length > 0 && (
+          {false && state.listJournalDaily.length > 0 && (
             <MDBRow className="mx-3">
               <MDBCol lg="6">
                 <TextField

@@ -1,11 +1,11 @@
 import React, { Fragment, useState, useContext, useEffect } from 'react';
 import { MDBContainer, MDBRow, MDBCol, MDBTypography, MDBCard, MDBCardBody, MDBBox, MDBBtn, MDBFormInline, MDBIcon } from "mdbreact";
-import { LinearProgress } from '@material-ui/core';
-import { Context as ProductContext } from '../../services/Context/ProductContext'
+import {LinearProgress} from '@material-ui/core';
+import {Context as ProductContext} from '../../services/Context/ProductContext'
 import { withRouter } from 'react-router-dom'
 import RiwayatProduksiComponent from '../../components/BahanBaku/RiwayatProduksiComponent';
 const ListComponent = (props) => {
-    const { state, ListProduct, DeleteProduct } = useContext(ProductContext)
+    const {state, ListProduct, DeleteProduct} = useContext(ProductContext)
     const [search, setSearch] = useState('')
 
     useEffect(() => {
@@ -13,9 +13,9 @@ const ListComponent = (props) => {
     }, []);
 
     const handleSearch = () => {
-        if (search === '') {
+        if(search === ''){
             alert('Ketikan yg ingin dicari!')
-        } else {
+        }else{
             return null
         }
     }
@@ -35,11 +35,11 @@ const ListComponent = (props) => {
 
     const [Goto, setGoto] = useState(false);
     const [tempData, setTempData] = useState([]);
-    const handleGoto = (data) => {
+    const handleGoto=(data)=>{
         setGoto(true)
         setTempData(data)
     }
-    const ItemProduct = ({ id, name, category }) => (
+    const ItemProduct = ({id, name, category}) => (
         <Fragment>
             <MDBCard className='mb-2'>
                 <MDBCardBody className='p-1'>
@@ -50,8 +50,8 @@ const ListComponent = (props) => {
                         <MDBCol lg="4">
                             <MDBRow>
                                 <MDBBtn color="info" size="sm" onClick={() => handleEditProduct(id)}><MDBIcon icon="edit" className="ml-1" /> Edit</MDBBtn>
-                                <MDBBtn gradient="peach" size="sm" onClick={() => handleGoto(id)}><MDBIcon icon="cogs" className="ml-1" /> Mode Produksi</MDBBtn>
-                                <MDBBtn color="danger" size="sm" onClick={() => handleDelete(id)}><MDBIcon icon="minus-circle" className="ml-1" /> Hapus</MDBBtn>
+                                <MDBBtn gradient="peach" size="sm" onClick={()=>handleGoto(id)}><MDBIcon icon="cogs" className="ml-1" /> Mode Produksi</MDBBtn>
+                                <MDBBtn color="danger" size="sm" onClick={() => handleDelete(id)}><MDBIcon icon="minus-circle" className="ml-1"/> Hapus</MDBBtn>
                             </MDBRow>
                         </MDBCol>
                     </MDBRow>
@@ -62,7 +62,7 @@ const ListComponent = (props) => {
 
     return (
         <Fragment>
-            {!Goto && <MDBContainer fluid>
+           {!Goto&&<MDBContainer fluid>
                 <MDBBox display="flex" justifyContent="end">
                     <MDBCol md="4">
                         <MDBFormInline className="md-form mr-auto mb-2">
@@ -79,15 +79,15 @@ const ListComponent = (props) => {
                     </MDBCol>
                 </MDBBox>
                 {state.loading && (
-                    <LinearProgress />
+                    <LinearProgress /> 
                 )}
                 {state.listProduct.map(item => (
                     <ItemProduct key={item.id} name={item.name} category={item.kategori} id={item.id} />
                 ))}
-
+                
             </MDBContainer>
-            }
-            {Goto && <RiwayatProduksiComponent userId={tempData} />}
+           }
+            {Goto&&<RiwayatProduksiComponent userId={tempData} />}
         </Fragment>
     );
 }

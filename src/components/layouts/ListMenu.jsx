@@ -1,7 +1,14 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom'
 import { Context as AuthContext } from '../../services/Context/AuthContext'
-import { makeStyles, ListSubheader, List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core'
+import {
+  makeStyles, ListSubheader, List, ListItem, ListItemIcon, ListItemText, Collapse, Dialog,
+  DialogTitle,
+  DialogContent,
+  Button,
+  DialogContentText,
+  DialogActions,
+} from '@material-ui/core'
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import Divider from '@material-ui/core/Divider';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -14,12 +21,22 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PaymentIcon from '@material-ui/icons/Payment';
 
+
 function ListMenu(props) {
   const { isAuthenticated } = useContext(AuthContext)
   const classes = useStyles();
   const [open, setOpen] = useState(true);
   const [open1, setOpen1] = useState(true);
+  const [openDialogApprove, setOpenDialogApprove] = useState(false);
   const [open2, setOpen2] = useState(true);
+
+  const handleApproveDialog = () => {
+    setOpenDialogApprove(true);
+  };
+
+  const handleApproveCancle = () => {
+    setOpenDialogApprove(false);
+  };
 
   const handleClick = () => {
     setOpen(!open);
@@ -36,7 +53,35 @@ function ListMenu(props) {
   let today = new Date()
   let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
-  const handleLogout = () => {
+  const HandleLogout = () => (
+    <Dialog
+      open={openDialogApprove}
+      onClose={handleApproveCancle}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{"Logout ?"}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Apakah anda yakin untuk keluar ?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleApproveCancle} color="secondary">
+          Batal
+        </Button>
+        <Button
+          onClick={Logout}
+          color="primary"
+          autoFocus
+        >
+          Logout
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+
+  const Logout = () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('login')
       props.history.push('/')
@@ -54,6 +99,7 @@ function ListMenu(props) {
       }
       className={classes.root}
     >
+      {HandleLogout()}
       <Divider />
       <Link to='/' className={classes.link}>
         <ListItem button>
@@ -78,59 +124,34 @@ function ListMenu(props) {
           <Link to={`/list-transaksi-pusat`} className={classes.link}>
             <ListItem button>
               <ListItemIcon>
-                <PaymentIcon />
+                <ListIcon />
               </ListItemIcon>
               <ListItemText primary="List Transaksi" />
             </ListItem>
           </Link>
-
         </>
       )}
-      {isAuthenticated() && isAuthenticated().data.level !== 'Marketing' && (
-        <Fragment>
-          <ListItem button onClick={handleClickOutcome}>
-            <ListItemIcon>
-              <PaymentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Pengeluaran" />
-            {open1 ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={!open1} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {isAuthenticated() && isAuthenticated().data.level === 'Admin' && (
-                <>
-                  <Link to={`/transaksi-keluar`} className={classes.link}>
-                    <ListItem button className={classes.nested}>
-                      <ListItemIcon>
-                        <PaymentIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Transaksi Keluar" />
-                    </ListItem>
-                  </Link>
-                  <Link to={`/list-pengeluaran-admin`} className={classes.link}>
-                    <ListItem button className={classes.nested}>
-                      <ListItemIcon>
-                        <ListIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Daftar Pengeluaran" />
-                    </ListItem>
-                  </Link>
-                </>
-              )}
 
-              {isAuthenticated() && isAuthenticated().data.level === 'Accountant' && (
-                <Link to={`/list-pengeluaran`} className={classes.link}>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <ListIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Daftar Pengeluaran" />
-                  </ListItem>
-                </Link>
-              )}
-            </List>
-          </Collapse>
-        </Fragment>
+      {isAuthenticated() && isAuthenticated().data.level === 'Admin' && (
+        <>
+          <Link to={`/transaksi-keluar`} className={classes.link}>
+            <ListItem button>
+              <ListItemIcon>
+                <PaymentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Transaksi Keluar" />
+            </ListItem>
+          </Link>
+
+          <Link to={`/list-pengeluaran-admin`} className={classes.link}>
+            <ListItem button>
+              <ListItemIcon>
+                <ListIcon />
+              </ListItemIcon>
+              <ListItemText primary="List Transaksi" />
+            </ListItem>
+          </Link>
+        </>
       )}
 
       {isAuthenticated() && isAuthenticated().data.level === 'Accountant' && (
@@ -144,12 +165,28 @@ function ListMenu(props) {
           </ListItem>
           <Collapse in={!open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
+              {/*<Link to='/list-transaksi-cabang' className={classes.link}>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <ListIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Cabang" />
+                </ListItem>
+                </Link>*/}
               <Link to='/list-transaksi-pusat' className={classes.link}>
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
                     <ListIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Pusat" />
+                  <ListItemText primary="Daftar Pemasukan" />
+                </ListItem>
+              </Link>
+              <Link to={`/list-pengeluaran`} className={classes.link}>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <ListIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Daftar Pengeluaran" />
                 </ListItem>
               </Link>
             </List>
@@ -183,14 +220,24 @@ function ListMenu(props) {
             </List>
           </Collapse>
 
-          {<Link to={`/buku-besar`} className={classes.link}>
+          <Link to={`/buku-besar`} className={classes.link}>
             <ListItem button>
               <ListItemIcon>
                 <MenuBookIcon />
               </ListItemIcon>
               <ListItemText primary="Buku Besar" />
             </ListItem>
-          </Link>}
+          </Link>
+
+          <Link to={`/neraca-saldo`} className={classes.link}>
+            <ListItem button>
+              <ListItemIcon>
+                <MenuBookIcon />
+              </ListItemIcon>
+              <ListItemText primary="Neraca Saldo" />
+            </ListItem>
+          </Link>
+
           <Link to={`/laporan-keuangan`} className={classes.link} >
             <ListItem button>
               <ListItemIcon>
@@ -201,7 +248,8 @@ function ListMenu(props) {
           </Link>
         </Fragment>
       )}
-      <ListItem button onClick={() => handleLogout()}>
+
+      <ListItem button onClick={() => handleApproveDialog()}>
         <ListItemIcon>
           <ExitToAppIcon />
         </ListItemIcon>

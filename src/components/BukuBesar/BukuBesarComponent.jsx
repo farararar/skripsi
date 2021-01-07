@@ -4,6 +4,7 @@ import {Context as AccountContext} from '../../services/Context/AccountContext'
 import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBIcon, MDBBox, MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
 import { InputLabel, Select, MenuItem, LinearProgress } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
+import moment from 'moment'
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
@@ -45,7 +46,7 @@ const BukuBesarComponent = ({  }) => {
         setSelectedDate(date);
         setValue({
             ...value,
-            start_date: formattedDate
+            start_date: date
         })   
     }
 
@@ -54,7 +55,7 @@ const BukuBesarComponent = ({  }) => {
         setSelectedDate2(date); 
         setValue({
             ...value,
-            end_date: formattedDate2
+            end_date: date
         }) 
     }
 
@@ -64,9 +65,10 @@ const BukuBesarComponent = ({  }) => {
         }else{
             let data = {
                 account_id : value.account_id,
-                start_date: value.start_date,
-                end_date: value.end_date
+                month: value.start_date.getMonth() + 1,
+                year: value.end_date.getFullYear()
             }
+            console.log('data = ', data);
             ListLedger(data)
             // alert(JSON.stringify(state.listLedger))
         }
@@ -113,9 +115,10 @@ const BukuBesarComponent = ({  }) => {
                                     <KeyboardDatePicker
                                         margin="normal"
                                         id="date-picker-dialog"
-                                        label="Tanggal Awal"
-                                        format="dd/MM/yyyy"
+                                        label="Pilih bulan"
+                                        format="MMMM"
                                         value={selectedDate}
+                                        views={["month"]}
                                         onChange={handleDateChange}
                                         KeyboardButtonProps={{
                                             'aria-label': 'change date',
@@ -130,8 +133,9 @@ const BukuBesarComponent = ({  }) => {
                                     <KeyboardDatePicker
                                         margin="normal"
                                         id="date-picker-dialog"
-                                        label="Tanggal Akhir"
-                                        format="dd/MM/yyyy"
+                                        label="Pilih tahun"
+                                        // format="dd/MM/yyyy"
+                                        views={["year"]}
                                         value={selectedDate2}
                                         onChange={handleDateChange2}
                                         KeyboardButtonProps={{
@@ -158,7 +162,7 @@ const BukuBesarComponent = ({  }) => {
                 )}
             </MDBCard>
             
-            {state.listLedger.length !== 0 && (
+            {state.listLedger && (
                 <MDBCard className='mb-2'>
                     <MDBCardBody className='p-1'>
                         <MDBTable>
@@ -170,24 +174,26 @@ const BukuBesarComponent = ({  }) => {
                                     <th>RINCIAN / DESKRIPSI</th>
                                     <th>DEBIT(Rp.)</th>
                                     <th>KREDIT(Rp.)</th>
-                                    <th>SALDO(Rp.)</th>
+                                    <th>SALDO DEBIT(Rp.)</th>
+                                    <th>SALDO KREDIT(Rp.)</th>
                                 </tr>
                             </MDBTableHead>
                             <MDBTableBody>
-                                {state.listLedger.map((item,i) => (
+                                {state.listLedger&&state.listLedger.map((item,i) => (
                                     <tr>
                                         <td>{i+1}</td>
-                                        <td> {item.date} </td>
+                                        <td> {item.Tanggal} </td>
                                         <td><b>{item.invoice_number}</b></td>
                                         <td>{item.description}</td>
-                                        <td><NumberFormat value={item.debit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'green'}} /></td>
-                                        <td><NumberFormat value={item.credit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'red'}}/></td>
-                                        <td><b><NumberFormat value={item.saldo} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></td>
+                                        <td><NumberFormat value={item.Debet} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'green'}} /></td>
+                                        <td><NumberFormat value={item.Kredit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'red'}}/></td>
+                                        <td><b><NumberFormat value={item['Saldo Debet']} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></td>
+                                        <td><b><NumberFormat value={item['Saldo Kredit']} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></td>
                                     </tr>
                                 ))}
                             </MDBTableBody>
                         </MDBTable>
-                        <hr></hr>
+                        {/* <hr></hr>
                         <MDBRow className='mx-3'>
                             <MDBCol lg="9">
                                 <h5 className="pt-2 mx-2">
@@ -208,7 +214,7 @@ const BukuBesarComponent = ({  }) => {
                                 </MDBBox>
                             </MDBCol>
                         </MDBRow>
-                        <hr></hr>
+                        <hr></hr> */}
                     </MDBCardBody>
                 </MDBCard>
             )}

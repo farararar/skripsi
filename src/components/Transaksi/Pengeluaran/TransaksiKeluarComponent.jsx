@@ -22,10 +22,7 @@ import { withRouter } from "react-router-dom";
 
 const TransaksiKeluarComponent = (props) => {
   const { isAuthenticated } = useContext(AuthContext);
-  const {
-    state: { listAccount },
-    ListAccount,
-  } = useContext(AccountContext);
+  const { state: { listAccount }, ListAccount } = useContext(AccountContext);
   const { state, ListOutcomeTypeBy, AddOutcome, PaymentMethod } = useContext(OutcomeContext);
   const [openDialogApprove, setOpenDialogApprove] = useState(false);
   const [dataTanggal, setDataTanggal] = useState([]);
@@ -122,30 +119,13 @@ const TransaksiKeluarComponent = (props) => {
     setOpenDialogApprove(false);
   };
 
-  const handleApproveProccess = async() => {
-    // let data = {
-    //   user_id: isAuthenticated().data.id,
-    //   type: value.type,
-    //   // account_id: value.account_id,
-    //   category: typeOutcome=="Logistik"?"Logistik":"Operasional",
-    //   shift: value.shift,
-    //   invoice_number: value.invoice_number,
-    //   ammount: value.ammount,
-    //   unit_price: value.unit_price,
-    //   qty: value.qty,
-    //   information: value.information,
-    //   description: value.description,
-    //   payment_method: value.payment_method,
-    //   image:  image[0],
-    //   date: today.getFullYear() + "-" + bulan + "-" + tanggal,
-    // };
-
+  const handleApproveProccess = async () => {
     let formData = new FormData();
-    Object.keys(value).map((res)=>{
-        formData.append(res, value[res]);
+    const tamp = Object.keys(value).map((res) => {
+      formData.append(res, value[res]);
     })
     formData.append('date', today.getFullYear() + "-" + bulan + "-" + tanggal)
-    formData.append('category', typeOutcome=="Logistik"?"Logistik":"Operasional")
+    formData.append('category', typeOutcome == "Logistik" ? "Logistik" : "Operasional")
     formData.append('image', image[0]);
     formData.append('user_id', isAuthenticated().data.id);
     AddOutcome(formData, () =>
@@ -263,36 +243,17 @@ const TransaksiKeluarComponent = (props) => {
                   </MDBCol>
                   <MDBCol lg="4">
                     <InputLabel>Tahun</InputLabel>
-                    <Select fullWidth value={2020}>
+                    <Select fullWidth>
                       <MenuItem value={2020}>
                         <em>2020</em>
+                      </MenuItem>
+                      <MenuItem value={2021}>
+                        <em>2021</em>
                       </MenuItem>
                     </Select>
                   </MDBCol>
                 </MDBRow>
                 <br></br>
-                {/* <FormControl variant="outlined" margin="normal" fullWidth>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Kategori Pengeluaran
-                  </InputLabel>
-                  <Select
-                    label="Kategori Pengeluaran"
-                    value={value.kategory_pengeluaran}
-                    onChange={handleChange("kategory_pengeluaran")}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    {[
-                      { id: 1, name: "operasional perusahaan" },
-                      { id: 2, name: "Logistik" },
-                    ].map((item, i) => (
-                      <MenuItem key={i} value={item.id}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl> */}
                 <FormControl variant="outlined" margin="normal" fullWidth>
                   <InputLabel id="demo-simple-select-outlined-label">
                     Shift Kerja
@@ -305,9 +266,6 @@ const TransaksiKeluarComponent = (props) => {
                     <MenuItem value="">
                       <em>Pilih shift</em>
                     </MenuItem>
-                    {/* {listAccount.map((item, i) => (
-                                            <MenuItem key={i} value={item.id}>{item.name}</MenuItem>
-                                        ))} */}
                     {[
                       { id: 1, sif: "Pagi" },
                       { id: 2, sif: "Siang" },
@@ -318,22 +276,6 @@ const TransaksiKeluarComponent = (props) => {
                     ))}
                   </Select>
                 </FormControl>
-
-                {/* <MDBRow className="m-12">
-                  <MDBCol lg="12">
-                    <TextField
-                      fullWidth
-                      label="Jumlah Pengeluaran"
-                      defaultValue="Default Value"
-                      variant="outlined"
-                      margin="normal"
-                      //   type="number"
-                      value={value.ammount}
-                      onChange={handleChange("ammount")}
-                    />
-                  </MDBCol>
-                </MDBRow> */}
-
                 <MDBRow className="m-12">
                   <MDBCol lg="12">
                     <TextField
@@ -363,23 +305,6 @@ const TransaksiKeluarComponent = (props) => {
                     />
                   </MDBCol>
                 </MDBRow>
-
-                {/* <MDBRow className="m-12">
-                  <MDBCol lg="12">
-                    <TextField
-                      fullWidth
-                      label="Total Invoice"
-                      //   defaultValue="Default Value"
-                      disabled
-                      variant="outlined"
-                      margin="normal"
-                      //   type="number"
-                      value={value.qty * value.unit_price}
-                      onChange={handleChange("total_invoice")}
-                    />
-                  </MDBCol>
-                </MDBRow> */}
-
                 <div>
                   <p style={{ color: "grey", fontSize: "15px" }}>
                     Upload Gambar
@@ -404,9 +329,6 @@ const TransaksiKeluarComponent = (props) => {
                         boxShadow:
                           "0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)",
                       }}
-                      // className={
-                      //   "flex relative w-128 h-128 rounded-4 mr-16 mb-16 overflow-hidden cursor-pointer hover:shadow-5"
-                      // }
                     >
                       <Icon
                         className={{
@@ -446,16 +368,6 @@ const TransaksiKeluarComponent = (props) => {
               </form>
             </MDBCol>
             <MDBCol lg="5">
-              <TextField
-                fullWidth
-                label="Nama Barang"
-                //   defaultValue="Default Value"
-                variant="outlined"
-                margin="normal"
-                //   type="number"
-                value={value.nama_barang}
-                onChange={handleChange("nama_barang")}
-              />
               <FormControl variant="outlined" margin="normal" fullWidth>
                 <InputLabel id="demo-simple-select-outlined-label">
                   Tipe Jenis Pengeluaran
@@ -490,10 +402,10 @@ const TransaksiKeluarComponent = (props) => {
                           <em>Pilih Jenis Akun Terlebih Dahulu</em>
                         </MenuItem>
                       ) : (
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                      )}
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                        )}
                       {state.listOutcomeType.map((item, i) => (
                         <MenuItem key={i} value={item}>
                           {item}
@@ -515,10 +427,10 @@ const TransaksiKeluarComponent = (props) => {
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  {state.paymentMethod&&state.paymentMethod.map((res)=>(
+                  {state.paymentMethod && state.paymentMethod.map((res) => (
                     <MenuItem value={res}>{res}</MenuItem>
                   ))}
-                  
+
                 </Select>
               </FormControl>
               <TextField

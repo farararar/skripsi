@@ -10,42 +10,47 @@ const IncomeReducer = (state, action) => {
             return {
                 ...state,
                 loading: true,
-                    message: action.payload,
+                message: action.payload,
             }
-            case 'NO-LOADING':
-                return {
-                    ...state,
-                    loading: false,
-                        message: '',
-                }
-                case 'LIST-OUTCOME-TYPE':
-                    return {
-                        ...state,
-                        listOutcomeType: action.payload
-                    }
-                    case 'LIST-OUTCOME-TYPE-BY':
-                        return {
-                            ...state,
-                            listOutcomeType: action.payload
-                        }
-                        case 'LIST-OUTCOME':
-                            return {
-                                ...state,
-                                listOutcome: action.payload
-                            }
-                            case 'DETAIL-OUTCOME': {
-                                return {
-                                    ...state,
-                                    detailOutcome: action.payload
-                                }
-                            }
-                            case 'LIST-PAYMENT':
-                                return {
-                                    ...state,
-                                    paymentMethod: action.payload
-                                }
-                            default:
-                                return state
+        case 'NO-LOADING':
+            return {
+                ...state,
+                loading: false,
+                message: '',
+            }
+        case 'LIST-OUTCOME-TYPE':
+            return {
+                ...state,
+                listOutcomeType: action.payload
+            }
+        case 'LIST-OUTCOME-TYPE-BY':
+            return {
+                ...state,
+                listOutcomeType: action.payload
+            }
+        case 'LIST-OUTCOME':
+            return {
+                ...state,
+                listOutcome: action.payload
+            }
+        case 'DETAIL-OUTCOME': {
+            return {
+                ...state,
+                detailOutcome: action.payload
+            }
+        }
+        case 'LIST-PAYMENT':
+            return {
+                ...state,
+                paymentMethod: action.payload
+            }
+        case "DETAIL-REVIEWER":
+            return {
+                ...state,
+                detailReviewer: action.payload,
+            };
+        default:
+            return state
     }
 }
 
@@ -85,7 +90,7 @@ const ListOutcomeTypeBy = dispatch => (type) => {
         type: 'LOADING',
         payload: 'Menampilkan Tipe Transaksi Keluar'
     })
-    axios.get(`${API}/outcome/${type=="Logistik"?"jenis-logistik":"jenis-operasional"}`)
+    axios.get(`${API}/outcome/${type == "Logistik" ? "jenis-logistik" : "jenis-operasional"}`)
         .then(res => {
             //   alert(JSON.stringify(res.data.data.data))
             if (res.data.success) {
@@ -180,14 +185,18 @@ const DetailOutcome = dispatch => (id) => {
     })
     axios.get(`${API}/outcome/${id}`)
         .then(res => {
-            //   alert(JSON.stringify(res.data.data.data))
             if (res.data.success) {
-                dispatch({
-                    type: 'NO-LOADING'
-                })
                 dispatch({
                     type: 'DETAIL-OUTCOME',
                     payload: res.data.data
+                })
+                dispatch({
+                    type: "DETAIL-REVIEWER",
+                    payload: res.data.data.reviewed_by,
+                });
+
+                dispatch({
+                    type: 'NO-LOADING'
                 })
             } else {
                 alert(res.data.message)
@@ -302,25 +311,50 @@ const PaymentMethod = dispatch => () => {
             // console.log(error)
         })
 }
+
+
+const ReviewOutcome = (dispatch) => (id, data) => {
+    dispatch({ type: "LOADING", payload: "Mengirim..." });
+    axios
+        .put(`${API}/outcome/${id}/review`, data)
+        .then((res) => {
+
+            if (res.data.success) {
+                alert(res.data.message);
+                dispatch({ type: "NO-LOADING" });
+                window.location.reload();
+            } else {
+                alert(res.data.message);
+                dispatch({ type: "NO-LOADING" });
+            }
+        })
+        .catch((error) => {
+            dispatch({ type: "NO-LOADING" });
+            alert(error);
+            // console.log(error)
+        });
+};
 export const {
     Provider,
     Context
 } = CreateDataContext(
     IncomeReducer, {
-        ListOutcomeType,
-        AddOutcome,
-        ListOutcome,
-        ListOutcomeTypeBy,
-        DetailOutcome,
-        DeleteOutcome,
-        UpdateOutcome,
-        PaymentMethod
-    }, {
-        loading: false,
-        message: '',
-        listOutcomeType: [],
-        listOutcome: [],
-        detailOutcome: [],
-        paymentMethod:[]
-    }
+    ListOutcomeType,
+    AddOutcome,
+    ListOutcome,
+    ListOutcomeTypeBy,
+    DetailOutcome,
+    DeleteOutcome,
+    UpdateOutcome,
+    ReviewOutcome,
+    PaymentMethod
+}, {
+    loading: false,
+    message: '',
+    listOutcomeType: [],
+    listOutcome: [],
+    detailReviewer: [],
+    detailOutcome: [],
+    paymentMethod: []
+}
 )

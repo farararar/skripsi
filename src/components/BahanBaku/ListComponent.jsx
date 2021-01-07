@@ -117,7 +117,7 @@ const ListComponent = () => {
                                         color="red"
                                         // size="sm"
                                         style={{ color: "red", margin: "10px" }}
-                                        onClick={() => handleDelete(row.raw_material_category_id)}
+                                        onClick={() => handleDelete(row.id)}
                                     /></></StyledTableCell>
                             </StyledTableRow>
                         ))}

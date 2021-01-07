@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { MDBContainer, MDBBreadcrumb, MDBBreadcrumbItem, } from "mdbreact";
-import TransaksiMasukComponent from '../../../components/Transaksi/TransaksiMasukComponent';
+import TransaksiMasukComponent from "../../../components/Transaksi/Pemasukkan/TransaksiMasukComponent";
 
 export default function TransaksiMasuk() {
     return (

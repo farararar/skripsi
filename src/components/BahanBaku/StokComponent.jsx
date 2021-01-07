@@ -15,7 +15,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 const StokComponent = () => {
     const classes = useStyles();
-    const { state, ListStok, ListStatus, UpdateStok } = useContext(RawMaterialContext)
+    const { state, ListStok, ListStatus, UpdateStok, ListRawMaterial } = useContext(RawMaterialContext)
     const [open, setOpen] = React.useState(false);
 
     const filterredDate = (date) => {
@@ -44,6 +44,7 @@ const StokComponent = () => {
 
     useEffect(() => {
         ListStok();
+        ListRawMaterial("");
         ListStatus();
     }, []);
 
@@ -132,8 +133,8 @@ const StokComponent = () => {
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            {state.listStok.map((res) => (
-                                <MenuItem value={res}>{res.material.name}</MenuItem>
+                            {state.listMaterialRaw.map((res) => (
+                                <MenuItem value={res}>{res?res.name:"-"}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
@@ -166,15 +167,15 @@ const StokComponent = () => {
                         {state.listStok.map((row) => {
                             // console.log("roooww = ",row)
                             return (
-                                <StyledTableRow key={row.name}>
+                                <StyledTableRow key={row.name||"-"}>
                                     <StyledTableCell component="th" scope="row">
-                                        {row.material.name || '-'}
+                                    {row.material?row.material.name:"-"}
                                     </StyledTableCell>
-                                    <StyledTableCell align="left">{row.material.code || "-"}</StyledTableCell>
-                                    <StyledTableCell align="left">{row.material.type == 1 ? 'Bahan Baku Langsung' : 'Bahan Baku Tidak Langsung'}</StyledTableCell>
-                                    <StyledTableCell align="left">{row.material.unit_buy || '-'}</StyledTableCell>
-                                    <StyledTableCell align="left">{row.material.unit_use || '-'}</StyledTableCell>
-                                    <StyledTableCell align="left">{row.material.unit_conversion || '-'}</StyledTableCell>
+                                    <StyledTableCell align="left">{row.material?row.material.code: "-"}</StyledTableCell>
+                                    <StyledTableCell align="left">{row.material?row.material.type == 1 ? 'Bahan Baku Langsung' : 'Bahan Baku Tidak Langsung':'-'}</StyledTableCell>
+                                    <StyledTableCell align="left">{row.material?row.material.unit_buy : '-'}</StyledTableCell>
+                                    <StyledTableCell align="left">{row.material?row.material.unit_use : '-'}</StyledTableCell>
+                                    <StyledTableCell align="left">{row.material?row.material.unit_conversion : '-'}</StyledTableCell>
                                     <StyledTableCell align="left">{row.stock || '-'}</StyledTableCell>
                                     {/* <TextField  type='number' margin="normal" variant="outlined" onChange={updateStok(`${row.id}`)} value={stok[`stok${row.id}`]||row.stock} /> */}
                                     {/* <StyledTableCell align="left"><>

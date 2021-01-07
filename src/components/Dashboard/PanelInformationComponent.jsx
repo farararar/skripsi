@@ -1,17 +1,11 @@
-import React, { Fragment, useEffect, useContext, useState } from 'react';
-import { Context as IncomeContext } from '../../services/Context/IncomeContext'
-import { Context as OutcomeContext } from '../../services/Context/OutcomeContext'
-import { MDBCard, MDBCardBody, MDBCardTitle, MDBCardText, MDBCardHeader, MDBRow, MDBCol, MDBBox } from "mdbreact";
+import React, { Fragment, useEffect } from 'react';
+import { MDBCard, MDBCardBody, MDBCardTitle, MDBCardText, MDBCardHeader, MDBBtn, MDBContainer, MDBRow, MDBCol, MDBBox } from "mdbreact";
 
 
-
-const PanelInformationComponent = () => {
-
-    const { state, GetIncome } = useContext(IncomeContext);
-
-    useEffect(() => {
-        GetIncome();
-    })
+const PanelInformationComponent = ({ data }) => {
+    useEffect(()=>{
+        console.log('data = hasasere = ',data);
+    },[])
     return (
         <Fragment>
             <MDBRow>
@@ -22,9 +16,9 @@ const PanelInformationComponent = () => {
                                 Penjualan
                                 </MDBCardHeader>
                             <MDBCardBody>
-                                <MDBCardTitle> {GetIncome()} </MDBCardTitle>
+                                <MDBCardTitle>{data.total_pemasukan}</MDBCardTitle>
                                 <MDBCardText>
-                                    170 Transaksi Pada Bulan Ini
+                                    {data.transaksi_pemasukan} Transaksi Pada Bulan Ini
                                     </MDBCardText>
                             </MDBCardBody>
                         </MDBCard>
@@ -37,9 +31,9 @@ const PanelInformationComponent = () => {
                                 Pengeluaran
                                 </MDBCardHeader>
                             <MDBCardBody>
-                                <MDBCardTitle>Rp. 260.000.000</MDBCardTitle>
+                                <MDBCardTitle>{data.total_pengeluaran}</MDBCardTitle>
                                 <MDBCardText>
-                                    90 Transaksi Pada Bulan Ini
+                                    {data.transaksi_pengeluaran} Transaksi Pada Bulan Ini
                                     </MDBCardText>
                             </MDBCardBody>
                         </MDBCard>

@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from 'react'
 import { MDBContainer, MDBTypography } from "mdbreact";
-import ListTransaksiComponent from '../../../components/Transaksi/TransaksiPusat/ListTransaksiComponent';
-import EditTransaksiComponent from '../../../components/Transaksi/TransaksiPusat/EditTransaksiComponent';
-import ReviewTransaksi from '../../../pages/Transaksi/ReviewTransaksi';
+import ListPemasukanComponent from '../../../components/Transaksi/TransaksiPusat/ListPemasukanComponent';
+import EditPemasukanComponent from '../../../components/Transaksi/TransaksiPusat/EditPemasukanComponent';
+import ReviewTransaksi from '../ReviewPemasukan';
 export default function TransaksiPusat() {
     const [Goto, setGoto] = useState(0);
     const [data, setData] = useState([]);
@@ -10,10 +10,9 @@ export default function TransaksiPusat() {
         <Fragment>
             <MDBTypography tag='h2' className="mt-4 mx-4"><b>List Transaksi Pusat</b></MDBTypography>
             <MDBContainer className="mt-0" fluid>
-                {Goto===5&&<ReviewTransaksi id={data.id} />}
-                {Goto===0&&<ListTransaksiComponent dataTamp={(value)=>setData(value)} Next={()=>setGoto(Goto+1)} NextR={()=>setGoto(5)} />}
-                {Goto===1&&<EditTransaksiComponent data={data} Next={()=>setGoto(Goto-1)} />}
-                
+                {Goto === 5 && <ReviewTransaksi id={data.id} />}
+                {Goto === 0 && <ListPemasukanComponent dataTamp={(value) => setData(value)} Next={() => setGoto(Goto + 1)} NextR={() => setGoto(5)} />}
+                {Goto === 1 && <EditPemasukanComponent data={data} Next={() => setGoto(Goto - 1)} />}
             </MDBContainer>
         </Fragment>
     )

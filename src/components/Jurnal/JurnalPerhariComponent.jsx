@@ -50,12 +50,6 @@ const JurnalPerhariComponent = ({ props, params, Change, Next, userData }) => {
   }, [date]);
 
   const reviewStatus = () => {
-    // {!review && (
-    //     <small style={{ color: 'red' }}>Not Review</small>
-    // )}
-    // {review && !save && (
-    //     <small style={{ color: 'red' }}>Not Review</small>
-    // )}
     if (!review) {
       return (
         <small style={{ color: "black" }}>
@@ -152,10 +146,10 @@ const JurnalPerhariComponent = ({ props, params, Change, Next, userData }) => {
     // alert(JSON.stringify(data))
   };
 
-  const handleDelete=(id)=>{
-    DeleteJournal(id, ()=>GetDailyJournal(date))
+  const handleDelete = (id) => {
+    DeleteJournal(id, () => GetDailyJournal(date))
   }
-  const handleEdit=(data)=>{
+  const handleEdit = (data) => {
     Next()
     userData(data)
   }
@@ -186,6 +180,7 @@ const JurnalPerhariComponent = ({ props, params, Change, Next, userData }) => {
                 gradient="blue"
                 onClick={handleReview}
                 disabled={review}
+                margin="normal"
               >
                 Review Jurnal
               </MDBBtn>
@@ -196,6 +191,7 @@ const JurnalPerhariComponent = ({ props, params, Change, Next, userData }) => {
               size="sm"
               gradient="blue"
               onClick={Change}
+              margin="20px"
             >
               Tambah Jurnal Manual
             </MDBBtn>
@@ -226,9 +222,8 @@ const JurnalPerhariComponent = ({ props, params, Change, Next, userData }) => {
             <MDBCol lg="3">
               <h5 className="pt-2 mx-2">
                 Tanggal Transaksi<br></br>
-                <span>{`${selectedDate.getDate()}/${
-                  selectedDate.getMonth() + 1
-                }/${selectedDate.getFullYear()}`}</span>
+                <span>{`${selectedDate.getDate()}/${selectedDate.getMonth() + 1
+                  }/${selectedDate.getFullYear()}`}</span>
               </h5>
             </MDBCol>
             <MDBCol lg="3">
@@ -296,7 +291,7 @@ const JurnalPerhariComponent = ({ props, params, Change, Next, userData }) => {
                         />
                       </td>
                       {
-                          item.review_harian==0&&
+                        item.review_harian == 0 &&
                         <>
                           {/* res.review_bulanan==0&& */}
                           <EditIcon

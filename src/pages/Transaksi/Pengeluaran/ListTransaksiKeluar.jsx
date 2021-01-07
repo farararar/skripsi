@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { MDBContainer, MDBBreadcrumb, MDBBreadcrumbItem, } from "mdbreact";
-import ListComponent from '../../../components/Transaksi/Pengeluaran/ListComponent';
+import ListComponent from '../../../components/Transaksi/Pengeluaran/ListPengeluaranComponent';
 
 
 export default function ListTransaksiKeluar(props) {

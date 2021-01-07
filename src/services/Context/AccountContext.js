@@ -1,9 +1,9 @@
 import CreateDataContext from './CreateDataContext'
 import axios from 'axios'
-import {API} from '../Api/AccountingApi'
+import { API } from '../Api/AccountingApi'
 
 const AccountReducer = (state, action) => {
-    switch(action.type){
+    switch (action.type) {
         case 'LOADING':
             return {
                 ...state,
@@ -19,7 +19,12 @@ const AccountReducer = (state, action) => {
         case 'LIST-ACCOUNT':
             return {
                 ...state,
-                listAccount:action.payload
+                listAccount: action.payload
+            }
+        case 'MENU':
+            return {
+                ...state,
+                menu: action.payload
             }
         default:
             return state
@@ -27,26 +32,45 @@ const AccountReducer = (state, action) => {
 }
 
 const ListAccount = dispatch => () => {
-    dispatch ({type: 'LOADING', payload: 'Menyimpan Transaksi'})
+    dispatch({ type: 'LOADING', payload: 'Menyimpan Transaksi' })
     axios.get(`${API}/account`)
-      .then(res => {
-        if(res.data.success){
-            dispatch({type: 'NO-LOADING'})
-            dispatch({type: 'LIST-ACCOUNT', payload:res.data.data})
-        }else{
-            alert(res.data.message)
-            dispatch({type: 'NO-LOADING'})
-        }
-    }).catch(error => {
-        dispatch({type: 'NO-LOADING'})
-        alert(error)
-        // console.log(error)
-    })
+        .then(res => {
+            if (res.data.success) {
+                dispatch({ type: 'NO-LOADING' })
+                dispatch({ type: 'LIST-ACCOUNT', payload: res.data.data })
+            } else {
+                alert(res.data.message)
+                dispatch({ type: 'NO-LOADING' })
+            }
+        }).catch(error => {
+            dispatch({ type: 'NO-LOADING' })
+            alert(error)
+            // console.log(error)
+        })
 }
 
 
-export const {Provider, Context} = CreateDataContext(
+const Menu = dispatch => () => {
+    dispatch({ type: 'LOADING', payload: 'Menyimpan Transaksi' })
+    axios.get(`${API}/dashboard`)
+        .then(res => {
+            console.log('menu = ', res.data.data);
+            if (res.data.success) {
+                dispatch({ type: 'NO-LOADING' })
+                dispatch({ type: 'MENU', payload: res.data.data })
+            } else {
+                alert(res.data.message)
+                dispatch({ type: 'NO-LOADING' })
+            }
+        }).catch(error => {
+            dispatch({ type: 'NO-LOADING' })
+            alert(error)
+            // console.log(error)
+        })
+}
+
+export const { Provider, Context } = CreateDataContext(
     AccountReducer,
-    {ListAccount},
-    {loading: false, message:'', listAccount:[]}
+    { ListAccount, Menu },
+    { loading: false, message: '', listAccount: [], menu: [] }
 )

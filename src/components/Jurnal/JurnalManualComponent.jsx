@@ -24,7 +24,7 @@ import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from "mdbreact";
 import NumberFormat from "react-number-format";
 import { withRouter } from "react-router-dom";
 
-const JurnalManualComponent = ({Change, userData, status}) => {
+const JurnalManualComponent = ({ Change, userData, status }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const {
     state: { listAccount },
@@ -45,15 +45,15 @@ const JurnalManualComponent = ({Change, userData, status}) => {
     date: "",
     debit: 0,
     credit: 0,
-    akun:[]
+    akun: []
   }
   const [value, setValue] = useState(constData);
   let today = new Date();
   const handleChange = (name) => (event) => {
     console.log('test = ', name)
-    if(name==="akun"){
-      console.log('masuk akun = ',event.target.value);
-      setValue({...value, [name]: event.target.value})
+    if (name === "akun") {
+      console.log('masuk akun = ', event.target.value);
+      setValue({ ...value, [name]: event.target.value })
       return 0;
     }
     setValue({
@@ -74,7 +74,7 @@ const JurnalManualComponent = ({Change, userData, status}) => {
   useEffect(() => {
     console.log('user dtaa = ', userData);
     ListAccount();
-    setValue(userData?userData:constData);
+    setValue(userData ? userData : constData);
     // ListCustomer();
     // ListProduct();
     const loopingTanggal = () => {
@@ -134,28 +134,11 @@ const JurnalManualComponent = ({Change, userData, status}) => {
       debit: value.debit,
       credit: value.credit,
       description: value.description,
-      // payment_method: value.payment_method,
-      invoice_number: value.invoice_number, 
+      invoice_number: value.invoice_number,
       date: today.getFullYear() + "-" + bulan + "-" + tanggal,
     };
 
-    // await setValue({...value, date: today.getFullYear() + "-" + bulan + "-" + tanggal})
-    // alert(JSON.stringify(data))
     JournalManual(data, Change, status, value.id)
-    // AddIncome(data, () =>
-    //   setValue({
-    //     customer_id: "",
-    //     account_id: "",
-    //     product_id: "",
-    //     invoice_number: "",
-    //     description: "",
-    //     payment_method: "",
-    //     date: "",
-    //     unit: 0,
-    //     unit_price: 0,
-    //     information: "",
-    //   })
-    // );
     setOpenDialogApprove(false);
   };
   return (
@@ -171,24 +154,18 @@ const JurnalManualComponent = ({Change, userData, status}) => {
             <MDBCol lg="7">
               <form>
                 <MDBRow className="m-12">
-
-                {/* <MDBCol lg="6"> */}
-                    <TextField
-                      fullWidth
-                      label="Nomor Invoice"
-                      // defaultValue="Default Value"
-                      variant="outlined"
-                      margin="normal"
-                      // type="number"
-                      value={value.invoice_number}
-                      onChange={handleChange("invoice_number")}
-                    />
-                  {/* </MDBCol> */}
+                  <TextField
+                    fullWidth
+                    label="Nomor Invoice"
+                    variant="outlined"
+                    margin="normal"
+                    value={value.invoice_number}
+                    onChange={handleChange("invoice_number")}
+                  />
                   <MDBCol lg="6">
                     <TextField
                       fullWidth
                       label="Debit"
-                      // defaultValue="Default Value"
                       variant="outlined"
                       margin="normal"
                       type="number"
@@ -196,7 +173,7 @@ const JurnalManualComponent = ({Change, userData, status}) => {
                       onChange={handleChange("debit")}
                     />
                   </MDBCol>
-                  
+
                   <MDBCol lg="6">
                     <TextField
                       fullWidth
@@ -229,6 +206,7 @@ const JurnalManualComponent = ({Change, userData, status}) => {
                       ))}
                     </Select>
                   </MDBCol>
+
                   <MDBCol lg="4">
                     <InputLabel>Bulan</InputLabel>
                     <Select
@@ -240,7 +218,7 @@ const JurnalManualComponent = ({Change, userData, status}) => {
                         <em>Pilih Bulan</em>
                       </MenuItem>
                       <MenuItem value={1}>Januari</MenuItem>
-                      <MenuItem value={2}>Pebruari</MenuItem>
+                      <MenuItem value={2}>Februari</MenuItem>
                       <MenuItem value={3}>Maret</MenuItem>
                       <MenuItem value={4}>April</MenuItem>
                       <MenuItem value={5}>Mei</MenuItem>
@@ -257,7 +235,13 @@ const JurnalManualComponent = ({Change, userData, status}) => {
                     <InputLabel>Tahun</InputLabel>
                     <Select fullWidth value={2020}>
                       <MenuItem value={2020}>
-                        <em>2020</em>
+                        <em>2021</em>
+                      </MenuItem>
+                      <MenuItem value={2020}>
+                        <em>2022</em>
+                      </MenuItem>
+                      <MenuItem value={2020}>
+                        <em>2023</em>
                       </MenuItem>
                     </Select>
                   </MDBCol>
@@ -267,21 +251,21 @@ const JurnalManualComponent = ({Change, userData, status}) => {
             </MDBCol>
             <MDBCol lg="5">
 
-            <FormControl variant="outlined" margin="normal" fullWidth>
+              <FormControl variant="outlined" margin="normal" fullWidth>
                 <InputLabel id="demo-simple-select-outlined-label">
                   Akun
                 </InputLabel>
                 <Select
                   label="Akun"
-                  value={value.akun?value.akun.name:''}
+                  value={value.akun ? value.akun.name : ''}
                   name={'akun'}
                   onChange={handleChange("akun")}
                 >
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  
-                  {listAccount&&listAccount.map((res, i)=>(
+
+                  {listAccount && listAccount.map((res, i) => (
                     <MenuItem value={res}>{res.name}</MenuItem>
                   ))}
                 </Select>

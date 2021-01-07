@@ -78,9 +78,10 @@ const AddFormComponent = () => {
   };
 
   const handleSave = () => {
+    let date = new Date();
     let data = {
-      product_id: value.product_id,
-      date: value.date,
+      product_id: value.product_id.id,
+      date: value.date==""?date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate():value.date,
       status: value.status,
       stock: value.stock,
     };
@@ -97,12 +98,12 @@ const AddFormComponent = () => {
             <MDBCol lg="2">
               <FormControl fullWidth className={classes.formControl}>
                 <InputLabel>Produk</InputLabel>
-                <Select onChange={handleChange("product_id")}>
+                <Select onChange={handleChange("product_id")} value={value.product_id} >
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
                   {listProduct.map((item) => (
-                    <MenuItem value={item.id}> {item.name} </MenuItem>
+                    <MenuItem value={item}> {item.name} </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -110,7 +111,7 @@ const AddFormComponent = () => {
             <MDBCol lg="2">
               <FormControl fullWidth className={classes.formControl}>
                 <InputLabel>Status</InputLabel>
-                <Select onChange={handleChange("status")}>
+                <Select onChange={handleChange("status")} value={value.status} >
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>

@@ -8,6 +8,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useHistory } from 'react-router-dom';
 import DateFnsUtils from "@date-io/date-fns";
+import moment from 'moment';
+import { ExternalLink } from 'react-external-link';
+import Iframe from 'react-iframe'
+
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
@@ -17,17 +21,15 @@ const BukuBesarKeuanganComponent = () => {
     const classes = useStyles();
     const { state, ListLaporanKeuangan } = useContext(JournalContext)
     const [search, setSearch] = useState('')
-    
-    const filterredDate=(date)=>{
+    const filterredDate = (date) => {
         return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     }
-    
+
     const [filter, setFilter] = useState({
         since: new Date,
         until: new Date
     })
-
-    const FilterRow=(data)=>{
+    const FilterRow = (data) => {
         return {
             since: filterredDate(filter.since),
             until: filterredDate(filter.until)
@@ -42,62 +44,41 @@ const BukuBesarKeuanganComponent = () => {
     useEffect(() => {
         ListLaporanKeuangan(FilterRow(filter));
     }, []);
+    // const  fullYear = new Date().getFullYear();
+    const [since, setSince] = useState(new Date());
+    const [until, setUntil] = useState(new Date());
+    const [externalUrl, setExternalUrl] = useState('https://newdemo.aplikasiskripsi.com/farah_accounting/public/account-report-pdf?since=2020-11-23&until=2020-11-26');
+    // const handleDateChange = (date) => {
+    //     console.log('year = ', date);
+    //     setFilterYear(date);
+    // };
 
-
-    const handleDateChange = (ket,date) => {
-        console.log(filter);
-        let formattedDate =
-            date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-        setFilter({
-            ...filter,
-            [ket]: date
-        })
-            // setSelectedDate(date);
-        // setDate(formattedDate);
-    };
-
+    useEffect(()=>{
+        console.log(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/account-report-pdf?since=${moment(since).format('YYYY-MM-DD')}&until=${moment(until).format('YYYY-MM-DD')}`)
+        setExternalUrl(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/account-report-pdf?since=${moment(since).format('YYYY-MM-DD')}&until=${moment(until).format('YYYY-MM-DD')}`)
+    },[since, until])
+    
     return (
         <Fragment>
             <MDBContainer fluid>
-                <MDBBox display='flex' alignContent='between'>
+                <MDBBox display='flex' style={{marginBottom: 20}} alignContent='between'>
                     <MDBCol size="9">
                         <MDBBox display="flex" justifyContent="start">
                             <MDBCol md="6">
                                 <InputLabel>Filter</InputLabel>
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                     {/* <Grid container justify="space-around"> */}
-                                    <div style={{display:"flex"}}>
-                                        <KeyboardDatePicker
-                                            margin="normal"
-                                            id="date-picker-dialog"
-                                            label="Since"
-                                            format="dd/MM/yyyy"
-                                            value={filter.since}
-                                            onChange={(value)=>handleDateChange('since', value)}
-                                            KeyboardButtonProps={{
-                                                "aria-label": "change date",
-                                            }}
-                                        />
-                                        <KeyboardDatePicker
-                                            margin="normal"
-                                            id="date-picker-dialog"
-                                            label="Until"
-                                            style={{marginLeft: '20px'}}
-                                            format="dd/MM/yyyy"
-                                            value={filter.until}
-                                            onChange={(value)=>handleDateChange('until', value)}
-                                            KeyboardButtonProps={{
-                                                "aria-label": "change date",
-                                            }}
-                                        />
-                                        </div>
+                                    <div style={{ display: "flex", width:'120%', justifyContent:"space-between" }}>
+                                    <KeyboardDatePicker value={since} label={'Since'} onChange={(value)=>setSince(value)}  />
+                                    <KeyboardDatePicker value={until} label={'Until'} onChange={(value)=>setUntil(value)}  />
+                                    </div>
                                     {/* </Grid> */}
-                                    
+
                                 </MuiPickersUtilsProvider>
                             </MDBCol>
                         </MDBBox>
                     </MDBCol>
-                
+
                 </MDBBox>
 
 
@@ -105,17 +86,24 @@ const BukuBesarKeuanganComponent = () => {
             {state.loading && (
                 <LinearProgress />
             )}
-            <TableContainer component={Paper}>
+            <div style={{textAlign:"center"}}>
+            <Iframe url={externalUrl}
+                width="1000px"
+                height="1000px"
+                id="myId"
+                className="m-20"
+                display="initial"
+                position="relative" />
+            </div>
+            {/* <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="customized table">
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Nama</StyledTableCell>
-                            {/* <StyledTableCell align="left">Kode Bahan</StyledTableCell> */}
                             <StyledTableCell align="left">Nomor referensi</StyledTableCell>
                             <StyledTableCell align="left">Debit</StyledTableCell>
                             <StyledTableCell align="left">Kredit</StyledTableCell>
                             <StyledTableCell align="left">Informasi</StyledTableCell>
-                            {/* <StyledTableCell align="left">Actions</StyledTableCell> */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -130,24 +118,12 @@ const BukuBesarKeuanganComponent = () => {
                                 <StyledTableCell align="left">{row.debit}</StyledTableCell>
                                 <StyledTableCell align="left">{row.credit}</StyledTableCell>
                                 <StyledTableCell align="left">{row.information}</StyledTableCell>
-                                {/* <StyledTableCell align="left"><>
-                                    <EditIcon
-                                        color="dark-green"
-                                        size="sm"
-                                        style={{ color: "green", margin: "10px" }}
-                                        onClick={() => handleEdit(row)}
-                                    />
-                                    <DeleteIcon
-                                        color="red"
-                                        // size="sm"
-                                        style={{ color: "red", margin: "10px" }}
-                                        onClick={() => handleDelete(row.raw_material_category_id)}
-                                    /></></StyledTableCell> */}
                             </StyledTableRow>
                         )})}
                     </TableBody>
                 </Table>
             </TableContainer>
+         */}
         </Fragment>
     );
 }

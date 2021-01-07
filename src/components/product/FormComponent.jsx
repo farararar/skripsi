@@ -42,8 +42,8 @@ const FormComponent = () => {
   const handleChange = (name, index) => (event) => {
     console.group('name', name);
     console.log('event = ', event.target.value);
-
-    if (name === 'raw_material') {
+    
+    if(name==='raw_material'){
       setValue({
         ...value,
         [`${name}[${event.target.value.raw_material_category_id}]`]: '0',
@@ -65,9 +65,9 @@ const FormComponent = () => {
       });
   };
 
-  useEffect(() => {
+  useEffect(()=>{
     console.log(value)
-  }, [value])
+  },[value])
   const handleReset = () => {
     setValue({
       product_category_id: "",
@@ -84,22 +84,22 @@ const FormComponent = () => {
   const submit = (e) => {
     e.preventDefault();
     let formData = new FormData();
-    Object.keys(value).map((res) => {
+    Object.keys(value).map((res)=>{
       formData.append(res, value[res]);
     })
     formData.append("image", file);
     AddProduct(formData, () => handleReset());
   };
   const [count1, setCount] = useState([]);
-  useEffect(() => {
+  useEffect(()=>{
     try {
       // console.log(Object.keys(material))
-      console.log('material = ', material);
+      console.log('material = ',material);
     } catch (error) {
-      console.log('err  ', error)
+      console.log('err  ',error)
     }
-
-  }, [material])
+    
+  },[material])
   return (
     <div>
       <h4>Tambah Data Produk</h4>
@@ -133,9 +133,7 @@ const FormComponent = () => {
                 />
                 <FormControl fullWidth className={classes.formControl}>
                   <InputLabel>Kategori Produk</InputLabel>
-                  <Select
-                    value={value.product_category_id}
-                    onChange={handleChange("product_category_id")}>
+                  <Select onChange={handleChange("product_category_id")}>
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
@@ -145,9 +143,7 @@ const FormComponent = () => {
                 </FormControl>
                 <FormControl fullWidth className={classes.formControl}>
                   <InputLabel>Satuan Produk</InputLabel>
-                  <Select
-                    value={value.unit_product}
-                    onChange={handleChange("unit_product")}>
+                  <Select onChange={handleChange("unit_product")}>
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
@@ -162,13 +158,11 @@ const FormComponent = () => {
                 </div>
 
                 {count1.map((res, index) => (
-                  <Card style={{ marginTop: '10px' }}>
+                  <Card style={{marginTop: '10px'}}>
                     <CardContent>
                       <FormControl fullWidth className={classes.formControl}>
                         <InputLabel>Material</InputLabel>
-                        <Select
-                          value={value.raw_material_category_id}
-                          onChange={handleChange(`raw_material`, index)}>
+                        <Select onChange={handleChange(`raw_material`, index)}>
                           <MenuItem value="">
                             <em>None</em>
                           </MenuItem>
