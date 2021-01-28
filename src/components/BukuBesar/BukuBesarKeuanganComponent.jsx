@@ -10,31 +10,59 @@ import { useHistory } from 'react-router-dom';
 import DateFnsUtils from "@date-io/date-fns";
 import moment from 'moment';
 import { ExternalLink } from 'react-external-link';
-import Iframe from 'react-iframe'
+import Iframe from 'react-iframe';
 
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from "@material-ui/pickers";
 import Grid from "@material-ui/core/Grid";
+var d = new Date();
 const BukuBesarKeuanganComponent = () => {
     const classes = useStyles();
     const { state, ListLaporanKeuangan } = useContext(JournalContext)
     const [search, setSearch] = useState('')
+    const [selectedDate2, setSelectedDate2] = useState();
+    const [value, setValue] = useState({
+        account_id: '',
+        start_date: '',
+        end_date: ''
+    })
     const filterredDate = (date) => {
-        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        return date.getFullYear();
     }
 
     const [filter, setFilter] = useState({
-        since: new Date,
-        until: new Date
+        tahun: new Date
     })
     const FilterRow = (data) => {
         return {
-            since: filterredDate(filter.since),
-            until: filterredDate(filter.until)
+            tahun: filterredDate(filter.tahun)
         }
     }
+    const [tahun, setTahun] = useState(d.getFullYear());
+
+    const [years, setYears] = useState([]);
+
+
+    const handleDateChange2 = (date) => {
+        let tahun = date.getFullYear()
+        setSelectedDate2(date);
+        // state.loading = true
+        setValue({
+            ...value,
+            end_date: date
+        })
+        handleChangeValue(tahun)
+        // setTimeout(() => {  state.loading = false }, 2000);
+    }
+    useEffect(() => {
+        const now = new Date().getUTCFullYear();
+        const years = Array(now - (now - 20))
+            .fill("")
+            .map((v, idx) => now - idx);
+        setYears(years);
+    }, []);
 
     const history = useHistory();
     useEffect(() => {
@@ -45,37 +73,38 @@ const BukuBesarKeuanganComponent = () => {
         ListLaporanKeuangan(FilterRow(filter));
     }, []);
     // const  fullYear = new Date().getFullYear();
-    const [since, setSince] = useState(new Date());
-    const [until, setUntil] = useState(new Date());
-    const [externalUrl, setExternalUrl] = useState('https://newdemo.aplikasiskripsi.com/farah_accounting/public/account-report-pdf?since=2020-11-23&until=2020-11-26');
-    // const handleDateChange = (date) => {
-    //     console.log('year = ', date);
-    //     setFilterYear(date);
-    // };
+    const [externalUrl, setExternalUrl] = useState(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/laporan-keuangan-pdf/${moment().format('YYYY')}`);
 
-    useEffect(()=>{
-        console.log(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/account-report-pdf?since=${moment(since).format('YYYY-MM-DD')}&until=${moment(until).format('YYYY-MM-DD')}`)
-        setExternalUrl(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/account-report-pdf?since=${moment(since).format('YYYY-MM-DD')}&until=${moment(until).format('YYYY-MM-DD')}`)
-    },[since, until])
-    
+    const handleChangeValue = (tahun) => {
+        console.log(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/laporan-keuangan-pdf/${tahun}`)
+        setExternalUrl(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/laporan-keuangan-pdf/${tahun}`)
+    };
+
     return (
         <Fragment>
             <MDBContainer fluid>
-                <MDBBox display='flex' style={{marginBottom: 20}} alignContent='between'>
+                <MDBBox display='flex' style={{ marginBottom: 20 }} alignContent='between'>
                     <MDBCol size="9">
                         <MDBBox display="flex" justifyContent="start">
-                            <MDBCol md="6">
-                                <InputLabel>Filter</InputLabel>
+                            <MDBCol lg="6">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    {/* <Grid container justify="space-around"> */}
-                                    <div style={{ display: "flex", width:'120%', justifyContent:"space-between" }}>
-                                    <KeyboardDatePicker value={since} label={'Since'} onChange={(value)=>setSince(value)}  />
-                                    <KeyboardDatePicker value={until} label={'Until'} onChange={(value)=>setUntil(value)}  />
-                                    </div>
-                                    {/* </Grid> */}
-
+                                    <Grid container justify="space-around">
+                                        <KeyboardDatePicker
+                                            margin="normal"
+                                            id="date-picker-dialog"
+                                            label="Pilih tahun"
+                                            // format="dd/MM/yyyy"
+                                            views={["year"]}
+                                            value={selectedDate2}
+                                            onChange={handleDateChange2}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </Grid>
                                 </MuiPickersUtilsProvider>
                             </MDBCol>
+
                         </MDBBox>
                     </MDBCol>
 
@@ -86,14 +115,14 @@ const BukuBesarKeuanganComponent = () => {
             {state.loading && (
                 <LinearProgress />
             )}
-            <div style={{textAlign:"center"}}>
-            <Iframe url={externalUrl}
-                width="1000px"
-                height="1000px"
-                id="myId"
-                className="m-20"
-                display="initial"
-                position="relative" />
+            <div style={{ textAlign: "center" }}>
+                <Iframe url={externalUrl}
+                    width="1000px"
+                    height="1000px"
+                    id="myId"
+                    className="m-20"
+                    display="initial"
+                    position="relative" />
             </div>
             {/* <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="customized table">

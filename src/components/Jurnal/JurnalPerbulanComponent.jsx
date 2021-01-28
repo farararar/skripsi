@@ -29,6 +29,8 @@ const JurnalPerbulanComponent = ({ Next, userData, params }) => {
   const [kredit, setKredit] = useState(0);
   const [date, setDate] = useState(params.tanggal);
   useEffect(() => {
+    // var d = new Date();
+    // var n = d.getFullYear();
     GetDailyJournal(`${tahun}/${bulan}`);
   }, [bulan, tahun]);
 
@@ -117,7 +119,6 @@ const JurnalPerbulanComponent = ({ Next, userData, params }) => {
                 <MenuItem value="12">Desember</MenuItem>
               </Select>
             </MDBCol>
-
             <MDBCol lg="2" className="ml-4">
               <InputLabel>Tahun</InputLabel>
               <Select
@@ -133,17 +134,17 @@ const JurnalPerbulanComponent = ({ Next, userData, params }) => {
                 ))}
               </Select>
             </MDBCol>
-            {/*<MDBCol lg="2">
-              <h8 className="pt-2 mx-2">
-                Status<br></br>
-                {state.additionalData.review ? state.additionalData.review.status : '-'}
-              </h8>
-            </MDBCol>*/}
           </MDBRow>
         </MDBCardBody>
       </MDBCard>
       <MDBCard className="mb-2">
         <MDBCardBody className="p-1">
+          {/* <MDBRow className='m-3'>
+                            <h5 className="pt-2 mx-2">
+                                Tanggal Transaksi<br></br>
+                                <small>11/07/2020</small>
+                            </h5>
+                        </MDBRow> */}
           <MDBTable>
             <MDBTableHead color="primary-color" textWhite>
               <tr>

@@ -462,9 +462,9 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                   </MDBCol>
                   <MDBCol lg="4">
                     <InputLabel>Tahun</InputLabel>
-                    <Select fullWidth value={2020}>
-                      <MenuItem value={2020}>
-                        <em>2020</em>
+                    <Select fullWidth value={2021}>
+                      <MenuItem value={2021}>
+                        <em>2021</em>
                       </MenuItem>
                     </Select>
                   </MDBCol>
@@ -499,6 +499,28 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                       ].map((item, i) => (
                         <MenuItem key={i} value={item.sif}>
                           {item.sif}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl variant="outlined" margin="normal" fullWidth>
+                    <InputLabel id="demo-simple-select-outlined-label">
+                      Kantor
+                    </InputLabel>
+                    <Select
+                      label="Kantor"
+                      value={value.kantor}
+                      onChange={handleChange("kantor")}
+                    >
+                      <MenuItem value="">
+                        <em>Pilih Kantor</em>
+                      </MenuItem>
+                      {[
+                        { id: 0, value: "cabang" },
+                        { id: 1, value: "pusat" },
+                      ].map((item, i) => (
+                        <MenuItem key={i} value={item.value}>
+                          {item.value}
                         </MenuItem>
                       ))}
                     </Select>

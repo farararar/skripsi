@@ -21,7 +21,6 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PaymentIcon from '@material-ui/icons/Payment';
 
-
 function ListMenu(props) {
   const { isAuthenticated } = useContext(AuthContext)
   const classes = useStyles();
