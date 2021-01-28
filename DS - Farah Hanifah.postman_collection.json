@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1ba90c4f-177c-456e-bb87-64c6d6b76de9",
+		"_postman_id": "86c65f38-0d2a-436f-be12-56d2af8d5c4d",
 		"name": "DS - Farah Hanifah",
 		"description": "Aplikasi accounting\n\nLumen",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -11,15 +11,12 @@
 			"item": [
 				{
 					"name": "Login",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\" : \"marketing@gmail.com\",\n    \"password\" : \"123456\"\n}",
+							"raw": "{\n    \"email\" : \"admin@gmail.com\",\n    \"password\" : \"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -41,327 +38,18 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Group",
-			"item": [
-				{
-					"name": "Store",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"code\" : 123321123,\n    \"name\" : \"Group 3\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/group/store",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"group",
-								"store"
-							]
-						},
-						"description": "code : int(11)\nname : varchar(50)"
-					},
-					"response": []
-				},
-				{
-					"name": "Update",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"code\" : 123456,\n    \"name\" : \"Group 2\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/group/2/update",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"group",
-								"2",
-								"update"
-							]
-						},
-						"description": "code : int(11)\nname : varchar(50)"
-					},
-					"response": []
-				},
-				{
-					"name": "List",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/group",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"group"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/group/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"group",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/group/3/delete",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"group",
-								"3",
-								"delete"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"description": "\"code\" : int(11),\n\"name\" : varchar(50)",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "a6df17f1-c51a-4cd1-909f-f5c012142c86",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "43d82505-7b54-4b49-a0e1-3869d97e755d",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Subgroup",
-			"item": [
-				{
-					"name": "Store",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"group_id\" : 1,\n    \"code\" : 123123,\n    \"name\" : \"Sub Group 2\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/subgroup/store",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"subgroup",
-								"store"
-							]
-						},
-						"description": "group_id : bigInteger/unsigned\ncode : int(11)\nname : varchar(50)"
-					},
-					"response": []
-				},
-				{
-					"name": "List",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/subgroup",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"subgroup"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/subgroup/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"subgroup",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"group_id\" : 1,\n    \"code\" : 44321,\n    \"name\" : \"Updated Sub Group 1\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/subgroup/1/update",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"subgroup",
-								"1",
-								"update"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/subgroup/2/delete",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"subgroup",
-								"2",
-								"delete"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"description": "\"group_id\" : bigInteger unsigned,\n\"code\" : int(11),\n\"name\" : varchar(50)",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "f1c90135-28e3-4eb3-9ddd-84a9e3224ef9",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "35bd8a7f-fa8b-401e-ae2c-47d3ae4b6b5d",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Account",
 			"item": [
 				{
-					"name": "Store",
+					"name": "Delete",
 					"request": {
-						"method": "POST",
+						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"subgroup_id\" : 1,\n    \"code\" : 559874,\n    \"name\" : \"Account 3\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/account/store",
+							"raw": "{{base_url}}/farah_accounting/public/account/3/delete",
 							"host": [
 								"{{base_url}}"
 							],
@@ -369,7 +57,42 @@
 								"farah_accounting",
 								"public",
 								"account",
-								"store"
+								"3",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"test\", function() {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/account/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"account",
+								"1"
 							]
 						}
 					},
@@ -395,12 +118,21 @@
 					"response": []
 				},
 				{
-					"name": "Get",
+					"name": "Store",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reference_number\" : \"10015\",\n    \"name\" : \"Tenaga Kerja Tidak Langsung\",\n    \"information\" : \"-\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/account/1",
+							"raw": "{{base_url}}/farah_accounting/public/account/store",
 							"host": [
 								"{{base_url}}"
 							],
@@ -408,7 +140,7 @@
 								"farah_accounting",
 								"public",
 								"account",
-								"1"
+								"store"
 							]
 						}
 					},
@@ -421,7 +153,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"subgroup_id\" : 1,\n    \"code\" : 666666,\n    \"name\" : \"Updated Account 1\"\n}",
+							"raw": "{\n    \"reference_number\" : \"10014\",\n    \"name\" : \"Beban Administrasi Bank\",\n    \"information\" : \"-\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -429,7 +161,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/account/1/update",
+							"raw": "{{base_url}}/farah_accounting/public/account/15/update",
 							"host": [
 								"{{base_url}}"
 							],
@@ -437,7 +169,7 @@
 								"farah_accounting",
 								"public",
 								"account",
-								"1",
+								"15",
 								"update"
 							]
 						}
@@ -445,33 +177,103 @@
 					"response": []
 				},
 				{
-					"name": "Delete",
+					"name": "Laporan-Keuangan",
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/account/6/delete",
+							"raw": "{{base_url}}/farah_accounting/public/account-report?since=2020-11-23&until=2020-11-26",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"farah_accounting",
 								"public",
-								"account",
-								"6",
-								"delete"
+								"account-report"
+							],
+							"query": [
+								{
+									"key": "since",
+									"value": "2020-11-23",
+									"description": "opsional, cuma dipake kalo mau difilter"
+								},
+								{
+									"key": "until",
+									"value": "2020-11-26",
+									"description": "opsional, cuma dipake kalo mau difilter"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buku Besar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/buku-besar?tahun=2020&bulan=06&account_id=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"buku-besar"
+							],
+							"query": [
+								{
+									"key": "tahun",
+									"value": "2020"
+								},
+								{
+									"key": "bulan",
+									"value": "06"
+								},
+								{
+									"key": "account_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Neraca Saldo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/neraca-saldo?tahun=2020&bulan=06",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"neraca-saldo"
+							],
+							"query": [
+								{
+									"key": "tahun",
+									"value": "2020"
+								},
+								{
+									"key": "bulan",
+									"value": "06"
+								}
 							]
 						}
 					},
 					"response": []
 				}
 			],
-			"description": "\"subgroup_id\" : bigInteger unsigned,\n\"code\" : int(11),\n\"name\" : varchar(50)",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "09461dff-dd14-42b0-b7f3-5bb7474cfd3c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -481,191 +283,32 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "afdee253-4151-4f29-9da8-aced9d430e2f",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
-			"name": "Period",
+			"name": "Outcome",
 			"item": [
-				{
-					"name": "Store",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"start_date\" : \"2020-08-13 00:00:00\",\n    \"end_date\" : \"2020-10-13 23:59:59\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/period/store",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"period",
-								"store"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/period",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"period"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "Get",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/period/1",
+							"raw": "{{base_url}}/farah_accounting/public/outcome/24",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"farah_accounting",
 								"public",
-								"period",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"start_date\" : \"2020-08-13 00:00:00\",\n    \"end_date\" : \"2020-09-13 23:59:59\",\n    \"isActive\" : true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/period/1/update",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"period",
-								"1",
-								"update"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/period/2/delete",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"period",
-								"2",
-								"delete"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"description": "\"start_date\" : datetime,\n\"end_date\" : datetime,\n\"isActive\" : boolean",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "ff968ee2-8756-42b6-8265-e15503ee378e",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "3c282386-2d8d-4b58-b0c1-0c45e820f55a",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Purchase",
-			"item": [
-				{
-					"name": "Store",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\" : \"Payment 2\",\n    \"desc\" : \"Payment Description\",\n    \"total\" : 650000,\n    \"date\" : \"2020-08-13 11:52:00\",\n    \"amount\" : 2\n}\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/purchase/store",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"purchase",
-								"store"
+								"outcome",
+								"24"
 							]
 						}
 					},
@@ -677,64 +320,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/purchase",
+							"raw": "{{base_url}}/farah_accounting/public/outcome",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"farah_accounting",
 								"public",
-								"purchase"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/purchase/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"purchase",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\" : \"Update Payment 1\",\n    \"desc\" : \"Payment Description\",\n    \"total\" : 650000,\n    \"date\" : \"2020-08-13 11:52:00\",\n    \"amount\" : 2\n}\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/purchase/1/update",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"purchase",
-								"1",
-								"update"
+								"outcome"
 							]
 						}
 					},
@@ -746,112 +339,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/purchase/2/delete",
+							"raw": "{{base_url}}/farah_accounting/public/outcome/3/delete",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"farah_accounting",
 								"public",
-								"purchase",
-								"2",
-								"delete"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"description": "\"name\" : varchar(50),\n\"desc\" : varchar(100),\n\"total\" : double(13, 2),\n\"date\" : datetime,\n\"amount\" : int(11)",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "edde9fa4-b8f7-4066-ad96-a8abe7eeb60c",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "8ad5231a-8501-4006-adcf-099290039a2e",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Payment",
-			"item": [
-				{
-					"name": "Store",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"workShift\" : 2,\n    \"date\" : \"2020-08-13 13:25:00\",\n    \"customerName\" : \"Customer Name\",\n    \"value\" : 50000,\n    \"method\" : 1,\n    \"total\" : 50000\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/payment/store",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"payment",
-								"store"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/payment",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"payment"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/payment/3/delete",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"farah_accounting",
-								"public",
-								"payment",
+								"outcome",
 								"3",
 								"delete"
 							]
@@ -860,13 +355,13 @@
 					"response": []
 				},
 				{
-					"name": "Update",
+					"name": "Review",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"workShift\" : 2,\n    \"date\" : \"2020-08-13 13:25:00\",\n    \"customerName\" : \"Updated Customer Name\",\n    \"value\" : 50000,\n    \"method\" : 1,\n    \"total\" : 50000\n}",
+							"raw": "{\n    \"review_status\": \"approved\",\n    \"reviewer_id\": 3\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -874,16 +369,1394 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/payment/3/update",
+							"raw": "{{base_url}}/farah_accounting/public/outcome/26/review",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"farah_accounting",
 								"public",
-								"payment",
-								"3",
+								"outcome",
+								"26",
+								"review"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "_method",
+									"value": "PUT",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "shift",
+									"value": "Pagi",
+									"description": "pilihan : Pagi / Siang",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "Operasional",
+									"description": "pilihan : Operasional / Logistik",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "Akumulasi penyusutan mesin",
+									"description": "kalo category nya operasional, list pilihan bisa dilihat di \"Outcome/Jenis pengeluaran operasional\".. Kalo category nya logistik, list pilihan bisa dilihat di \"Outcome/Jenis pengeluaran logistik\"",
+									"type": "text"
+								},
+								{
+									"key": "invoice_number",
+									"value": "INV/20200823/XI/9989249",
+									"type": "text"
+								},
+								{
+									"key": "payment_method",
+									"value": "Tunai",
+									"description": "pilihannya ada di \"Income/Payment Methods\"",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "2020-11-11",
+									"type": "text"
+								},
+								{
+									"key": "qty",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "unit_price",
+									"value": "60000",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"description": "opsional kalo ngedit",
+									"type": "file",
+									"src": "/Users/tebacamac/Pictures/avatar2.png",
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "Pembelian produk a dan b,",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/outcome/12/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"outcome",
+								"12",
 								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "shift",
+									"value": "Pagi",
+									"description": "pilihan : Pagi / Siang",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "Operasional",
+									"description": "pilihan : Operasional / Logistik",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "Akumulasi penyusutan mesin",
+									"description": "kalo category nya operasional, list pilihan bisa dilihat di \"Outcome/Jenis pengeluaran operasional\".. Kalo category nya logistik, list pilihan bisa dilihat di \"Outcome/Jenis pengeluaran logistik\"",
+									"type": "text"
+								},
+								{
+									"key": "invoice_number",
+									"value": "INV/20200823/XI/9989249",
+									"type": "text"
+								},
+								{
+									"key": "payment_method",
+									"value": "Tunai",
+									"description": "pilihannya ada di \"Income/Payment Methods\"",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "2020-11-11",
+									"type": "text"
+								},
+								{
+									"key": "qty",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "unit_price",
+									"value": "60000",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/tebacamac/Pictures/avatar2.png"
+								},
+								{
+									"key": "description",
+									"value": "Pembelian produk a dan b,",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/outcome/store",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"outcome",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payment methods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/outcome/payment-methods",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"outcome",
+								"payment-methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Jenis pengeluaran operasional",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/outcome/jenis-operasional",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"outcome",
+								"jenis-operasional"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Jenis pengeluaran logistik",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/outcome/jenis-logistik",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"outcome",
+								"jenis-logistik"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Income",
+			"item": [
+				{
+					"name": "Get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/income/46",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"income",
+								"46"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invoice",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/invoice-income/40",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"invoice-income",
+								"40"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/income/38/delete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"income",
+								"38",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "_method",
+									"value": "PUT",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "shift",
+									"value": "Pagi",
+									"type": "text"
+								},
+								{
+									"key": "customer",
+									"value": "customer name",
+									"type": "text"
+								},
+								{
+									"key": "product[31]",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "product[32]",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "product[n]",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "invoice_number",
+									"value": "INV/20200823/XI/99892491267",
+									"type": "text"
+								},
+								{
+									"key": "information",
+									"value": "info",
+									"type": "text"
+								},
+								{
+									"key": "payment_method",
+									"value": "Tunai",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "2020-11-11",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"description": "opsional kalo ngedit",
+									"type": "file",
+									"src": "/Users/tebacamac/Pictures/avatar2.png"
+								},
+								{
+									"key": "description",
+									"value": "Pembelian produk a dan b,",
+									"type": "text"
+								},
+								{
+									"key": "kantor",
+									"value": "0",
+									"description": "0 = pusat, 1 = cabang",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/income/46/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"income",
+								"46",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/income",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"income"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "keyword",
+									"value": "eh",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "shift",
+									"value": "Pagi",
+									"description": "pilihan : Pagi / Siang",
+									"type": "text"
+								},
+								{
+									"key": "customer",
+									"value": "customer name",
+									"type": "text"
+								},
+								{
+									"key": "product[31]",
+									"value": "3",
+									"description": "yang di kurung itu [product_id], yang jadi valuenya berapa unit kejual",
+									"type": "text"
+								},
+								{
+									"key": "product[32]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "product[n]",
+									"value": "",
+									"description": "bisa nambah tergantung banyaknya produk yang dijual",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "invoice_number",
+									"value": "INV/20200823/XI/9989249",
+									"type": "text"
+								},
+								{
+									"key": "information",
+									"value": "info",
+									"type": "text"
+								},
+								{
+									"key": "payment_method",
+									"value": "Tunai",
+									"description": "pilihannya ada di \"Income/Payment Methods\"",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "2020-11-11",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/tebacamac/Pictures/avatar2.png"
+								},
+								{
+									"key": "description",
+									"value": "Pembelian produk a dan b,",
+									"type": "text"
+								},
+								{
+									"key": "kantor",
+									"value": "0",
+									"description": "0 = pusat, 1 = cabang",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/income/store",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"income",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Review",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"review_status\" : \"approved\",\n    \"reviewer_id\" : 3,\n    \"review\" : \"eh\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/income/40/review",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"income",
+								"40",
+								"review"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payment Methods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/income/payment-methods",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"income",
+								"payment-methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Valid or Invalid",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"_method\": \"put\",\n    \"is_valid\" : 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/income/50/validate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"income",
+								"50",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Journal",
+			"item": [
+				{
+					"name": "Monthly",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/journal/2020/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"journal",
+								"2020",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Daily",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/journal/2020-11-21",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"journal",
+								"2020-11-21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Review Daily",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reviewer_id\" : 3,\n    \"memo\" : \"Memo Review Jurnal Harian 21 Nov\",\n    \"date\" : \"2020-11-21\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/journal/review-daily",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"journal",
+								"review-daily"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Review Monthly",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reviewer_id\" : 3,\n    \"memo\" : \"Memo Review Jurnal Bulanan\",\n    \"year\" : \"2020\",\n    \"month\" : \"11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/journal/review-monthly",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"journal",
+								"review-monthly"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": 1,\n    \"debit\": 2000,\n    \"credit\": 200000,\n    \"invoice_number\" : \"INV/20200823/XI/998926011\",\n    \"description\" : \"Tes\",\n    \"date\" : \"2020-11-21\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/journal/store",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"journal",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": 1,\n    \"debit\": 5000000,\n    \"credit\": 0,\n    \"invoice_number\" : \"INV/20200823/XI/9989249\",\n    \"description\" : \"Deskripsi Jurnal 2\",\n    \"date\" : \"2020-08-23\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/journal/15/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"journal",
+								"15",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Posting",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reviewer_id\" : 3,\n    \"year\" : \"2020\",\n    \"month\" : \"10\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/journal/posting",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"journal",
+								"posting"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/journal/15/delete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"journal",
+								"15",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Raw Material Category",
+			"item": [
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/raw-category/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"raw-category",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/raw-category",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"raw-category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/raw-category",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"raw-category"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Raw Material",
+			"item": [
+				{
+					"name": "Stock",
+					"item": [
+						{
+							"name": "Store",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"material_id\" : 19,\r\n    \"date\" : \"2020-09-01\",\r\n    \"status\" : \"Tambah Stock\",\r\n    \"stock\" : 12\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/farah_accounting/public/stock-material",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"farah_accounting",
+										"public",
+										"stock-material"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/farah_accounting/public/stock-material",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"farah_accounting",
+										"public",
+										"stock-material"
+									],
+									"query": [
+										{
+											"key": "since",
+											"value": "2020-09-01",
+											"description": "opsional",
+											"disabled": true
+										},
+										{
+											"key": "until",
+											"value": "2020-09-30",
+											"description": "opsional",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List sttatus",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/farah_accounting/public/stock-opname/material/status",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"farah_accounting",
+										"public",
+										"stock-opname",
+										"material",
+										"status"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/raw-material/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"raw-material",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/raw-material",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"raw-material"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "1",
+									"description": "\"type\" , 1 atau 2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"raw_material_category_id\": 1,\r\n    \"name\" : \"Tepung Terigu\",\r\n    \"code\" : \"bl-001\",\r\n    \"type\" : 1, \r\n    \"unit_buy\" : \"Kilogram\",\r\n    \"unit_use\" : \"Gram\",\r\n    \"unit_conversion\" : 0.001,\r\n    \"unit_price\" : 25000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/raw-material",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"raw-material"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"raw_material_category_id\": 1,\r\n    \"name\" : \"Tepung Bebek\",\r\n    \"code\" : \"bl-001\",\r\n    \"type\" : 1, \r\n    \"unit_buy\" : \"Kilogram\",\r\n    \"unit_use\" : \"Buah\",\r\n    \"unit_conversion\" : 0.05,\r\n    \"unit_price\" : 25000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/raw-material/36",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"raw-material",
+								"36"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/raw-material/report?since=2020-09-01&until=2020-09-30",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"raw-material",
+								"report"
+							],
+							"query": [
+								{
+									"key": "since",
+									"value": "2020-09-01",
+									"description": "harus terisi"
+								},
+								{
+									"key": "until",
+									"value": "2020-09-30",
+									"description": "harus terisi"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "cake",
+									"description": "opsional, ini cuma dipake kalo ada pencarian",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product/19",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product",
+								"19"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product_category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Roti Strawberry",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "RS-001",
+									"type": "text"
+								},
+								{
+									"key": "unit_product",
+									"value": "Buah",
+									"description": "Pilihan bisa diambil di \"Products/list unit\"",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/tebacamac/Documents/setting.blade.php"
+								},
+								{
+									"key": "information",
+									"value": "Informatino Porduct",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "25000",
+									"type": "text"
+								},
+								{
+									"key": "raw_material[10]",
+									"value": "3.5",
+									"description": "yang di kurung itu [raw_material_id], yang jadi valuenya berapa unit yang dipake, list raw materialnya bisa didapet di \"Raw Material/List\"",
+									"type": "text"
+								},
+								{
+									"key": "raw_material[11]",
+									"value": "0.5",
+									"type": "text"
+								},
+								{
+									"key": "raw_material[n]",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "_method",
+									"value": "PUT",
+									"type": "text"
+								},
+								{
+									"key": "product_category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Roti Strawberry",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "RS-001",
+									"type": "text"
+								},
+								{
+									"key": "unit_product",
+									"value": "Buah",
+									"description": "Pilihan bisa diambil di \"Products/list unit\"",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/tebacamac/Pictures/avatar2.png",
+									"disabled": true
+								},
+								{
+									"key": "information",
+									"value": "Informatino Porduct",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "25000",
+									"type": "text"
+								},
+								{
+									"key": "raw_material[10]",
+									"value": "3.5",
+									"description": "yang di kurung itu [raw_material_id], yang jadi valuenya berapa unit yang dipake, list raw materialnya bisa didapet di \"Raw Material/List\"",
+									"type": "text"
+								},
+								{
+									"key": "raw_material[11]",
+									"value": "0.5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product/36",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product",
+								"36"
 							]
 						}
 					},
@@ -895,46 +1768,319 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/farah_accounting/public/payment/1",
+							"raw": "{{base_url}}/farah_accounting/public/product/31",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"farah_accounting",
 								"public",
-								"payment",
-								"1"
+								"product",
+								"31"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product-category",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product-category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list unit",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product-unit",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product-unit"
 							]
 						}
 					},
 					"response": []
 				}
-			],
-			"description": "\"workShift\" : varchar(1),\n\"date\" : datetime,\n\"customerName\" : varchar(50),\n\"value\" : int(11),\n\"method\" : varchar(1),\n\"total\" : double(13, 2)",
-			"event": [
+			]
+		},
+		{
+			"name": "Product Process",
+			"item": [
 				{
-					"listen": "prerequest",
-					"script": {
-						"id": "b58f42e0-0c61-43e2-b871-9b5839da1d38",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product-process/31",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product-process",
+								"31"
+							]
+						}
+					},
+					"response": []
 				},
 				{
-					"listen": "test",
-					"script": {
-						"id": "efb02c0c-062c-4f47-8336-e5a854f273ec",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product-process/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product-process",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Start",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\" : 1,\r\n    \"production_code\" : \"R-001\",\r\n    \"information\" : \"Pembuatan Roti Sobek\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product-process",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product-process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stop",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product-process/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product-process",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/product-process/5/report",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"product-process",
+								"5",
+								"report"
+							]
+						}
+					},
+					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
+		},
+		{
+			"name": "Stock Opname",
+			"item": [
+				{
+					"name": "List status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/stock-opname/produk/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"stock-opname",
+								"produk",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/stock-opname",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"stock-opname"
+							],
+							"query": [
+								{
+									"key": "since",
+									"value": "2020-11-01",
+									"description": "opsional, cuma kalo difilter",
+									"disabled": true
+								},
+								{
+									"key": "until",
+									"value": "2020-11-30",
+									"description": "opsional, cuma kalo difilter",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\" : 36,\r\n    \"date\" : \"2020-09-01\",\r\n    \"status\" : \"Produksi\",\r\n    \"stock\" : 12\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farah_accounting/public/stock-opname",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farah_accounting",
+								"public",
+								"stock-opname"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/farah_accounting/public/dashboard",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"farah_accounting",
+						"public",
+						"dashboard"
+					]
+				}
+			},
+			"response": []
 		}
 	],
-	"protocolProfileBehavior": {}
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"test\", function() {",
+					"    const base_url = pm.variables.get(\"base_url\");",
+					"    var jsonData = pm.response.json();",
+					"    pm.expect(jsonData.success).to.eql(true);",
+					"});"
+				]
+			}
+		}
+	]
 }
