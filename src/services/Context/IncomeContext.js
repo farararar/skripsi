@@ -311,13 +311,8 @@ const InvoiceIncome = (dispatch) => (id) => {
           invoice_no: tamp.invoice_number,
           balance: "null",
           company: tamp.customer,
-<<<<<<< HEAD
           email: tamp.customer+"@gmail.com",
           phone: "+1 (872) 588-3809",
-=======
-          email: tamp.customer + "@gmail.com",
-          phone: "0216987092",
->>>>>>> 7bcb6f993b11653d0e16f6f6cced064d552663a3
           address: "malang",
           trans_date: tamp.date,
           due_date: "-",

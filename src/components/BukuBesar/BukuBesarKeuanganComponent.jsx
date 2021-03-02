@@ -47,37 +47,21 @@ const BukuBesarKeuanganComponent = () => {
 
     const handleDateChange2 = (date) => {
         let tahun = date.getFullYear()
-<<<<<<< HEAD
         setSelectedDate2(date); 
-=======
-        setSelectedDate2(date);
->>>>>>> 7bcb6f993b11653d0e16f6f6cced064d552663a3
         // state.loading = true
         setValue({
             ...value,
             end_date: date
-<<<<<<< HEAD
         }) 
-=======
-        })
->>>>>>> 7bcb6f993b11653d0e16f6f6cced064d552663a3
         handleChangeValue(tahun)
         // setTimeout(() => {  state.loading = false }, 2000);
     }
     useEffect(() => {
-<<<<<<< HEAD
       const now = new Date().getUTCFullYear();
       const years = Array(now - (now - 20))
         .fill("")
         .map((v, idx) => now - idx);
       setYears(years);
-=======
-        const now = new Date().getUTCFullYear();
-        const years = Array(now - (now - 20))
-            .fill("")
-            .map((v, idx) => now - idx);
-        setYears(years);
->>>>>>> 7bcb6f993b11653d0e16f6f6cced064d552663a3
     }, []);
 
     const history = useHistory();
@@ -95,11 +79,7 @@ const BukuBesarKeuanganComponent = () => {
         console.log(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/laporan-keuangan-pdf/${tahun}`)
         setExternalUrl(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/laporan-keuangan-pdf/${tahun}`)
     };
-<<<<<<< HEAD
     
-=======
-
->>>>>>> 7bcb6f993b11653d0e16f6f6cced064d552663a3
     return (
         <Fragment>
             <MDBContainer fluid>
