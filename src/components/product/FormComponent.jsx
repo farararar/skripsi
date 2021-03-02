@@ -88,7 +88,6 @@ const FormComponent = () => {
       formData.append(res, value[res]);
     })
     formData.append("image", file);
-    AddProduct(formData, () => handleReset());
   };
   const [count1, setCount] = useState([]);
   useEffect(()=>{
@@ -192,7 +191,7 @@ const FormComponent = () => {
                   variant="outlined"
                   margin="normal"
                   onChange={handleChange("harga_produk")}
-                  value={value.harga_produk}
+                  value={value.unit_price}
                 />
 
                 <TextField

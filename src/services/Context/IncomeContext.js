@@ -26,6 +26,11 @@ const IncomeReducer = (state, action) => {
         ...state,
         listIncome: state.listIncome.concat(action.payload),
       };
+    case "LIST-INCOME-BL":
+      return {
+        ...state,
+        ListIncomeBl: action.payload,
+      };
     case "PAGE-INFORMATION":
       return {
         ...state,
@@ -63,6 +68,11 @@ const IncomeReducer = (state, action) => {
         ...state,
         invoiceIncome: action.payload,
       };
+    case "LIST-KEUANGAN":
+      return {
+        ...state,
+        ListKeuangan: action.payload,
+      };
     default:
       return state;
   }
@@ -72,6 +82,27 @@ const AddIncome = (dispatch) => (data, callback) => {
   dispatch({ type: "LOADING", payload: "Menyimpan Transaksi" });
   axios
     .post(`${API}/income/store`, data)
+    .then((res) => {
+      if (res.data.success) {
+        dispatch({ type: "NO-LOADING" });
+        callback();
+        alert("Transaksi Berhasil Disimpan!");
+      } else {
+        alert(res.data.message);
+        dispatch({ type: "NO-LOADING" });
+      }
+    })
+    .catch((error) => {
+      dispatch({ type: "NO-LOADING" });
+      alert(error);
+      // console.log(error)
+    });
+};
+
+const AddPelunasan = (dispatch) => (data, callback) => {
+  dispatch({ type: "LOADING", payload: "Menyimpan Transaksi" });
+  axios
+    .post(`${API}/income/pelunasan`, data)
     .then((res) => {
       if (res.data.success) {
         dispatch({ type: "NO-LOADING" });
@@ -209,6 +240,34 @@ const ListIncomeNext = (dispatch) => (page) => {
     });
 };
 
+const ListIncomeBl = (dispatch) => () => {
+    axios
+    .get(`${API}/list-belum-lunas`)
+    .then((res) => {
+      //   alert(JSON.stringify(res))
+      if (res.data.success) {
+        let array = res.data.data;
+        //var newArray = array.filter(function (el) {
+          //return el.payment_status == 'Belum Lunas'
+                
+        //});
+        console.log('belum lunas',array);
+        dispatch({ type: "NO-LOADING" });
+        dispatch({ type: "LIST-INCOME-BL", payload: array });
+        
+        return array;
+      } else {
+        alert(res.data.message);
+        dispatch({ type: "NO-LOADING" });
+      }
+    })
+    .catch((error) => {
+      dispatch({ type: "NO-LOADING" });
+      alert(error);
+      // console.log(error)
+    });
+};
+
 const GetDetailIncome = (dispatch) => (id) => {
   dispatch({ type: "LOADING", payload: "Menampilkan Detail Transaksi...." });
   // axios.get(`${API}/invoice-income/${id}`)
@@ -244,17 +303,17 @@ const InvoiceIncome = (dispatch) => (id) => {
     .get(`${API}/invoice-income/${id}`)
     // axios.get(`${API}/income/${id}`)
     .then((res) => {
-      //   console.log(JSON.stringify(res.data));
+    //   console.log(JSON.stringify(res.data));
       if (res.data.success) {
         const tamp = res.data.data;
         const param = {
           id: "5df3180a09ea16dc4b95f910",
           invoice_no: tamp.invoice_number,
           balance: "null",
-          company: "TOKO ROTI AMAYA",
-          email: "tes@amaya-cake.com",
+          company: tamp.customer,
+          email: tamp.customer+"@gmail.com",
           phone: "+1 (872) 588-3809",
-          address: "",
+          address: "malang",
           trans_date: tamp.date,
           due_date: "-",
           grand_total: tamp.grand_total.replace(/[^0-9]/g, ""),
@@ -295,31 +354,30 @@ const ReviewIncome = (dispatch) => (id, data) => {
     });
 };
 
-// const GetDetailIncome = dispatch => async (id) => {
-//     dispatch({type: 'LOADING', payload: 'Menampilkan Data . . .'})
-//     try {
-//         let response = await fetch(`${API}/income/${id}`, {
-//             method: 'GET',
-//             headers: {
-//                 'Accept' : 'application/json',
-//                 'Content-Type': 'application/json',
-//             },
-//         })
-//         let responseJson = await response.json()
-//         // alert(JSON.stringify(responseJson))
-//         if(responseJson.success){
-//             dispatch({type: 'NO-LOADING'})
-//             dispatch({type: 'DETAIL-INCOME', payload:responseJson.data.account})
-//         }else{
-//             alert(responseJson.message)
-//             dispatch({type: 'NO-LOADING'})
-//         }
-//     } catch (err) {
-//         dispatch({type: 'NO-LOADING'})
-//         alert(err)
-//         // console.log(err)
-//     }
-// }
+const ListKeuangan = (dispatch) => (callback) => {
+  dispatch({ type: "LOADING", payload: "Menampilkan data transaksi...." });
+  axios
+    .get(`${API}/list-keuangan`)
+    .then((res) => {
+      //   alert(JSON.stringify(res))
+      if (res.data.success) {
+        dispatch({ type: "NO-LOADING" });
+        dispatch({ type: "LIST-KEUANGAN", payload: res.data });
+        if (callback) {
+          callback();
+        }
+        return res.data;
+      } else {
+        alert(res.data.message);
+        dispatch({ type: "NO-LOADING" });
+      }
+    })
+    .catch((error) => {
+      dispatch({ type: "NO-LOADING" });
+      alert(error);
+      // console.log(error)
+    });
+};
 
 export const { Provider, Context } = CreateDataContext(
   IncomeReducer,
@@ -333,12 +391,16 @@ export const { Provider, Context } = CreateDataContext(
     UpdateIncome,
     DeleteIncome,
     ValidateIncome,
+    ListKeuangan,
+    ListIncomeBl,
+    AddPelunasan
   },
   {
     loading: false,
     invoiceIncome: [],
     message: "",
     listIncome: [],
+    
     detailIncome: "",
     detailAccount: "",
     detailUser: "",

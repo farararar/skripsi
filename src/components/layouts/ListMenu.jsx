@@ -21,7 +21,6 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PaymentIcon from '@material-ui/icons/Payment';
 
-
 function ListMenu(props) {
   const { isAuthenticated } = useContext(AuthContext)
   const classes = useStyles();
@@ -120,13 +119,28 @@ function ListMenu(props) {
               <ListItemText primary="Transaksi Masuk" />
             </ListItem>
           </Link>
-
+          <Link to={`/keuangan`} className={classes.link}>
+            <ListItem button>
+              <ListItemIcon>
+                <PaymentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Keuangan" />
+            </ListItem>
+          </Link>
           <Link to={`/list-transaksi-pusat`} className={classes.link}>
             <ListItem button>
               <ListItemIcon>
                 <ListIcon />
               </ListItemIcon>
               <ListItemText primary="List Transaksi" />
+            </ListItem>
+          </Link>
+          <Link to={`/list-keuangan`} className={classes.link}>
+            <ListItem button>
+              <ListItemIcon>
+                <PaymentIcon />
+              </ListItemIcon>
+              <ListItemText primary="List Keuangan" />
             </ListItem>
           </Link>
         </>

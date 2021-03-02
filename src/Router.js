@@ -17,6 +17,8 @@ import BukuBesar from './pages/BukuBesar/BukuBesar';
 import LaporanKeuangan from './pages/Jurnal/JurnalLaporanKeuangan';
 import MarketingRoute from './services/Route/MarketingRoute';
 import TransaksiMasuk from './pages/Transaksi/Pusat/TransaksiMasuk';
+import Keuangan from './pages/Transaksi/Keuangan/Keuangan';
+import ListKeuangan from './pages/Transaksi/Keuangan/ListKeuangan';
 import JurnalPerBulan from './pages/Jurnal/JurnalPerBulan';
 import TransaksiKeluar from './pages/Transaksi/Pengeluaran/TransaksiKeluar';
 import ListTransaksiKeluar from './pages/Transaksi/Pengeluaran/ListTransaksiKeluar';
@@ -31,6 +33,8 @@ const Router = () => {
                 <Layout>
                     <PrivateRoute path='/' exact component={Home} />
                     <MarketingRoute path='/transaksi-masuk' exact component={TransaksiMasuk} />
+                    <MarketingRoute path='/keuangan' exact component={Keuangan}/>
+                    <MarketingRoute path='/list-keuangan' exact component={ListKeuangan}/>
                     <PrivateRoute path='/list-transaksi-pusat' exact component={TransaksiPusat} />
                     <PrivateRoute path='/list-transaksi-cabang' exact component={TransaksiCabang} />
                     <PrivateRoute path='/review-transaksi-keluar/:id' exact component={ReviewTransaksiKeluar} />

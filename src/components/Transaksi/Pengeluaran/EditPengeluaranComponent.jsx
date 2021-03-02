@@ -549,17 +549,8 @@ const TransaksiKeluarComponent = ({ props, data, Next }) => {
                     <em>None</em>
                   </MenuItem>
                   <MenuItem value="Tunai">Tunai</MenuItem>
-                  <MenuItem value="Transfer">Transfer</MenuItem>
-                  <MenuItem value="Pembayaran Uang Muka">
-                    Pembayaran Uang Muka
-                  </MenuItem>
-                  <MenuItem value="Pembayaran Bulanan">
-                    Pembayaran Bulanan
-                  </MenuItem>
-                  <MenuItem value="Pembayaran Sisa Bulanan">
-                    Pembayaran Sisa Bulanan
-                  </MenuItem>
-                  <MenuItem value="Retur Penjualan">Retur Penjualan</MenuItem>
+                  <MenuItem value="Kredit">Kredit</MenuItem>
+                  <MenuItem value="Pembayaran Utang">Pembayaran Utang</MenuItem>
                 </Select>
               </FormControl>
               <TextField

@@ -39,7 +39,7 @@ const LedgerReducer = (state, action) => {
 const ListLedger = dispatch => (data) => {
     dispatch({ type: 'LOADING', payload: 'Menampilkan Data Buku Besar...' })
     // axios.post(`${API}/ledger`, data)
-    axios.get(`${API}/buku-besar?tahun=${data.month}&bulan=${data.year}&account_id=${data.account_id}`)
+    axios.get(`${API}/buku-besar?tahun=${data.year}&bulan=${data.month}&account_id=${data.account_id}`)
         .then(res => {
             //   alert(JSON.stringify(res.data.data.daftar))
             if (res.data.success) {
@@ -61,7 +61,7 @@ const ListLedger = dispatch => (data) => {
 const ListNeraca = dispatch => (data) => {
     dispatch({ type: 'LOADING', payload: 'Menampilkan Data Buku Besar...' })
     // axios.post(`${API}/ledger`, data)
-    axios.get(`${API}/neraca-saldo?tahun=${data.month}&bulan=${data.year}`)
+    axios.get(`${API}/neraca-saldo?tahun=${data.year}&bulan=${data.month}`)
         .then(res => {
             alert(JSON.stringify(res.data.data))
             if (res.data.success) {

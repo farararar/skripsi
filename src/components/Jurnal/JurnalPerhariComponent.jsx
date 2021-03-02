@@ -180,7 +180,6 @@ const JurnalPerhariComponent = ({ props, params, Change, Next, userData }) => {
                 gradient="blue"
                 onClick={handleReview}
                 disabled={review}
-                margin="normal"
               >
                 Review Jurnal
               </MDBBtn>
@@ -191,7 +190,6 @@ const JurnalPerhariComponent = ({ props, params, Change, Next, userData }) => {
               size="sm"
               gradient="blue"
               onClick={Change}
-              margin="20px"
             >
               Tambah Jurnal Manual
             </MDBBtn>
@@ -268,12 +266,12 @@ const JurnalPerhariComponent = ({ props, params, Change, Next, userData }) => {
                     <tr>
                       <td>{i + 1}</td>
                       <td>
-                        <b>{item.reference_number}</b>
+                        <b>{item.account.reference_number}</b>
                       </td>
                       <td>
-                        <b>{item.name}</b>
+                        <b>{item.account.name}</b>
                       </td>
-                      <td>{item.information}</td>
+                      <td>{item.account.information}</td>
                       <td>
                         <NumberFormat
                           displayType={"text"}

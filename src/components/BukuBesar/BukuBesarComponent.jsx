@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
-import {Context as LedgerContext} from '../../services/Context/LedgerContext'
-import {Context as AccountContext} from '../../services/Context/AccountContext'
+import { Context as LedgerContext } from '../../services/Context/LedgerContext'
+import { Context as AccountContext } from '../../services/Context/AccountContext'
 import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBIcon, MDBBox, MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
 import { InputLabel, Select, MenuItem, LinearProgress } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
@@ -12,9 +12,9 @@ import {
 } from '@material-ui/pickers';
 import NumberFormat from 'react-number-format';
 
-const BukuBesarComponent = ({  }) => {
-    const {state:{listAccount}, ListAccount} = useContext(AccountContext)
-    const {state, ListLedger} = useContext(LedgerContext)
+const BukuBesarComponent = ({ }) => {
+    const { state: { listAccount }, ListAccount } = useContext(AccountContext)
+    const { state, ListLedger } = useContext(LedgerContext)
     const [] = useState(false)
     const [] = useState(false)
     const [] = useState(false)
@@ -47,24 +47,24 @@ const BukuBesarComponent = ({  }) => {
         setValue({
             ...value,
             start_date: date
-        })   
+        })
     }
 
     const handleDateChange2 = (date) => {
         let formattedDate2 = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-        setSelectedDate2(date); 
+        setSelectedDate2(date);
         setValue({
             ...value,
             end_date: date
-        }) 
+        })
     }
 
     const handleFilter = () => {
-        if(value.account_id===''||value.start_date===''||value.end_date===''){
+        if (value.account_id === '' || value.start_date === '' || value.end_date === '') {
             alert('Pilih Jenis Akun & Tentukan Rentang Tanggal Transaksi!')
-        }else{
+        } else {
             let data = {
-                account_id : value.account_id,
+                account_id: value.account_id,
                 month: value.start_date.getMonth() + 1,
                 year: value.end_date.getFullYear()
             }
@@ -72,7 +72,7 @@ const BukuBesarComponent = ({  }) => {
             ListLedger(data)
             // alert(JSON.stringify(state.listLedger))
         }
-        
+
     }
 
     return (
@@ -93,7 +93,7 @@ const BukuBesarComponent = ({  }) => {
                 <MDBCardBody className='p-1'>
                     <MDBRow>
                         <MDBCol lg="2">
-                            <InputLabel className="pt-2 mx-2">Jenis Akun</InputLabel> 
+                            <InputLabel className="pt-2 mx-2">Jenis Akun</InputLabel>
                             <Select fullWidth className=" mx-2" onChange={(e) => handleSelectAccount(e.target.value)}>
                                 <MenuItem value="">
                                     <em>Pilih Jenis Akun</em>
@@ -147,7 +147,7 @@ const BukuBesarComponent = ({  }) => {
                         </MDBCol>
                         <MDBCol lg="3">
                             <MDBRow className="pt-2 mx-2">
-                                <MDBBtn color="dark-green"  gradient="blue" onClick={handleFilter}>
+                                <MDBBtn color="dark-green" gradient="blue" onClick={handleFilter}>
                                     Tampilkan <MDBIcon icon="filter" className="ml-1" />
                                 </MDBBtn>
                                 {/* <MDBBtn color="danger" size="sm">
@@ -161,7 +161,7 @@ const BukuBesarComponent = ({  }) => {
                     <LinearProgress />
                 )}
             </MDBCard>
-            
+
             {state.listLedger && (
                 <MDBCard className='mb-2'>
                     <MDBCardBody className='p-1'>
@@ -179,14 +179,14 @@ const BukuBesarComponent = ({  }) => {
                                 </tr>
                             </MDBTableHead>
                             <MDBTableBody>
-                                {state.listLedger&&state.listLedger.map((item,i) => (
+                                {state.listLedger && state.listLedger.map((item, i) => (
                                     <tr>
-                                        <td>{i+1}</td>
+                                        <td>{i + 1}</td>
                                         <td> {item.Tanggal} </td>
                                         <td><b>{item.invoice_number}</b></td>
                                         <td>{item.description}</td>
-                                        <td><NumberFormat value={item.Debet} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'green'}} /></td>
-                                        <td><NumberFormat value={item.Kredit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'red'}}/></td>
+                                        <td><NumberFormat value={item.Debet} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{ color: 'green' }} /></td>
+                                        <td><NumberFormat value={item.Kredit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{ color: 'red' }} /></td>
                                         <td><b><NumberFormat value={item['Saldo Debet']} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></td>
                                         <td><b><NumberFormat value={item['Saldo Kredit']} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></td>
                                     </tr>
