@@ -42,7 +42,10 @@ const TransaksiMasukComponent = (props) => {
     state: { listProduct },
     ListProduct,
   } = useContext(ProductContext);
+<<<<<<< HEAD
   
+=======
+>>>>>>> 7bcb6f993b11653d0e16f6f6cced064d552663a3
   const { state, AddIncome } = useContext(IncomeContext);
   const [openDialogApprove, setOpenDialogApprove] = useState(false);
   const [dataTanggal, setDataTanggal] = useState([]);
@@ -282,7 +285,11 @@ const TransaksiMasukComponent = (props) => {
     Promise.all(tamp).then(() => {
       // history.push('/transaksi-masuk')
       // location.reload()
+<<<<<<< HEAD
       console.log(formdata);
+=======
+
+>>>>>>> 7bcb6f993b11653d0e16f6f6cced064d552663a3
       AddIncome(formdata, () => window.location.reload());
       setOpenDialogApprove(false);
     });
@@ -418,12 +425,15 @@ const TransaksiMasukComponent = (props) => {
                   <MDBCol lg="4">
                     <InputLabel>Tahun</InputLabel>
                     <Select fullWidth value={2021}>
+<<<<<<< HEAD
                       <MenuItem value={2019}>
                         <em>2019</em>
                       </MenuItem>
                       <MenuItem value={2020}>
                         <em>2020</em>
                       </MenuItem>
+=======
+>>>>>>> 7bcb6f993b11653d0e16f6f6cced064d552663a3
                       <MenuItem value={2021}>
                         <em>2021</em>
                       </MenuItem>
@@ -451,11 +461,17 @@ const TransaksiMasukComponent = (props) => {
                   <MenuItem value="Pembayaran Bulanan">
                     Pembayaran Bulanan
                   </MenuItem>
+<<<<<<< HEAD
                   <MenuItem value="Retur Penjualan">Retur Penjualan</MenuItem>
                 </Select>
               </FormControl>
               {tex_dp(value.payment_method)}
               {jatuhtempo(value.payment_method)}
+=======
+                    <MenuItem value="Retur Penjualan">Retur Penjualan</MenuItem>
+                  </Select>
+                </FormControl>
+>>>>>>> 7bcb6f993b11653d0e16f6f6cced064d552663a3
                 <FormControl variant="outlined" margin="normal" fullWidth>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Kantor
