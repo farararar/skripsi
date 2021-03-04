@@ -93,9 +93,9 @@ function tablebody(){
                   </TableCell>
                   <TableCell align="center">{row.invoice_number}</TableCell>
                   <TableCell align="center">{row.customer}</TableCell>
-                  <TableCell align="center">{row.repayment}</TableCell>
+                  <TableCell align="center">{ row.remaining_payment == null ? '0' : row.remaining_payment}</TableCell>
                   <TableCell align="center">{row.ammount}</TableCell>
-                  <TableCell align="center">{row.due_date}</TableCell>
+                  <TableCell align="center">{row.due_date == null ? '-' : row.due_date}</TableCell>
                   <TableCell align="center">{row.payment_status}</TableCell>
                 
                 </TableRow>
@@ -129,7 +129,7 @@ const classes = useStyles();
                     <MDBBox display="flex" justifyContent="center" >
                         <MDBCard style={{ width: "22rem", marginTop: "1rem" }}>
                             <MDBCardBody>
-                                <MDBCardTitle>{bb()}</MDBCardTitle>
+                                <MDBCardTitle>{bt()}</MDBCardTitle>
                                 <MDBCardText>
                                     Penjualan 30 Hari terakhir
                                     </MDBCardText>
@@ -153,7 +153,7 @@ const classes = useStyles();
                     <MDBBox display="flex" justifyContent="center" >
                         <MDBCard style={{ width: "22rem", marginTop: "1rem" }}>
                             <MDBCardBody>
-                                <MDBCardTitle>{bt()}</MDBCardTitle>
+                                <MDBCardTitle>{bb()}</MDBCardTitle>
                                 <MDBCardText>
                                     Penjualan Belum di bayar
                                     </MDBCardText>

@@ -255,9 +255,12 @@ const JurnalManualComponent = ({Change, userData, status}) => {
                   </MDBCol>
                   <MDBCol lg="4">
                     <InputLabel>Tahun</InputLabel>
-                    <Select fullWidth value={2020}>
+                    <Select fullWidth value={2021}>
                       <MenuItem value={2020}>
                         <em>2020</em>
+                      </MenuItem>
+                      <MenuItem value={2021}>
+                        <em>2021</em>
                       </MenuItem>
                     </Select>
                   </MDBCol>

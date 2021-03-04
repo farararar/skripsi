@@ -34,7 +34,7 @@ const Router = () => {
                     <PrivateRoute path='/' exact component={Home} />
                     <MarketingRoute path='/transaksi-masuk' exact component={TransaksiMasuk} />
                     <MarketingRoute path='/keuangan' exact component={Keuangan}/>
-                    <MarketingRoute path='/list-keuangan' exact component={ListKeuangan}/>
+                    <AccountantRoute path='/list-keuangan' exact component={ListKeuangan}/>
                     <PrivateRoute path='/list-transaksi-pusat' exact component={TransaksiPusat} />
                     <PrivateRoute path='/list-transaksi-cabang' exact component={TransaksiCabang} />
                     <PrivateRoute path='/review-transaksi-keluar/:id' exact component={ReviewTransaksiKeluar} />
