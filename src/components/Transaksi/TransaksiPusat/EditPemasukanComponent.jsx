@@ -503,29 +503,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
                       ))}
                     </Select>
                   </FormControl>
-                  <FormControl variant="outlined" margin="normal" fullWidth>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Kantor
-                    </InputLabel>
-                    <Select
-                      label="Kantor"
-                      value={value.kantor}
-                      onChange={handleChange("kantor")}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Kantor</em>
-                      </MenuItem>
-                      {[
-                        { id: 0, value: "cabang" },
-                        { id: 1, value: "pusat" },
-                      ].map((item, i) => (
-                        <MenuItem key={i} value={item.value}>
-                          {item.value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-
+                
                   <div>
                     <p style={{ color: "grey", fontSize: "15px" }}>
                       Upload Gambar

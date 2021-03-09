@@ -456,28 +456,7 @@ const TransaksiMasukComponent = (props) => {
               </FormControl>
               {tex_dp(value.payment_method)}
               {jatuhtempo(value.payment_method)}
-                <FormControl variant="outlined" margin="normal" fullWidth>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Kantor
-                    </InputLabel>
-                    <Select
-                      label="Kantor"
-                      value={value.kantor}
-                      onChange={handleChange("kantor")}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih...</em>
-                      </MenuItem>
-                      {[
-                        { id: 0, value: "cabang" },
-                        { id: 1, value: "pusat" },
-                      ].map((item, i) => (
-                        <MenuItem key={i} value={item.id}>
-                          {item.value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                 
                   <FormControl variant="outlined" margin="normal" fullWidth>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Shift Kerja
