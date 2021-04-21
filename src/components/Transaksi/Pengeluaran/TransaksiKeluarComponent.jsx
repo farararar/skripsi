@@ -17,6 +17,11 @@ import {
   DialogActions,
   LinearProgress,
 } from "@material-ui/core";
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from "mdbreact";
 import { withRouter } from "react-router-dom";
 
@@ -25,6 +30,7 @@ const TransaksiKeluarComponent = (props) => {
   const { state: { listAccount }, ListAccount } = useContext(AccountContext);
   const { state, ListOutcomeTypeBy, AddOutcome, PaymentMethod } = useContext(OutcomeContext);
   const [openDialogApprove, setOpenDialogApprove] = useState(false);
+  const [selectedDate, setSelectedDate] = useState();
   const [dataTanggal, setDataTanggal] = useState([]);
   const [tanggal, setTanggal] = useState("");
   const [bulan, setBulan] = useState("");
@@ -66,6 +72,15 @@ const TransaksiKeluarComponent = (props) => {
     setTypeOutcome(value);
     return ListOutcomeTypeBy(value);
   };
+
+  const handleDateChange = (date) => {
+    let formattedDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
+    setSelectedDate(date);
+    setValue({
+      ...value,
+      date: formattedDate,
+    });
+  }
 
   useEffect(() => {
     ListAccount();
@@ -124,7 +139,7 @@ const TransaksiKeluarComponent = (props) => {
     const tamp = Object.keys(value).map((res) => {
       formData.append(res, value[res]);
     })
-    formData.append('date', today.getFullYear() + "-" + bulan + "-" + tanggal)
+    //formData.append('date', today.getFullYear() + "-" + bulan + "-" + tanggal)
     formData.append('category', typeOutcome == "Logistik" ? "Logistik" : "Operasional")
     formData.append('image', image[0]);
     formData.append('user_id', isAuthenticated().data.id);
@@ -176,7 +191,7 @@ const TransaksiKeluarComponent = (props) => {
         {state.loading && <LinearProgress />}
         <MDBCardBody className="p-1">
           <MDBRow className="m-3">
-            <MDBCol lg="7">
+            <MDBCol lg="6">
               <form>
                 <TextField
                   fullWidth
@@ -186,7 +201,6 @@ const TransaksiKeluarComponent = (props) => {
                   value={value.invoice_number}
                   onChange={handleChange("invoice_number")}
                 />
-                <br></br>
                 <TextField
                   fullWidth
                   label="Deskripsi Transaksi"
@@ -197,63 +211,7 @@ const TransaksiKeluarComponent = (props) => {
                   value={value.description}
                   onChange={handleChange("description")}
                 />
-                <br></br>
-                <br></br>
-                <MDBRow className="m-12">
-                  <MDBCol lg="4">
-                    <InputLabel>Tanggal</InputLabel>
-                    <Select
-                      fullWidth
-                      value={tanggal}
-                      onChange={(event) => setTanggal(event.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Tanggal</em>
-                      </MenuItem>
-                      {dataTanggal.map((item) => (
-                        <MenuItem key={item.tanggal} value={item.tanggal}>
-                          {item.tanggal}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </MDBCol>
-                  <MDBCol lg="4">
-                    <InputLabel>Bulan</InputLabel>
-                    <Select
-                      fullWidth
-                      value={bulan}
-                      onChange={(event) => setBulan(event.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Bulan</em>
-                      </MenuItem>
-                      <MenuItem value={1}>Januari</MenuItem>
-                      <MenuItem value={2}>Pebruari</MenuItem>
-                      <MenuItem value={3}>Maret</MenuItem>
-                      <MenuItem value={4}>April</MenuItem>
-                      <MenuItem value={5}>Mei</MenuItem>
-                      <MenuItem value={6}>Juni</MenuItem>
-                      <MenuItem value={7}>Juli</MenuItem>
-                      <MenuItem value={8}>Agustus</MenuItem>
-                      <MenuItem value={9}>September</MenuItem>
-                      <MenuItem value={10}>Oktober</MenuItem>
-                      <MenuItem value={11}>Nopember</MenuItem>
-                      <MenuItem value={12}>Desember</MenuItem>
-                    </Select>
-                  </MDBCol>
-                  <MDBCol lg="4">
-                    <InputLabel>Tahun</InputLabel>
-                    <Select fullWidth>
-                      <MenuItem value={2020}>
-                        <em>2020</em>
-                      </MenuItem>
-                      <MenuItem value={2021}>
-                        <em>2021</em>
-                      </MenuItem>
-                    </Select>
-                  </MDBCol>
-                </MDBRow>
-                <br></br>
+                
                 <FormControl variant="outlined" margin="normal" fullWidth>
                   <InputLabel id="demo-simple-select-outlined-label">
                     Shift Kerja
@@ -276,35 +234,23 @@ const TransaksiKeluarComponent = (props) => {
                     ))}
                   </Select>
                 </FormControl>
-                <MDBRow className="m-12">
-                  <MDBCol lg="12">
-                    <TextField
-                      fullWidth
-                      label="Quantity"
-                      // defaultValue="Default Value"
-                      variant="outlined"
-                      margin="normal"
-                      //   type="number"
-                      value={value.qty}
-                      onChange={handleChange("qty")}
-                    />
-                  </MDBCol>
-                </MDBRow>
-
-                <MDBRow className="m-12">
-                  <MDBCol lg="12">
-                    <TextField
-                      fullWidth
-                      label="Harga Satuan"
-                      //   defaultValue="Default Value"
-                      variant="outlined"
-                      margin="normal"
-                      //   type="number"
-                      value={value.unit_price}
-                      onChange={handleChange("unit_price")}
-                    />
-                  </MDBCol>
-                </MDBRow>
+                <br></br>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="date-picker-transaksi"
+                    label="Tanggal Transaksi"
+                    format="dd/MM/yyyy"
+                    value={selectedDate}
+                    views={["date"]}
+                    onChange={handleDateChange}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+                <br></br>
+                <br></br>
                 <div>
                   <p style={{ color: "grey", fontSize: "15px" }}>
                     Upload Gambar
@@ -367,7 +313,7 @@ const TransaksiKeluarComponent = (props) => {
                 </div>
               </form>
             </MDBCol>
-            <MDBCol lg="5">
+            <MDBCol lg="6">
               <FormControl variant="outlined" margin="normal" fullWidth>
                 <InputLabel id="demo-simple-select-outlined-label">
                   Tipe Jenis Pengeluaran
@@ -402,10 +348,10 @@ const TransaksiKeluarComponent = (props) => {
                           <em>Pilih Jenis Akun Terlebih Dahulu</em>
                         </MenuItem>
                       ) : (
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                        )}
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                      )}
                       {state.listOutcomeType.map((item, i) => (
                         <MenuItem key={i} value={item}>
                           {item}
@@ -415,6 +361,26 @@ const TransaksiKeluarComponent = (props) => {
                   </FormControl>
                 </MDBCol>
               </MDBRow>
+              <TextField
+                fullWidth
+                label="Quantity"
+                // defaultValue="Default Value"
+                variant="outlined"
+                margin="normal"
+                //   type="number"
+                value={value.qty}
+                onChange={handleChange("qty")}
+              />
+              <TextField
+                fullWidth
+                label="Harga Satuan"
+                //   defaultValue="Default Value"
+                variant="outlined"
+                margin="normal"
+                //   type="number"
+                value={value.unit_price}
+                onChange={handleChange("unit_price")}
+              />
               <FormControl variant="outlined" margin="normal" fullWidth>
                 <InputLabel id="demo-simple-select-outlined-label">
                   Metode Pembayaran
@@ -430,7 +396,6 @@ const TransaksiKeluarComponent = (props) => {
                   {state.paymentMethod && state.paymentMethod.map((res) => (
                     <MenuItem value={res}>{res}</MenuItem>
                   ))}
-
                 </Select>
               </FormControl>
               <TextField

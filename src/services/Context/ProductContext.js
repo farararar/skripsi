@@ -10,22 +10,27 @@ const ProductReducer = (state, action) => {
             return {
                 ...state,
                 loading: true,
-                    message: action.payload,
+                message: action.payload,
             }
-            case 'NO-LOADING':
-                return {
-                    ...state,
-                    loading: false,
-                        message: '',
-                }
-                case 'LIST-PRODUCT':
-                    return {
-                        ...state,
-                        listProduct: action.payload
-                    }
-                    
-                        default:
-                            return state
+        case 'NO-LOADING':
+            return {
+                ...state,
+                loading: false,
+                message: '',
+            }
+        case 'LIST-PRODUCT':
+            return {
+                ...state,
+                listProduct: action.payload
+            }
+        case 'UNIT-PRICE':
+            return {
+                ...state,
+                unitPrice: action.payload
+            }
+
+        default:
+            return state
     }
 }
 
@@ -36,10 +41,10 @@ const AddProduct = dispatch => async (formData, callback) => {
         payload: 'Menyimpan Data Bahan Baku...'
     })
     axios.post(`${API}/product`, formData, {
-            headers: {
-                'content-type': `multipart/form-data; boundary=${formData._boundary}`
-            }
-        })
+        headers: {
+            'content-type': `multipart/form-data; boundary=${formData._boundary}`
+        }
+    })
         .then(res => {
             //   alert(JSON.stringify(res)) 
             if (res.data.success) {
@@ -96,7 +101,29 @@ const ListProduct = dispatch => () => {
         })
 }
 
-
+const UnitPrice = dispatch => (id) => {
+    dispatch({
+        type: 'LOADING',
+        payload: 'Menampilkan Harga Satuan'
+    })
+    axios.get(`${API}/product/${id}`)
+    .then((res) => {
+      //   alert(JSON.stringify(res))
+      if (res.data.success) {
+        dispatch({ type: "NO-LOADING" });
+        dispatch({ type: "UNIT-PRICE", payload: res.data.data.unit_price });
+      } else {
+        alert(res.data.message);
+        dispatch({ type: "NO-LOADING" });
+      }
+    })
+    .catch((error) => {
+      dispatch({ type: "NO-LOADING" });
+      alert(error);
+      // console.log(error)
+    });
+    return true;
+}
 
 const DeleteProduct = dispatch => (id, callback) => {
     dispatch({
@@ -166,13 +193,14 @@ export const {
     Context
 } = CreateDataContext(
     ProductReducer, {
-        AddProduct,
-        ListProduct,
-        DeleteProduct,
-        AddIngredients,
-    }, {
-        loading: false,
-        message: '',
-        listProduct: [],
-    }
+    AddProduct,
+    ListProduct,
+    DeleteProduct,
+    AddIngredients,
+    UnitPrice
+}, {
+    loading: false,
+    message: '',
+    listProduct: [],
+}
 )

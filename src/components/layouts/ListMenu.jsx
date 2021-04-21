@@ -197,14 +197,6 @@ function ListMenu(props) {
               </Link>
             </List>
           </Collapse>
-          <Link to={`/list-keuangan`} className={classes.link}>
-            <ListItem button>
-              <ListItemIcon>
-                <PaymentIcon />
-              </ListItemIcon>
-              <ListItemText primary="List Keuangan" />
-            </ListItem>
-          </Link>
           <ListItem button onClick={handleClickJurnal}>
             <ListItemIcon>
               <ImportContactsIcon />

@@ -73,11 +73,11 @@ const BukuBesarKeuanganComponent = () => {
         ListLaporanKeuangan(FilterRow(filter));
     }, []);
     // const  fullYear = new Date().getFullYear();
-    const [externalUrl, setExternalUrl] = useState(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/laporan-keuangan-pdf/${moment().format('YYYY')}`);
+    const [externalUrl, setExternalUrl] = useState(`http://localhost/farah_accounting_ws/public/laporan-keuangan-pdf/${moment().format('YYYY')}`);
 
     const handleChangeValue = (tahun) => {
-        console.log(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/laporan-keuangan-pdf/${tahun}`)
-        setExternalUrl(`https://newdemo.aplikasiskripsi.com/farah_accounting/public/laporan-keuangan-pdf/${tahun}`)
+        console.log(`http://localhost/farah_accounting_ws/public/laporan-keuangan-pdf/${tahun}`)
+        setExternalUrl(`http://localhost/farah_accounting_ws/public/laporan-keuangan-pdf/${tahun}`)
     };
     
     return (

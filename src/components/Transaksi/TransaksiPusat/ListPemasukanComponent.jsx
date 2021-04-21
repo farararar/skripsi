@@ -11,6 +11,8 @@ import {
   MDBBox,
   MDBBtn,
   MDBFormInline,
+  MDBBreadcrumb,
+  MDBBreadcrumbItem
 } from "mdbreact";
 import { withRouter } from "react-router-dom";
 import { CircularProgress, Icon } from "@material-ui/core";
@@ -100,72 +102,74 @@ const ListPemasukanComponent = ({ props, dataTamp, Next, NextR }) => {
       {state.listIncome.map((item, i) => {
         console.log('ite = ', item.is_valid);
         return (
-          <MDBCard key={i} className="mb-2">
-            <MDBCardBody className="p-1">
-              <MDBRow>
-                <MDBCol lg="9">
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    {item.is_valid === '1' && <DoneIcon />}
+          <div>
+            <MDBCard key={i} className="mb-2">
+              <MDBCardBody className="p-1">
+                <MDBRow>
+                  <MDBCol lg="9">
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      {item.is_valid === '1' && <DoneIcon />}
+                      <MDBTypography tag="h5" className="pt-2 mx-2">
+                        {" "}
+                        {item.invoice_number}{" "}
+                        <small>
+                          {item.customer} - {item.payment_method}
+                        </small>
+                      </MDBTypography>
+                    </div>
+                    <MDBTypography tag="h10" className="pt-2 mx-2">
+                      {" "}
+                      {"status review: "} {item.review_status == null ? '-' : item.review_status}
+                    </MDBTypography>
                     <MDBTypography tag="h5" className="pt-2 mx-2">
                       {" "}
-                      {item.invoice_number}{" "}
-                      <small>
-                        {item.customer} - {item.payment_method}
-                      </small>
+                      {"pesan review: "} {item.review == null ? '-' : item.review}
                     </MDBTypography>
-                  </div>
-                  <MDBTypography tag="h10" className="pt-2 mx-2">
-                    {" "}
-                    {"status review: "} {item.review_status == null ? '-' : item.review_status}
-                  </MDBTypography>
-                  <MDBTypography tag="h5" className="pt-2 mx-2">
-                    {" "}
-                    {"pesan review: "} {item.review == null ? '-' : item.review}
-                  </MDBTypography>
-                </MDBCol>
-                <MDBCol lg="3">
-                  <MDBRow lg="1">
-                    {isAuthenticated().data.level === "Accountant" && (
-                      <MDBBtn
-                        color="cyan"
-                        size="sm"
-                        style={{ margin: "10px", position: "absolute", left: "100px" }}
-                        onClick={() => handleClickReview(item)}
-                      >
-                        Review
-                      </MDBBtn>
-                    )}
-                    {login.data && login.data.name === 'Marketing' &&
-                      <>
+                  </MDBCol>
+                  <MDBCol lg="3">
+                    <MDBRow lg="1">
+                      {isAuthenticated().data.level === "Accountant" && (
                         <MDBBtn
-                          color="dark-green"
+                          color="cyan"
                           size="sm"
-                          style={{ margin: "10px" }}
-                          onClick={() =>
-                            history.push(`/generate-invoice-income`, { userId: item.id })
-                          }
+                          style={{ margin: "10px", position: "absolute", left: "100px" }}
+                          onClick={() => handleClickReview(item)}
                         >
-                          Generate
+                          Review
+                        </MDBBtn>
+                      )}
+                      {login.data && login.data.name === 'Marketing' &&
+                        <>
+                          <MDBBtn
+                            color="dark-green"
+                            size="sm"
+                            style={{ margin: "10px" }}
+                            onClick={() =>
+                              history.push(`/generate-invoice-income`, { userId: item.id })
+                            }
+                          >
+                            Generate
                       </MDBBtn>
-                        <EditIcon
-                          color="dark-green"
-                          size="sm"
-                          style={{ color: "green", margin: "10px" }}
-                          onClick={() => handleEdit(item)}
-                        />
-                        <DeleteIcon
-                          color="red"
-                          // size="sm"
-                          style={{ color: "red", margin: "10px" }}
-                          onClick={() => handleDelete(item.id)}
-                        />
-                      </>
-                    }
-                  </MDBRow>
-                </MDBCol>
-              </MDBRow>
-            </MDBCardBody>
-          </MDBCard>
+                          <EditIcon
+                            color="dark-green"
+                            size="sm"
+                            style={{ color: "green", margin: "10px" }}
+                            onClick={() => handleEdit(item)}
+                          />
+                          <DeleteIcon
+                            color="red"
+                            // size="sm"
+                            style={{ color: "red", margin: "10px" }}
+                            onClick={() => handleDelete(item.id)}
+                          />
+                        </>
+                      }
+                    </MDBRow>
+                  </MDBCol>
+                </MDBRow>
+              </MDBCardBody>
+            </MDBCard>
+          </div>
         )
       })}
     </Fragment >
@@ -173,7 +177,9 @@ const ListPemasukanComponent = ({ props, dataTamp, Next, NextR }) => {
 
   return (
     <Fragment>
-      {/* {JSON.stringify(state.listIncome)} */}
+      <MDBBreadcrumb >
+        <MDBBreadcrumbItem><b>Daftar Transaksi Masuk</b></MDBBreadcrumbItem>
+      </MDBBreadcrumb>
       <MDBContainer fluid>
         <MDBBox display="flex" justifyContent="end">
           <MDBCol md="4">

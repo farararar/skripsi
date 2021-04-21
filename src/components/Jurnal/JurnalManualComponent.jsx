@@ -4,6 +4,11 @@ import { Context as CustomerContext } from "../../services/Context/CustomerConte
 import { Context as AccountContext } from "../../services/Context/AccountContext";
 import { Context as JournalContext } from "../../services/Context/JournalContext";
 import { Context as ProductContext } from "../../services/Context/ProductContext";
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 import {
   Button,
   TextField,
@@ -24,7 +29,7 @@ import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from "mdbreact";
 import NumberFormat from "react-number-format";
 import { withRouter } from "react-router-dom";
 
-const JurnalManualComponent = ({Change, userData, status}) => {
+const JurnalManualComponent = ({ Change, userData, status }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const {
     state: { listAccount },
@@ -37,6 +42,7 @@ const JurnalManualComponent = ({Change, userData, status}) => {
   const [bulan, setBulan] = useState("");
   const [ammount, setAmmount] = useState(0);
   const [image, setImage] = useState([]);
+  const [selectedDate, setSelectedDate] = useState();
 
   const constData = {
     account_id: "",
@@ -45,15 +51,15 @@ const JurnalManualComponent = ({Change, userData, status}) => {
     date: "",
     debit: 0,
     credit: 0,
-    akun:[]
+    akun: []
   }
   const [value, setValue] = useState(constData);
   let today = new Date();
   const handleChange = (name) => (event) => {
     console.log('test = ', name)
-    if(name==="akun"){
-      console.log('masuk akun = ',event.target.value);
-      setValue({...value, [name]: event.target.value})
+    if (name === "akun") {
+      console.log('masuk akun = ', event.target.value);
+      setValue({ ...value, [name]: event.target.value })
       return 0;
     }
     setValue({
@@ -74,7 +80,7 @@ const JurnalManualComponent = ({Change, userData, status}) => {
   useEffect(() => {
     console.log('user dtaa = ', userData);
     ListAccount();
-    setValue(userData?userData:constData);
+    setValue(userData ? userData : constData);
     // ListCustomer();
     // ListProduct();
     const loopingTanggal = () => {
@@ -118,6 +124,15 @@ const JurnalManualComponent = ({Change, userData, status}) => {
     </Dialog>
   );
 
+  const handleDateChange = (date) => {
+    let formattedDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
+    setSelectedDate(date);
+    setValue({
+      ...value,
+      date: formattedDate,
+    });
+  }
+
   const handleApproveDialog = () => {
     setOpenDialogApprove(true);
   };
@@ -134,8 +149,7 @@ const JurnalManualComponent = ({Change, userData, status}) => {
       debit: value.debit,
       credit: value.credit,
       description: value.description,
-      // payment_method: value.payment_method,
-      invoice_number: value.invoice_number, 
+      invoice_number: value.invoice_number,
       date: today.getFullYear() + "-" + bulan + "-" + tanggal,
     };
 
@@ -168,154 +182,78 @@ const JurnalManualComponent = ({Change, userData, status}) => {
         {state.loading && <LinearProgress />}
         <MDBCardBody className="p-1">
           <MDBRow className="m-3">
-            <MDBCol lg="7">
+            <MDBCol lg="6">
               <form>
-                <MDBRow className="m-12">
+                <TextField
+                  fullWidth
+                  label="Nomor Invoice"
+                  variant="outlined"
+                  margin="normal"
+                  value={value.invoice_number}
+                  onChange={handleChange("invoice_number")}
+                />
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="date-picker-transaksi"
+                    label="Tanggal Transaksi"
+                    format="dd/MM/yyyy"
+                    value={selectedDate}
+                    views={["date"]}
+                    onChange={handleDateChange}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
 
-                {/* <MDBCol lg="6"> */}
-                    <TextField
-                      fullWidth
-                      label="Nomor Invoice"
-                      // defaultValue="Default Value"
-                      variant="outlined"
-                      margin="normal"
-                      // type="number"
-                      value={value.invoice_number}
-                      onChange={handleChange("invoice_number")}
-                    />
-                  {/* </MDBCol> */}
-                  <MDBCol lg="6">
-                    <TextField
-                      fullWidth
-                      label="Debit"
-                      // defaultValue="Default Value"
-                      variant="outlined"
-                      margin="normal"
-                      type="number"
-                      value={value.debit}
-                      onChange={handleChange("debit")}
-                    />
-                  </MDBCol>
-                  
-                  <MDBCol lg="6">
-                    <TextField
-                      fullWidth
-                      label="Kredit"
-                      // defaultValue="Default Value"
-                      variant="outlined"
-                      margin="normal"
-                      type="number"
-                      value={value.kredit}
-                      onChange={handleChange("credit")}
-                    />
-                  </MDBCol>
-                </MDBRow>
-                <br></br>
-                <MDBRow className="m-12">
-                  <MDBCol lg="4">
-                    <InputLabel>Tanggal</InputLabel>
-                    <Select
-                      fullWidth
-                      value={tanggal}
-                      onChange={(event) => setTanggal(event.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Tanggal</em>
-                      </MenuItem>
-                      {dataTanggal.map((item) => (
-                        <MenuItem key={item.tanggal} value={item.tanggal}>
-                          {item.tanggal}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </MDBCol>
-                  <MDBCol lg="4">
-                    <InputLabel>Bulan</InputLabel>
-                    <Select
-                      fullWidth
-                      value={bulan}
-                      onChange={(event) => setBulan(event.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Bulan</em>
-                      </MenuItem>
-                      <MenuItem value={1}>Januari</MenuItem>
-                      <MenuItem value={2}>Pebruari</MenuItem>
-                      <MenuItem value={3}>Maret</MenuItem>
-                      <MenuItem value={4}>April</MenuItem>
-                      <MenuItem value={5}>Mei</MenuItem>
-                      <MenuItem value={6}>Juni</MenuItem>
-                      <MenuItem value={7}>Juli</MenuItem>
-                      <MenuItem value={8}>Agustus</MenuItem>
-                      <MenuItem value={9}>September</MenuItem>
-                      <MenuItem value={10}>Oktober</MenuItem>
-                      <MenuItem value={11}>Nopember</MenuItem>
-                      <MenuItem value={12}>Desember</MenuItem>
-                    </Select>
-                  </MDBCol>
-                  <MDBCol lg="4">
-                    <InputLabel>Tahun</InputLabel>
-                    <Select fullWidth value={2021}>
-                      <MenuItem value={2020}>
-                        <em>2020</em>
-                      </MenuItem>
-                      <MenuItem value={2021}>
-                        <em>2021</em>
-                      </MenuItem>
-                    </Select>
-                  </MDBCol>
-                </MDBRow>
-                <br></br>
+
               </form>
             </MDBCol>
-            <MDBCol lg="5">
-
-            <FormControl variant="outlined" margin="normal" fullWidth>
+            <MDBCol lg="6">
+              <FormControl variant="outlined" margin="normal" fullWidth>
                 <InputLabel id="demo-simple-select-outlined-label">
                   Akun
                 </InputLabel>
                 <Select
                   label="Akun"
-                  value={value.akun?value.akun.name:''}
+                  value={value.akun ? value.akun.name : ''}
                   name={'akun'}
                   onChange={handleChange("akun")}
                 >
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  
-                  {listAccount&&listAccount.map((res, i)=>(
+
+                  {listAccount && listAccount.map((res, i) => (
                     <MenuItem value={res}>{res.name}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
-
-              {/* <FormControl variant="outlined" margin="normal" fullWidth>
-                <InputLabel id="demo-simple-select-outlined-label">
-                  Metode Pembayaran
-                </InputLabel>
-                <Select
-                  label="Metode Pembayaran"
-                  value={value.payment_method}
-                  onChange={handleChange("payment_method")}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value="Tunai">Tunai</MenuItem>
-                  <MenuItem value="Transfer">Transfer</MenuItem>
-                  <MenuItem value="Pembayaran Uang Muka">
-                    Pembayaran Uang Muka
-                  </MenuItem>
-                  <MenuItem value="Pembayaran Bulanan">
-                    Pembayaran Bulanan
-                  </MenuItem>
-                  <MenuItem value="Pembayaran Sisa Bulanan">
-                    Pembayaran Sisa Bulanan
-                  </MenuItem>
-                  <MenuItem value="Retur Penjualan">Retur Penjualan</MenuItem>
-                </Select>
-              </FormControl> */}
+              <MDBRow className="m-12">
+                <MDBCol lg="6">
+                  <TextField
+                    fullWidth
+                    label="Debit"
+                    variant="outlined"
+                    margin="normal"
+                    type="number"
+                    value={value.debit}
+                    onChange={handleChange("debit")}
+                  />
+                </MDBCol>
+                <MDBCol lg="6">
+                  <TextField
+                    fullWidth
+                    label="Kredit"
+                    variant="outlined"
+                    margin="normal"
+                    type="number"
+                    value={value.kredit}
+                    onChange={handleChange("credit")}
+                  />
+                </MDBCol>
+              </MDBRow>
               <TextField
                 fullWidth
                 label="Keterangan"

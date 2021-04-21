@@ -70,6 +70,7 @@ const BukuBesarComponent = ({ }) => {
             }
             console.log('data = ', data);
             ListLedger(data)
+            console.log(state.listLedger)
             // alert(JSON.stringify(state.listLedger))
         }
 
@@ -185,10 +186,10 @@ const BukuBesarComponent = ({ }) => {
                                         <td> {item.Tanggal} </td>
                                         <td><b>{item.invoice_number}</b></td>
                                         <td>{item.description}</td>
-                                        <td><NumberFormat value={item.Debet} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{ color: 'green' }} /></td>
-                                        <td><NumberFormat value={item.Kredit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{ color: 'red' }} /></td>
-                                        <td><b><NumberFormat value={item['Saldo Debet']} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></td>
-                                        <td><b><NumberFormat value={item['Saldo Kredit']} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></td>
+                                        <td> {item.Debet} </td>
+                                        <td>{item.Kredit}</td>
+                                        <td><b>{item['Saldo Debet']}  </b></td>
+                                        <td><b>{item['Saldo Kredit']}  </b></td>
                                     </tr>
                                 ))}
                             </MDBTableBody>

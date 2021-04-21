@@ -106,7 +106,7 @@ const ListPengeluaranComponent = (props, dataTamp, NextR) => {
                         Review
                       </MDBBtn>
                     )}
-                    {isAuthenticated().data.level === 'Admin' && <>
+                    {isAuthenticated().data.level === 'Admin' && item.review_status !== 'approved' && <>
                       <EditIcon
                         color="dark-green"
                         size="sm"

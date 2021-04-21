@@ -1,0 +1,1 @@
+{"version":3,"sources":["App.css"],"names":[],"mappings":"AACA,KACI,aAAc,CACd,aACJ","file":"main.bb1620ae.chunk.css","sourcesContent":["\n.app{\n    display: table;\n    margin: 0 auto;\n}\n"]}

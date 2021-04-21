@@ -194,8 +194,8 @@ const NeracaSaldoComponent = ({  }) => {
                                         {/* <td> {item.Tanggal} </td> */}
                                         <td><b>{item.invoice_number}</b></td>
                                         <td>{item}</td>
-                                        <td><NumberFormat value={state.listNeraca[item].Debet} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'green'}} /></td>
-                                        <td><NumberFormat value={state.listNeraca[item].Kredit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'red'}}/></td>
+                                        <td>{state.listNeraca[item].Debet}</td>
+                                        <td>{state.listNeraca[item].Kredit}</td>
                                         {/* <td><b><NumberFormat value={item['Saldo Debet']} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></td>
                                         <td><b><NumberFormat value={item['Saldo Kredit']} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></td> */}
                                     </tr>

@@ -1,4 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 import { Context as AuthContext } from "../../../services/Context/AuthContext";
 import { Context as CustomerContext } from "../../../services/Context/CustomerContext";
 import { Context as AccountContext } from "../../../services/Context/AccountContext";
@@ -28,8 +33,12 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent'
 import RemoveCircleOutlinedIcon from '@material-ui/icons/RemoveCircleOutlined';
 const TransaksiMasukComponent = (props) => {
+  const [subtotal, onChangeSubtotal] = useState([]);
+
   const history = useHistory()
   const { isAuthenticated } = useContext(AuthContext);
+  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDateTempo, setSelectedDateTempo] = useState();
   const {
     state: { listAccount },
     ListAccount,
@@ -40,9 +49,9 @@ const TransaksiMasukComponent = (props) => {
   } = useContext(CustomerContext);
   const {
     state: { listProduct },
-    ListProduct,
+    ListProduct
   } = useContext(ProductContext);
-  
+
   const { state, AddIncome } = useContext(IncomeContext);
   const [openDialogApprove, setOpenDialogApprove] = useState(false);
   const [dataTanggal, setDataTanggal] = useState([]);
@@ -51,6 +60,8 @@ const TransaksiMasukComponent = (props) => {
   const [tanggal_jt, setTanggal_jt] = useState("");
   const [bulan_jt, setBulan_jt] = useState("");
   const [ammount, setAmmount] = useState(0);
+  const [total, setTotal] = useState();
+  const [jmlprod, setJmlprod] = useState();
   const [image, setImage] = useState([]);
 
   const defaultData = {
@@ -63,87 +74,42 @@ const TransaksiMasukComponent = (props) => {
     information: "",
     image: [],
     shift: "",
-    uang_muka :"",
-    jatuh_tempo : ""
+    uang_muka: "",
+    jatuh_tempo: "",
+    
   };
-  
-  
-  
-  function tex_dp(paymentod){
-    if(paymentod == 'Pembayaran Uang Muka' || paymentod == 'Pembayaran Bulanan'){
+
+  function tex_dp(paymentod) {
+    if (paymentod == 'Pembayaran Uang Muka' || paymentod == 'Pembayaran Bulanan') {
       return (
-        <TextField 
-        fullWidth label="Uang Muka" 
-        variant="outlined" 
-        margin="normal" 
-        multiline rowsMax={4} 
-        value={value.uang_muka}
-        onChange={handleChange("uang_muka")}/>
+        <TextField
+          fullWidth label="Uang Muka"
+          variant="outlined"
+          margin="normal"
+          multiline rowsMax={4}
+          value={value.uang_muka}
+          onChange={handleChange("uang_muka")} />
       )
     }
   };
-  function jatuhtempo(paymentod){
-    if(paymentod == 'Pembayaran Uang Muka'|| paymentod == 'Pembayaran Bulanan'){
+
+  function jatuhtempo(paymentod) {
+    if (paymentod == 'Pembayaran Uang Muka' || paymentod == 'Pembayaran Bulanan') {
       return (
-        
-        <MDBRow className="m-12">
-                <br></br>
-                  <MDBCol lg="4">
-                    <InputLabel>Tanggal</InputLabel>
-                    <Select
-                      fullWidth
-                      value={tanggal_jt}
-                      onChange={(event) => setTanggal_jt(event.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Tanggal</em>
-                      </MenuItem>
-                      {dataTanggal.map((item) => (
-                        <MenuItem key={item.tanggal} value={item.tanggal}>
-                          {item.tanggal}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </MDBCol>
-                  <MDBCol lg="4">
-                    <InputLabel>Bulan</InputLabel>
-                    <Select
-                      fullWidth
-                      value={bulan_jt}
-                      onChange={(event) => setBulan_jt(event.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Bulan</em>
-                      </MenuItem>
-                      <MenuItem value={1}>Januari</MenuItem>
-                      <MenuItem value={2}>Pebruari</MenuItem>
-                      <MenuItem value={3}>Maret</MenuItem>
-                      <MenuItem value={4}>April</MenuItem>
-                      <MenuItem value={5}>Mei</MenuItem>
-                      <MenuItem value={6}>Juni</MenuItem>
-                      <MenuItem value={7}>Juli</MenuItem>
-                      <MenuItem value={8}>Agustus</MenuItem>
-                      <MenuItem value={9}>September</MenuItem>
-                      <MenuItem value={10}>Oktober</MenuItem>
-                      <MenuItem value={11}>Nopember</MenuItem>
-                      <MenuItem value={12}>Desember</MenuItem>
-                    </Select>
-                  </MDBCol>
-                  <MDBCol lg="4">
-                    <InputLabel>Tahun</InputLabel>
-                    <Select fullWidth value={2021}>
-                      <MenuItem value={2019}>
-                        <em>2019</em>
-                      </MenuItem>
-                      <MenuItem value={2020}>
-                        <em>2020</em>
-                      </MenuItem>
-                      <MenuItem value={2021}>
-                        <em>2021</em>
-                      </MenuItem>
-                    </Select>
-                  </MDBCol>
-                </MDBRow>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            margin="normal"
+            id="date-picker-transaksi"
+            label="Tanggal Jatuh Tempo"
+            format="dd/MM/yyyy"
+            value={selectedDateTempo}
+            views={["date"]}
+            onChange={handleDateTempoChange}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+        </MuiPickersUtilsProvider>
       )
     }
   };
@@ -151,7 +117,7 @@ const TransaksiMasukComponent = (props) => {
   const [value, setValue] = useState(defaultData);
   let today = new Date();
   const handleChange = (name, ket, stok) => (event) => {
-    if(event.target.value == 'Pembayaran Uang Muka'){
+    if (event.target.value == 'Pembayaran Uang Muka') {
       console.log('show field');
       let paymentod = event.target.value
       tex_dp(paymentod)
@@ -187,25 +153,152 @@ const TransaksiMasukComponent = (props) => {
     }
   };
 
+  const handleDateChange = (date) => {
+    let formattedDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
+    setSelectedDate(date);
+    setValue({
+      ...value,
+      date: formattedDate,
+    });
+  }
+
+  const handleDateTempoChange = (dateTempo) => {
+    let formattedDateTempo = dateTempo.getFullYear() + "-" + ("0" + (dateTempo.getMonth() + 1)).slice(-2) + "-" + ("0" + dateTempo.getDate()).slice(-2)
+    setSelectedDateTempo(dateTempo);
+    setValue({
+      ...value,
+      dateTempo: formattedDateTempo,
+    });
+  }
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    console.log("VALUE : ", value)
+    console.log("Subtotal.. : ", subtotal)
+    updateTotalPrice()  
+    // document.title = `You clicked ${JSON.stringify(subtotal)} times`;
+  });
+  
   const handleChangeProduk = (name, index) => (event) => {
-    console.group('name', name);
-    console.log('event = ', event.target.value);
+    // console.log("Index : ", index)
+    console.log('name', name);
+    // console.log('event = ', event.target.value);
 
     if (name === 'product') {
-      setValue({
-        ...value,
-        [`${name}[${event.target.value.id}]`]: '0',
-      });
+      let id_prod = event.target.value.id
+
+      const prod_val  = Object.values(product)
+      if (prod_val.includes(id_prod)) {
+        alert("produk sudah ada di daftar pembelian")
+        removeCard(index)
+        return(null)
+      }
+      // setJmlprod(1)
       setProduct({
         ...product,
         [index]: event.target.value.id
       })
-    } else
+      setPrice({
+        ...price,
+        [index]:  event.target.value.unit_price
+      })
+      let prod_price = event.target.value.unit_price;
+      console.log('prod_price',price);
+
+      onChangeSubtotal({
+        ...subtotal,
+        [index] : 1 * prod_price
+      });
+
+     
       setValue({
         ...value,
-        [name]: event.target.value,
+        ['product['+id_prod+']']: 1,
       });
+
+      
+        
+       
+        
+        if(subtotal.length === 0){
+          console.log('Sakali deui');
+          setTotal(1 * prod_price); 
+          
+        }else{
+          updateTotalPrice()   
+        }
+        
+      
+      
+    } else {
+      let new_qty = parseInt(event.target.value)
+      console.log("Subtotal awal : ", subtotal)
+      console.log('new qty',new_qty);
+      if(isNaN(new_qty) || new_qty < 0){
+        console.log('is not nummber');
+      }else{
+        setValue({
+          ...value,
+          [name]: new_qty,
+        });
+  
+        onChangeSubtotal({
+          ...subtotal,
+          [index]: new_qty * price[index],
+        });
+        console.log("Price : ", price[index])
+        console.log("New Subtotal awal : ", subtotal)
+        updateTotalPrice()
+      }
+      
+      
+      
+    }
+    
+    
   }
+
+  
+  
+  const updateTotalPrice = async () => {
+    let total_price;
+    total_price = Object.values(subtotal);
+    console.log('GRAND',total_price);
+    let sum = total_price.reduce((a, b) => a + b, 0)
+    console.log('SUM',sum);
+    if(sum == 0){
+      let total_price;
+      total_price = Object.values(subtotal);
+      console.log('GRAND',total_price);
+      let sum = total_price.reduce((a, b) => a + b, 0)
+      console.log('SUM',sum);
+      setTotal(sum);
+    }else{
+      setTotal(sum);
+    }
+    
+    console.log('value amount',total);
+
+  }
+  
+  const ammount_value = () =>{
+    return value.ammount;
+  }
+  
+  // const updateTotalPrice = async () => {
+  //   let total_price = 0
+  //   const tamp = await Object.values(subtotal).map((v) => {
+  //     console.log("testes",v);
+  //     total_price = total_price + v
+  //   });
+  //   Promise.all(tamp).then(() => {
+  //     console.log("Total Price : ", total_price);
+  //     setValue({
+  //       ...value,
+  //       ['ammount']: total_price,
+  //     });
+  //   });
+  // }
 
   useEffect(() => {
     ListAccount();
@@ -267,21 +360,20 @@ const TransaksiMasukComponent = (props) => {
 
   const handleApproveProccess = async () => {
     let formdata = new FormData();
+    console.log(value)
     const tamp = await Object.keys(value).map((res) => {
       console.log(res);
-
+      formdata.append('image',null)
       if (res === "date") {
-        formdata.append(res, today.getFullYear() + "-" + bulan + "-" + tanggal);
-      } else if (res === "jatuh_tempo"){
-        formdata.append(res, today.getFullYear() + "-" + bulan_jt+ "-" + tanggal_jt);
+        formdata.append(res, value.date)
+      } else if (res === "jatuh_tempo") {
+        formdata.append(res, value.dateTempo)
       }
       else {
         formdata.append(res, value[res]);
       }
     });
     Promise.all(tamp).then(() => {
-      // history.push('/transaksi-masuk')
-      // location.reload()
       console.log(formdata);
       AddIncome(formdata, () => window.location.reload());
       setOpenDialogApprove(false);
@@ -309,7 +401,6 @@ const TransaksiMasukComponent = (props) => {
         return null;
       }
     } else {
-      //   return process.env.REACT_APP_API_DOMAIN + media.path;
       return "kosong";
     }
   }
@@ -323,6 +414,8 @@ const TransaksiMasukComponent = (props) => {
   }
   const [count1, setCount] = useState([]);
   const [product, setProduct] = useState([]);
+  const [price, setPrice] = useState([]);
+  
 
   const removeCard = (index) => {
     console.log(index);
@@ -331,11 +424,20 @@ const TransaksiMasukComponent = (props) => {
     let newArr = [...count1];
     newArr[index] = 'B';
     setCount(newArr);
+    // updateTotalPrice()
+  }
+
+  // useEffect(() => {
+  //   console.log(subtotal);
+  // }, [subtotal])
+
+  const addProduct = () =>{
+    console.log('Sub total',subtotal);
+    setCount([...count1, 'A'])
   }
 
   return (
     <div>
-      {/* {today.getFullYear()} */}
       <h4>Input Transaksi Masuk</h4>
       <hr className="" />
       <MDBCard className="mb-2">
@@ -343,7 +445,7 @@ const TransaksiMasukComponent = (props) => {
         {state.loading && <LinearProgress />}
         <MDBCardBody className="p-1">
           <MDBRow className="m-3">
-            <MDBCol lg="7">
+            <MDBCol lg="6">
               <form>
                 <TextField
                   fullWidth
@@ -354,13 +456,13 @@ const TransaksiMasukComponent = (props) => {
                   onChange={handleChange("invoice_number")}
                 />
                 <TextField
-                fullWidth
-                label="Nama Customer"
-                variant="outlined"
-                margin="normal"
-                value={value.customer}
-                onChange={handleChange("customer")}
-              />
+                  fullWidth
+                  label="Nama Customer"
+                  variant="outlined"
+                  margin="normal"
+                  value={value.customer}
+                  onChange={handleChange("customer")}
+                />
                 <TextField
                   fullWidth
                   label="Deskripsi Transaksi"
@@ -372,66 +474,52 @@ const TransaksiMasukComponent = (props) => {
                   onChange={handleChange("description")}
                 />
                 <br></br>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="date-picker-transaksi"
+                    label="Tanggal Transaksi"
+                    format="dd/MM/yyyy"
+                    value={selectedDate}
+                    views={["date"]}
+                    onChange={handleDateChange}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
                 <br></br>
-                <MDBRow className="m-12">
-                  <MDBCol lg="4">
-                    <InputLabel>Tanggal</InputLabel>
-                    <Select
-                      fullWidth
-                      value={tanggal}
-                      onChange={(event) => setTanggal(event.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Tanggal</em>
-                      </MenuItem>
-                      {dataTanggal.map((item) => (
-                        <MenuItem key={item.tanggal} value={item.tanggal}>
-                          {item.tanggal}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </MDBCol>
-                  <MDBCol lg="4">
-                    <InputLabel>Bulan</InputLabel>
-                    <Select
-                      fullWidth
-                      value={bulan}
-                      onChange={(event) => setBulan(event.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Bulan</em>
-                      </MenuItem>
-                      <MenuItem value={1}>Januari</MenuItem>
-                      <MenuItem value={2}>Pebruari</MenuItem>
-                      <MenuItem value={3}>Maret</MenuItem>
-                      <MenuItem value={4}>April</MenuItem>
-                      <MenuItem value={5}>Mei</MenuItem>
-                      <MenuItem value={6}>Juni</MenuItem>
-                      <MenuItem value={7}>Juli</MenuItem>
-                      <MenuItem value={8}>Agustus</MenuItem>
-                      <MenuItem value={9}>September</MenuItem>
-                      <MenuItem value={10}>Oktober</MenuItem>
-                      <MenuItem value={11}>Nopember</MenuItem>
-                      <MenuItem value={12}>Desember</MenuItem>
-                    </Select>
-                  </MDBCol>
-                  <MDBCol lg="4">
-                    <InputLabel>Tahun</InputLabel>
-                    <Select fullWidth value={2021}>
-                      <MenuItem value={2019}>
-                        <em>2019</em>
-                      </MenuItem>
-                      <MenuItem value={2020}>
-                        <em>2020</em>
-                      </MenuItem>
-                      <MenuItem value={2021}>
-                        <em>2021</em>
-                      </MenuItem>
-                    </Select>
-                  </MDBCol>
-                </MDBRow>
                 <br></br>
-                <FormControl variant="outlined" margin="normal" fullWidth>
+              </form>
+              <div style={{ display: 'flex', alignItems: "center", justifyContent: "space-between" }}>
+                <p style={{ marginTop: '15px' }}>Tambah Produk</p>
+                <AddCircleIcon onClick={addProduct} />
+              </div>
+            </MDBCol>
+            <MDBCol lg="6">
+              <FormControl variant="outlined" margin="normal" fullWidth>
+                <InputLabel id="demo-simple-select-outlined-label">
+                  Shift Kerja
+                    </InputLabel>
+                <Select
+                  label="Metode Pembayaran"
+                  value={value.shift}
+                  onChange={handleChange("shift")}
+                >
+                  <MenuItem value="">
+                    <em>Pilih Shift</em>
+                  </MenuItem>
+                  {[
+                    { id: 1, sif: "Pagi" },
+                    { id: 2, sif: "Siang" },
+                  ].map((item, i) => (
+                    <MenuItem key={i} value={item.sif}>
+                      {item.sif}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl variant="outlined" margin="normal" fullWidth>
                 <InputLabel id="demo-simple-select-outlined-label">
                   Metode Pembayaran
                 </InputLabel>
@@ -455,133 +543,9 @@ const TransaksiMasukComponent = (props) => {
                 </Select>
               </FormControl>
               {tex_dp(value.payment_method)}
-              {jatuhtempo(value.payment_method)}
-                 
-                  <FormControl variant="outlined" margin="normal" fullWidth>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Shift Kerja
-                    </InputLabel>
-                    <Select
-                      label="Metode Pembayaran"
-                      value={value.shift}
-                      onChange={handleChange("shift")}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Shift</em>
-                      </MenuItem>
-                      {[
-                        { id: 1, sif: "Pagi" },
-                        { id: 2, sif: "Siang" },
-                      ].map((item, i) => (
-                        <MenuItem key={i} value={item.sif}>
-                          {item.sif}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-              </form>
-            </MDBCol>
-            <MDBCol lg="">
-              <Divider />
-              <Divider />
               <br></br>
-              <div>
-                    <p style={{ color: "grey", fontSize: "15px" }}>
-                      Upload Gambar
-                    </p>
-                    <input
-                      type="file"
-                      name="images[]"
-                      id="button-file"
-                      // className="display-none"
-                      style={{ display: "none" }}
-                      accept="image/*"
-                      onChange={handleImage}
-                    />
-                    <div className="flex justify-center sm:justify-start flex-wrap"> 
-                      {image.length !== 1 && (
-                        <label
-                          htmlFor="button-file"
-                          style={{
-                            padding: "120px",
-                            margin: "10px",
-                            alignItems: "center",
-                            borderRadius: "10px",
-                            boxShadow:
-                              "0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)",
-                          }}
-                        >
-                          <Icon
-                            className={{
-                              fontSize: "3.6rem",
-                              color: "rgba(0, 0, 0, 0.54)",
-                              width: "1em",
-                              height: "1em",
-                              overflow: "hidden",
-                              flexShrink: "0",
-                              useSelect: "none",
-                              margin: "10px",
-                            }}
-                          >
-                            cloud_upload
-                          </Icon>
-                        </label>
-                      )}
-                      {image &&
-                        image.map((media, index) => {
-                          return (
-                            <img
-                              onClick={() => removeImage(image, media)}
-                              style={{
-                                width: "120px",
-                                marginBottom: "20px",
-                                height: "120px",
-                                borderRadius: "10px",
-                                backgroundColor: "red",
-                                margin: "10px",
-                              }}
-                              src={createObjectURL(media)}
-                              alt="product2"
-                            />
-                          );
-                        })}
-                    </div>
-                  </div>
-                  <br></br>
-                <div style={{ display: 'flex', alignItems: "center", justifyContent: "space-between" }}>
-                  <p style={{ marginTop: '15px' }}>Tambah Produk</p>
-                  <AddCircleIcon onClick={() => setCount([...count1, 'A'])} />
-                </div>
-              {count1.map((res, index) => (
-                  <>
-                    {res === "A" && <Card style={{ marginTop: '10px' }}>
-                      <CardContent>
-                        <FormControl fullWidth >
-                          <RemoveCircleOutlinedIcon onClick={() => removeCard(index)} style={{ color: 'red', alignItems: 'flex-end', position: "absolute", right: 0, top: 0, fontSize: 20, cursor: 'pointer' }} />
-                          <InputLabel>Produk</InputLabel>
-                          <Select onChange={handleChangeProduk(`product`, index)}>
-                            <MenuItem value="">
-                              <em>None</em>
-                            </MenuItem>
-                            {listProduct.map((res) => (
-                              <MenuItem value={res}>{res.name}</MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-
-                        <TextField
-                          fullWidth
-                          label={"Produk"}
-                          variant="outlined"
-                          margin="normal"
-                          onChange={handleChangeProduk(`product[${product[index]}]`)}
-                          value={value[`product[${product[index]}]`]}
-                        />
-                      </CardContent>
-                    </Card>}
-                  </>
-                ))}
-              <TextField
+              {jatuhtempo(value.payment_method)}
+              {/*<TextField
                 fullWidth
                 label="Keterangan"
                 variant="outlined"
@@ -591,28 +555,131 @@ const TransaksiMasukComponent = (props) => {
                 rowsMax={5}
                 value={value.information}
                 onChange={handleChange("information")}
-              />
-              <MDBRow className="mt-3 mb-2">
-                <MDBCol lg="12">
-                  <MDBBox display="flex" justifyContent="end">
-                    <MDBBtn
-                      color="dark-green"
-                      onClick={() => handleApproveDialog("approve")}
-                      disabled={state.loading}
-                    >
-                      Simpan Transaksi
-                    </MDBBtn>
-                  </MDBBox>
-                </MDBCol>
-                {/* <MDBCol lg="6">
+              />*/}
+            </MDBCol>
+          </MDBRow>
+
+          {count1.map((res, index) => (
+            <>
+              {res === "A" && <Card style={{ marginTop: '10px' }}>
+                <CardContent>
+                  <MDBRow className="m-12">
+                    <MDBCol lg="3">
+                      <FormControl fullWidth>
+                        <RemoveCircleOutlinedIcon onClick={() => removeCard(index)} style={{ color: 'red', alignItems: 'flex-end', position: "absolute", fontSize: 25, cursor: 'pointer', marginLeft: 930, marginTop: -15 }} />
+                        <br></br>
+                        <InputLabel>Produk</InputLabel>
+                        <Select onChange={handleChangeProduk('product', index)}>
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          {listProduct.map((res) => (
+                            <MenuItem value={res}>{res.name}</MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </MDBCol>
+                    <MDBCol lg="3">
+                    
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        label="Jumlah Produk"
+                        type="number"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        onChange={handleChangeProduk(`product[${product[index]}]`, index)}
+                        value={value[`product[${product[index]}]`]}
+                        // defaultValue={jmlprod}
+                      />
+                      
+                    </MDBCol>
+                    <MDBCol lg="3">
+                    
+                      <TextField
+                        fullWidth
+                        id="Harga"
+                        variant="outlined"
+                        label="Harga"
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        margin="normal"
+                        value={price[index]}
+                      />
+                    </MDBCol>
+                    <MDBCol lg="3">
+                    
+                      <TextField
+                        fullWidth
+                        label="Total Harga"
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        variant="outlined"
+                        
+                        margin="normal"
+                        value={subtotal[index]}
+                      />
+                    </MDBCol>
+                  </MDBRow>
+                </CardContent>
+              </Card>}
+            </>
+          ))}
+
+          <br></br>
+          <br></br>
+          <MDBCol lg="12">
+            <MDBRow className="mt-3 mb-2">
+              <MDBCol lg="10">
+                <b>TOTAL TRANSAKSI</b>
+                <br></br>
+              </MDBCol>
+              <MDBCol lg="2">
+                <b>
+                  <NumberFormat
+                    // value={value.ammount}
+                    value={total}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"Rp. "}
+                  />
+                </b>
+              </MDBCol>
+            </MDBRow>
+          </MDBCol>
+          <Divider style={{ variant: "middle", width: '100%' }} />
+          <br></br>
+          <br></br>
+
+          <MDBRow className="mt-3 mb-2">
+            <MDBCol lg="12">
+              <MDBBox display="flex" justifyContent="end">
+                <MDBBtn
+                  color="dark-green"
+                  onClick={() => handleApproveDialog("approve")}
+                  disabled={state.loading}
+                >
+                  Simpan Transaksi
+            </MDBBtn>
+              </MDBBox>
+            </MDBCol>
+            {/* <MDBCol lg="6">
                                     <MDBBox display="flex" justifyContent="start">
                                         <MDBBtn color="danger" >
                                             Batal
                                         </MDBBtn>
                                     </MDBBox>
                                 </MDBCol> */}
-              </MDBRow>
-            </MDBCol>
           </MDBRow>
         </MDBCardBody>
       </MDBCard>

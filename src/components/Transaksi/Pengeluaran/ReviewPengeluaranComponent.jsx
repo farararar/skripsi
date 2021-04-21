@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { Context as AuthContext } from '../../../services/Context/AuthContext'
 import { Context as IncomeContext } from '../../../services/Context/IncomeContext'
 import { Button, TextField, Divider, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, LinearProgress } from '@material-ui/core';
-import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBIcon } from 'mdbreact';
+import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBIcon, MDBCardImage } from 'mdbreact';
 import { useParams } from "react-router-dom";
 import NumberFormat from 'react-number-format';
 import { Context as OutcomeContext } from "../../../services/Context/OutcomeContext";
@@ -55,9 +55,10 @@ const ReviewPengeluaranComponent = ({ data, Next, userId }) => {
             unitPrice: data ? data.unit_price : '-',
             ammount: data ? data.ammount : "-",
             paymentMethod: data ? data.payment_method : '-',
-            information: `Keterangan: ${data ? data.information : "-"}`
+            information: `Keterangan: ${data ? data.information : "-"}`,
+            image:  "http://localhost/farah_accounting_ws/public/" + data.image 
         }
-        console.log('outcome degtail = ', data);
+        console.log('outcome detail = ', data);
         setForm(obj);
     }, [state])
 
@@ -98,12 +99,12 @@ const ReviewPengeluaranComponent = ({ data, Next, userId }) => {
     }
 
     const handleRejectedProccess = () => {
-        let data = {
+        let params = {
             review_status: 'rejected',
             reviewer_id: isAuthenticated().data.id
         }
         setOpenDialogApprove(false)
-        ReviewIncome(id, data)
+        ReviewOutcome(data.id, params)
     }
 
     const onchange = (event) => {
@@ -121,24 +122,23 @@ const ReviewPengeluaranComponent = ({ data, Next, userId }) => {
             <MDBCard className='mb-2'>
                 <MDBCardBody className='p-1'>
                     <MDBRow>
-                        <MDBCol lg="3">
-                            <h5 className="pt-2 mx-2">
+                        <MDBCol lg="2">
+                            <h6 className="pt-2 mx-1">
                                 Nomor Transaksi<br></br>
                                 <small>{data ? data.invoice_number : '-'}</small>
-                            </h5>
+                            </h6>
                         </MDBCol>
                         <MDBCol lg="2">
-                            <h5 className="pt-2 mx-2">
+                            <h6 className="pt-2 mx-1">
                                 Status Review<br></br>
-                                <b>{data ? data.review_status : '-'}</b>
+                                <b>{data ? data.review_status : '-'}  </b>
                                 {data && data.review_status === null && (
-                                    '........................'
+                                   '................'
                                 )}
-                            </h5>
+                            </h6>
                         </MDBCol>
                         <MDBCol lg="2">
-
-                            <h5 className="pt-2 mx-2">
+                            <h6 className="pt-2 mx-1">
                                 Direview Oleh<br></br>
                                 {data.reviewed_by && (
                                     <Fragment>
@@ -146,21 +146,21 @@ const ReviewPengeluaranComponent = ({ data, Next, userId }) => {
                                     </Fragment>
                                 )}
                                 {!data.reviewed_by && (
-                                    '........................'
+                                    '................'
                                 )}
-                            </h5>
+                            </h6>
 
                         </MDBCol>
                         <MDBCol lg="2">
-                            <h5 className="pt-2 mx-2">
+                            <h6 className="pt-2 mx-1">
                                 Tanggal Review<br></br>
                                 <small>{data ? data.review_date : '-'}</small>
                                 {data && data.review_date === null && (
-                                    '........................'
+                                   '................'
                                 )}
-                            </h5>
+                            </h6>
                         </MDBCol>
-                        <MDBCol lg="3">
+                        <MDBCol lg="4">
                             <MDBRow className="pt-2 mx-2">
                                 {detailReviewer && (
                                     <MDBBtn color="dark-green" size="sm" disabled>
@@ -185,17 +185,18 @@ const ReviewPengeluaranComponent = ({ data, Next, userId }) => {
                 )}
                 <MDBCardBody className='p-1'>
                     <MDBRow className='m-3'>
-                        <MDBCol lg="7">
+                        <MDBCol lg="6">
                             <form>
                                 <TextField fullWidth value={form.email} name={'email'} margin="normal" onChange={onchange} /><br></br>
                                 <TextField fullWidth value={form.desc} name={'desc'} margin="normal" onChange={onchange} /><br></br>
                                 <TextField fullWidth value={form.date} name={'date'} margin="normal" onChange={onchange} /><br></br>
                                 <TextField fullWidth value={form.category} name={'category'} margin="normal" onChange={onchange} /><br></br>
-                                <TextField fullWidth value={form.type} name={'typr'} margin="normal" onChange={onchange} /><br></br>
+                                <TextField fullWidth value={form.type} name={'typr'} margin="normal" onChange={onchange} /><br></br>    
+                                <img class="img-thumbnail" src = {form.image} onChange={onchange}/>                                                  
                             </form>
+                             
                         </MDBCol>
-
-                        <MDBCol lg="5">
+                        <MDBCol lg="6">
                             <MDBRow className='m-12'>
                                 <MDBCol lg="4">
                                     <TextField fullWidth defaultValue="Default Value" margin="normal" type='number' value={form.unit} name={'unit'} onChange={onchange} />

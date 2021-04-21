@@ -48,6 +48,9 @@ const ReviewPemasukanComponent = ({ userId }) => {
             unitPrice: state.detailIncome.unit_price,
             ammount: state.detailIncome.ammount,
             paymentMethod: state.detailIncome.payment_method,
+            jatuhTempo: `${state.detailIncome.due_date == null ? '-' :state.detailIncome.due_date}`,
+            uangMukaB: `${state.detailIncome.remaining_payment == null ? '0' :state.detailIncome.remaining_payment}`,
+            uangMuka: `${state.detailIncome.down_payment == null ? '0' :state.detailIncome.down_payment}`,
             information: `Keterangan: ${state.detailIncome.information}`
         }
         setForm(obj);
@@ -95,7 +98,7 @@ const ReviewPemasukanComponent = ({ userId }) => {
             reviewer_id: isAuthenticated().data.id
         }
         setOpenDialogApprove(false)
-        ReviewIncome(id, data)
+        ReviewIncome(userId, data)
     }
 
     const onchange = (event) => {
@@ -176,7 +179,7 @@ const ReviewPemasukanComponent = ({ userId }) => {
                 )}
                 <MDBCardBody className='p-1'>
                     <MDBRow className='m-3'>
-                        <MDBCol lg="7">
+                        <MDBCol lg="6">
                             <form>
                                 <TextField fullWidth value={form.email} name={'email'} margin="normal" onChange={onchange} /><br></br>
                                 <TextField fullWidth value={form.desc} name={'desc'} margin="normal" onChange={onchange} /><br></br>
@@ -185,7 +188,16 @@ const ReviewPemasukanComponent = ({ userId }) => {
                                 <TextField fullWidth value={form.paymentMethod} name={'paymentMethod'} margin="normal" onChange={onchange} />
                             </form>
                         </MDBCol>
-                        <MDBCol lg="5">
+                        <MDBCol lg="6">
+                        <TextField fullWidth value={form.jatuhTempo} name={'jatuhTempo'} margin="normal" onChange={onchange} />
+                        
+                        {(  form.paymentMethod == 'Pembayaran Uang Muka') && (
+                            <TextField fullWidth value={form.uangMuka} name={'uangMuka'} margin="normal" onChange={onchange} />
+                        )}
+                        {(  form.paymentMethod == 'Pembayaran Bulanan') && (
+                             <TextField fullWidth value={form.uangMukaB} name={'uangMuka'} margin="normal" onChange={onchange} />
+                        )}
+                        
                             {form.data !== undefined && (form.data.map((item, i) => {
                                 return (
                                     <Fragment>

@@ -15,6 +15,8 @@ import { Context as AuthContext } from "../../services/Context/AuthContext";
 import { Context as JournalContext } from "../../services/Context/JournalContext";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import NumberFormat from 'react-number-format';
+
 var d = new Date();
 const JurnalPerbulanComponent = ({ Next, userData, params }) => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -169,8 +171,8 @@ const JurnalPerbulanComponent = ({ Next, userData, params }) => {
                         </td>
                         <td>{res.account.name}</td>
                         <td>{res.description}</td>
-                        <td>{res.credit}</td>
-                        <td>{res.debit}</td>
+                        <td><NumberFormat value={res.credit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'green'}}/></td>
+                        <td><NumberFormat value={res.debit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'red'}}/></td>
                         <td>
                           {
                             res.review_bulanan == 0 &&
@@ -209,11 +211,11 @@ const JurnalPerbulanComponent = ({ Next, userData, params }) => {
               <MDBBox display="flex" justifyContent="start">
                 <h5 className="pt-2 mx-2">
                   <small>
-                    <b>Rp. {debit}</b>
+                  <b> <NumberFormat value = {debit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '}  /> </b>
                   </small>
                   <br></br>
                   <small>
-                    <b>Rp. {kredit}</b>
+                 <b><NumberFormat value={kredit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '}/> </b>
                   </small>
                 </h5>
               </MDBBox>

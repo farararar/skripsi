@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 import { Context as AuthContext } from "../../../services/Context/AuthContext";
 import { Context as AccountContext } from "../../../services/Context/AccountContext";
 import { Context as OutcomeContext } from "../../../services/Context/OutcomeContext";
+import { useHistory } from 'react-router-dom';
 import {
   Button,
   TextField,
@@ -21,9 +27,11 @@ import { MDBCard, MDBCardBody, MDBRow, MDBCol, MDBBtn, MDBBox } from "mdbreact";
 import { withRouter } from "react-router-dom";
 
 const TransaksiKeluarComponent = ({ props, data, Next }) => {
+  const history = useHistory();
   const { isAuthenticated } = useContext(AuthContext);
   const { state: { listAccount }, ListAccount, } = useContext(AccountContext);
   const { state, DetailOutcome, UpdateOutcome, ListOutcomeTypeBy } = useContext(OutcomeContext);
+  const [selectedDate, setSelectedDate] = useState();
   const [openDialogApprove, setOpenDialogApprove] = useState(false);
   const [dataTanggal, setDataTanggal] = useState([]);
   const [tanggal, setTanggal] = useState("");
@@ -166,6 +174,30 @@ const TransaksiKeluarComponent = ({ props, data, Next }) => {
     </Dialog>
   );
 
+  const alertSuccess = () => (
+    <Dialog
+      open={openDialogApprove}
+      onClose={handleApproveCancle}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{"Success?"}</DialogTitle>
+      <DialogActions>
+        <Button onClick={handleApproveCancle} color="secondary">
+          OK
+        </Button>
+        <Button
+          onClick={handleApproveProccess}
+          color="primary"
+          autoFocus
+          disabled={state.loading}
+        >
+          {state.loading ? state.message : "Simpan Transaksi"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
   const handleApproveDialog = () => {
     setOpenDialogApprove(true);
   };
@@ -174,6 +206,7 @@ const TransaksiKeluarComponent = ({ props, data, Next }) => {
     setOpenDialogApprove(false);
   };
   const [trigger, setTrigger] = useState(null);
+
 
   const handleApproveProccess = async () => {
     let formdata = new FormData();
@@ -208,11 +241,18 @@ const TransaksiKeluarComponent = ({ props, data, Next }) => {
     formdata.append("_method", "PUT");
     formdata.append("user_id", data.user_id);
 
-    Promise.all(tamp).then(() => {
-      UpdateOutcome(data.id, formdata, Next);
+    Promise.all(tamp).then((res) => {
+      let back = history.goBack()
+      UpdateOutcome(data.id, formdata, () => {
+        history.push('/list-pengeluaran-admin')
+      });
       setOpenDialogApprove(false);
     });
   };
+
+  function backPage(){
+    return alertSuccess()
+  }
 
   const urlToObject = async (inputURI) => {
     var binaryVal;
@@ -268,6 +308,16 @@ const TransaksiKeluarComponent = ({ props, data, Next }) => {
       );
     }
   }
+
+  const handleDateChange = (date) => {
+    let formattedDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
+    setSelectedDate(date);
+    setValue({
+      ...value,
+      date: formattedDate,
+    });
+  }
+
   const handleChangeTypeOutcome = (value) => {
     setTypeOutcome(value);
     return ListOutcomeTypeBy(value);
@@ -293,8 +343,6 @@ const TransaksiKeluarComponent = ({ props, data, Next }) => {
                   value={value.invoice_number}
                   onChange={handleChange("invoice_number")}
                 />
-                <br></br>
-                <br></br>
                 <TextField
                   fullWidth
                   label="Deskripsi Transaksi"
@@ -306,66 +354,6 @@ const TransaksiKeluarComponent = ({ props, data, Next }) => {
                   value={value.description}
                   onChange={handleChange("description")}
                 />
-                <br></br>
-                <br></br>
-                <MDBRow className="m-12">
-                  <MDBCol lg="4">
-                    <InputLabel>Tanggal</InputLabel>
-                    <Select
-                      fullWidth
-                      disabled={updated}
-                      value={tanggal}
-                      onChange={(event) => setTanggal(event.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Tanggal</em>
-                      </MenuItem>
-                      {dataTanggal.map((item) => (
-                        <MenuItem key={item.tanggal} value={item.tanggal}>
-                          {item.tanggal}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </MDBCol>
-                  <MDBCol lg="4">
-                    <InputLabel>Bulan</InputLabel>
-                    <Select
-                      fullWidth
-                      disabled={updated}
-                      value={bulan}
-                      onChange={(event) => setBulan(event.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Pilih Bulan</em>
-                      </MenuItem>
-                      <MenuItem value={1}>Januari</MenuItem>
-                      <MenuItem value={2}>Pebruari</MenuItem>
-                      <MenuItem value={3}>Maret</MenuItem>
-                      <MenuItem value={4}>April</MenuItem>
-                      <MenuItem value={5}>Mei</MenuItem>
-                      <MenuItem value={6}>Juni</MenuItem>
-                      <MenuItem value={7}>Juli</MenuItem>
-                      <MenuItem value={8}>Agustus</MenuItem>
-                      <MenuItem value={9}>September</MenuItem>
-                      <MenuItem value={10}>Oktober</MenuItem>
-                      <MenuItem value={11}>Nopember</MenuItem>
-                      <MenuItem value={12}>Desember</MenuItem>
-                    </Select>
-                  </MDBCol>
-                  <MDBCol lg="4">
-                    <InputLabel>Tahun</InputLabel>
-                    <Select fullWidth disabled={updated} >
-                      <MenuItem value={2020}>
-                        <em>2020</em>
-                      </MenuItem>
-                      <MenuItem value={2021}>
-                        <em>2021</em>
-                      </MenuItem>
-                    </Select>
-                  </MDBCol>
-                </MDBRow>
-                <br></br>
-
                 <TextField
                   fullWidth
                   label="Nama Customer"
@@ -375,9 +363,7 @@ const TransaksiKeluarComponent = ({ props, data, Next }) => {
                   value={value.user ? value.user.name : '-'}
                   onChange={handleChange("customer")}
                 />
-
-                <FormControl variant="outlined" margin="normal" fullWidth>
-                  <FormControl variant="outlined" margin="normal" fullWidth>
+                 <FormControl variant="outlined" margin="normal" fullWidth>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Shift Kerja
                     </InputLabel>
@@ -399,27 +385,24 @@ const TransaksiKeluarComponent = ({ props, data, Next }) => {
                       ))}
                     </Select>
                   </FormControl>
-
-                  <TextField
-                    fullWidth
-                    label="Quantity"
-                    variant="outlined"
-                    disabled={updated}
+                <br></br>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
                     margin="normal"
-                    value={value.qty}
-                    onChange={handleChange("qty")}
+                    id="date-picker-transaksi"
+                    label="Tanggal Transaksi"
+                    format="dd/MM/yyyy"
+                    value={value.date}
+                    views={["date"]}
+                    onChange={handleDateChange}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
                   />
-
-                  <TextField
-                    fullWidth
-                    label="Harga Satuan"
-                    variant="outlined"
-                    disabled={updated}
-                    margin="normal"
-                    value={value.unit_price}
-                    onChange={handleChange("unit_price")}
-                  />
-
+                </MuiPickersUtilsProvider>
+                <br></br>
+               
+                <FormControl variant="outlined" margin="normal" fullWidth>
                   <div>
                     <p style={{ color: "grey", fontSize: "15px" }}>
                       Gambar
@@ -553,6 +536,25 @@ const TransaksiKeluarComponent = ({ props, data, Next }) => {
                   <MenuItem value="Pembayaran Utang">Pembayaran Utang</MenuItem>
                 </Select>
               </FormControl>
+              <TextField
+                    fullWidth
+                    label="Quantity"
+                    variant="outlined"
+                    disabled={updated}
+                    margin="normal"
+                    value={value.qty}
+                    onChange={handleChange("qty")}
+                  />
+
+                  <TextField
+                    fullWidth
+                    label="Harga Satuan"
+                    variant="outlined"
+                    disabled={updated}
+                    margin="normal"
+                    value={value.unit_price}
+                    onChange={handleChange("unit_price")}
+                  />
               <TextField
                 fullWidth
                 label="Keterangan"
