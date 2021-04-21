@@ -109,7 +109,7 @@ if(!function_exists('getJenisLogistik'))
     {
         $data = array("Pembelian bahan baku langsung", //0
             "Pembeliaan bahan baku pembantu", //1
-            "Gaji tenaga kerja langsung", //2
+            "Gaji tenaga kerja tidak langsung", //2
             "Reparasi & pemeliharaan mesin pabrik", //3
             "Reparasi & pemeliharaan gedung pabrik", //4
             "Reparasi & pemeliharaan kendaraan", //5

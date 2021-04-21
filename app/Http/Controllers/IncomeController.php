@@ -87,6 +87,131 @@ class IncomeController extends Controller
         return response()->json($response);
     }
 
+    public function pelunasan(Request $request)
+    {
+        $income = Income::where('invoice_number', $request->invoice_number)->first();
+        $income->remaining_payment -= $request->repayment;
+        $income->repayment = $request->repayment;
+        $income->save();
+
+        $journal = new Journal;
+        $journal->account_id = 1;
+        $journal->invoice_number = $income->invoice_number;
+        $journal->debit = $request->repayment;
+        $journal->credit = 0;
+        $journal->description = $income->description;
+        $journal->date = date('Y-m-d');
+        $journal->save();
+
+        $journal = new Journal;
+        $journal->account_id = 4;
+        $journal->invoice_number = $income->invoice_number;
+        $journal->debit = 0;
+        $journal->credit = $request->repayment;
+        $journal->description = $income->description;
+        $journal->date = date('Y-m-d');
+        $journal->save();
+
+        $response = createResponse(true, 200, "Income has been successfully updated"); 
+        return response()->json($response);
+    }
+
+    public function listBelumLunas(Request $request)
+    {
+        $keyword = $request->keyword;
+        $data = Income::where('remaining_payment', '>', 0)->where(function ($q) {
+                            $q->orWhere('payment_method', 'Pembayaran Uang Muka')
+                            ->orWhere('payment_method', 'Pembayaran Bulanan');
+                        })
+                        ->where(function ($q) use ($keyword) {
+                            if($keyword !== null) {
+                                $q->where('invoice_number', 'LIKE', '%'.$keyword.'%');
+                            }
+                        })->orderBy('invoice_number', 'asc')->get();
+
+        if(count($data) == 0) {
+            $response = createResponse(false, 404, "Data is Not Available");   
+        } else {
+            foreach($data as $datum) {
+                $datum->date = tanggalIndonesia($datum->date);
+            }
+            $response = createResponse(true, 200, "Incomes has been successfully retrieved", $data); 
+        }
+        return response()->json($response);
+    }
+
+    public function listKeuangan(Request $request)
+    {
+        $keyword = $request->keyword;
+
+        $last_month = date('Y-m-d', strtotime('-30 days'));
+        $today = date('Y-m-d');
+        // return $last_month;
+        $penjualan_langsung = Income::where(function ($q) {
+            $q->orWhere('payment_method', '!=', 'Pembayaran Uang Muka')
+            ->orWhere('payment_method', '!=', 'Pembayaran Bulanan');
+        })->where('date', '>=', $last_month)->sum('ammount');
+
+        $dp_bulan_terakhir = Income::where(function ($q) {
+                $q->orWhere('payment_method', 'Pembayaran Uang Muka')
+                ->orWhere('payment_method', 'Pembayaran Bulanan');
+            })->where('date', '>=', $last_month)->sum('down_payment');
+        $repayment_bulan_terakhir = Income::where(function ($q) {
+                $q->orWhere('payment_method', 'Pembayaran Uang Muka')
+                ->orWhere('payment_method', 'Pembayaran Bulanan');
+            })->where('date', '>=', $last_month)->sum('repayment');
+            
+        $bulan_terakhir = $penjualan_langsung + $dp_bulan_terakhir + $repayment_bulan_terakhir;
+
+        $jatuh_tempo = Income::where(function ($q) {
+                $q->orWhere('payment_method', 'Pembayaran Uang Muka')
+                ->orWhere('payment_method', 'Pembayaran Bulanan');
+            })->where('due_date', '<=', $today)->sum('remaining_payment');
+        
+        $belum_dibayar = Income::where(function ($q) {
+                $q->orWhere('payment_method', 'Pembayaran Uang Muka')
+                ->orWhere('payment_method', 'Pembayaran Bulanan');
+            })->sum('remaining_payment');
+
+        $data = Income::where(function ($q) use ($keyword) {
+                            if($keyword !== null) {
+                                $q->where('invoice_number', 'LIKE', '%'.$keyword.'%');
+                            }
+                        })->get();
+        
+        if(count($data) == 0) {
+            $response = createResponse(false, 404, "Data is Not Available");   
+        } else {
+            foreach($data as $datum) {
+                if($datum->payment_method !== "Pembayaran Uang Muka" && $datum->payment_method !== "Pembayaran Bulanan") {
+                    $datum->payment_status = "Lunas";
+                } else {
+                    $dibayar = $datum->down_payment + $datum->repayment;
+                    if($datum->down_payment == 0 && $datum->down_payment !== NULL) {
+                        $datum->payment_status =  "Belum Dibayar";
+                    } elseif($dibayar == $datum->down_payment) {
+                        $datum->payment_status = "Uang Muka";
+                    } elseif($dibayar !== $datum->ammount) {
+                        $datum->payment_status = "Belum Lunas";
+                    } elseif($dibayar == $datum->ammount || $datum->remaining_payment == 0) {
+                        $datum->payment_status = "Lunas";
+                    }
+                }
+                $datum->date = tanggalIndonesia($datum->date);
+            }
+            $response = array(
+                "success" => true,
+                "status_code" => 200,
+                "message" => "Incomes has been successfully retrieved",
+                "bulan_terakhir" => "Rp. ". number_format($bulan_terakhir,0,',','.'),
+                "jatuh_tempo" => "Rp. ". number_format($jatuh_tempo,0,',','.'),
+                "belum_dibayar" => "Rp. ". number_format($belum_dibayar,0,',','.'),
+                "data" => $data,
+            );
+        }
+        return response()->json($response);
+    }
+
     public function store(Request $request)
     {
         $isItNotValid = $this->isItNotValid($request, 'unique');
@@ -109,9 +234,11 @@ class IncomeController extends Controller
             
         }
 
-        $image_name	= time().'_'.rand(100,999).'.png';
-        $request->file('image')->move('uploads/images/income/', $image_name);
-        $data->image = 'uploads/images/income/'. $image_name;
+        if($request->hasFile('image')) {
+            $image_name	= time().'_'.rand(100,999).'.png';
+            $request->file('image')->move('uploads/images/income/', $image_name);
+            $data->image = 'uploads/images/income/'. $image_name;
+        }
 
         $account = $this->accountPaymentMethods();
         $data->debit_account    = $account[$request->payment_method]["debit_account"];
@@ -123,7 +250,12 @@ class IncomeController extends Controller
         $data->description      = $request->description;
         $data->information      = $request->information;
         $data->payment_method   = $request->payment_method;
-        $data->kantor           = $request->kantor;
+        if($data->payment_method == "Pembayaran Uang Muka" || $data->payment_method == "Pembayaran Bulanan") {
+            $data->down_payment         = intval($request->uang_muka);
+            $data->remaining_payment    = $data->ammount - intval($request->uang_muka);
+            $data->repayment            = 0;
+            $data->due_date             = $request->jatuh_tempo;
+        }
         $data->date             = $request->date;
         $data->save();
 
@@ -195,7 +327,12 @@ class IncomeController extends Controller
             $data->description      = $request->description;
             $data->information      = $request->information;
             $data->payment_method   = $request->payment_method;
-            $data->kantor           = $request->kantor;
+            if($data->payment_method == "Pembayaran Uang Muka" || $data->payment_method == "Pembayaran Bulanan") {
+                $data->down_payment         = $request->uang_muka;
+                $data->remaining_payment    = $data->ammount - $request->uang_muka;
+                $data->repayment            = 0;
+                $data->due_date             = $request->jatuh_tempo;
+            }
             $data->date             = $request->date;
             $data->save();
     
@@ -241,25 +378,25 @@ class IncomeController extends Controller
             $data->review = $request->review;
             $data->save();
 
-            $debit = new Journal;
-            $debit->account_id = $data->debit_account;
-            $debit->invoice_number = $data->invoice_number;
-            $debit->debit = $data->ammount;
-            $debit->credit = 0;
-            $debit->kantor = $data->kantor;
-            $debit->description = $data->description;
-            $debit->date = $data->date;
-            $debit->save();
+            if ($status == 'approved') {
+                $debit = new Journal;
+                $debit->account_id = $data->debit_account;
+                $debit->invoice_number = $data->invoice_number;
+                $debit->debit = $data->ammount;
+                $debit->credit = 0;
+                $debit->description = $data->description;
+                $debit->date = $data->date;
+                $debit->save();
 
-            $credit = new Journal;
-            $credit->account_id = $data->credit_account;
-            $credit->invoice_number = $data->invoice_number;
-            $credit->debit = 0;
-            $credit->credit = $data->ammount;
-            $credit->kantor = $data->kantor;
-            $credit->description = $data->description;
-            $credit->date = $data->date;
-            $credit->save();
+                $credit = new Journal;
+                $credit->account_id = $data->credit_account;
+                $credit->invoice_number = $data->invoice_number;
+                $credit->debit = 0;
+                $credit->credit = $data->ammount;
+                $credit->description = $data->description;
+                $credit->date = $data->date;
+                $credit->save();
+            }
 
             $data = Income::with('user')->with('reviewed_by')->find($id);
 
@@ -324,7 +461,12 @@ class IncomeController extends Controller
 
     public function getPaymentMethods()
     {
-        $data = array("Tunai", "Transfer", "Pembayaran Uang Muka", "Pembayaran Bulanan", "Pembayaran Sisa Bulanan", "Retur Penjualan");
+        $data = array("Tunai", 
+                "Transfer", 
+                "Pembayaran Uang Muka", 
+                "Pembayaran Bulanan", 
+                //"Pembayaran Sisa Bulanan",
+                "Retur Penjualan");
         $response = createResponse(true, 200, "Pick one payment method", $data);
         return response()->json($response);
     }
@@ -348,11 +490,11 @@ class IncomeController extends Controller
                 "debit_account" => 4,
                 "credit_account" => 2
             ),
-            "Pembayaran Sisa Bulanan" => array(
-                "debit_account" => 1,
-                "credit_account" => 6
-            ),
-            "Pembayaran Sisa Bulanan" => array(
+            // "Pembayaran Sisa Bulanan" => array(
+            //     "debit_account" => 1,
+            //     "credit_account" => 6
+            // ),
+            "Retur Penjualan" => array(
                 "debit_account" => 1,
                 "credit_account" => 5
             ),

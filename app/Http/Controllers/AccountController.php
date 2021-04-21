@@ -148,11 +148,6 @@ class AccountController extends Controller
         return null;
     }
 
-
-
-
-
-
     //
     //
     //buku besar
@@ -161,6 +156,7 @@ class AccountController extends Controller
         $year = $request->tahun;
         $month = $request->bulan;
         $account_id = $request->account_id;
+
         if(strlen($month) == 1) {
             $month = "0".$month;
         }
@@ -200,6 +196,7 @@ class AccountController extends Controller
     {
         $year = $request->tahun;
         $month = $request->bulan;
+        
         if(strlen($month) == 1) {
             $month = "0".$month;
         }

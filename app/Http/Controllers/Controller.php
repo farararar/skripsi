@@ -73,12 +73,17 @@ class Controller extends BaseController
         $p_gedung = Outcome::where('type', getJenisOperasional(16))->where('date', 'LIKE', $year.'-%')->sum('ammount');
         $akumulasi = Outcome::where('type', 'LIKE', 'Akumulasi')->where('date', 'LIKE', $year.'-%')->sum('ammount');
 
+        
+        $total_activa_lancar =  $kas + $rekening + $piutang_usaha;
         $activa_lancar = array(
             "Kas" => $kas,
             "Rekening" => $rekening,
             // "Rekap Bahan Baku" => null,
             "Piutang Usaha" => $piutang_usaha,
+            "Total Aktiva Lancar" => $total_activa_lancar
         );
+
+        $total_activa_tetap = $p_komputer_elektronik + $p_mesin_pabrik + $p_furnitur + $p_kendaraan + $p_gedung + $akumulasi;
         $activa_tetap = array(
             "Aset Komputer & Elektronik" => $p_komputer_elektronik,
             "Aset Mesin Usaha" => $p_mesin_pabrik,
@@ -86,16 +91,21 @@ class Controller extends BaseController
             "Aset Kendaraan" => $p_kendaraan,
             "Aset Gedung" => $p_gedung,
             "Akumulasi Penyusutan" => $akumulasi,
+            "Total Aktiva Tetap" => $total_activa_tetap
         );
         
         $activa = array(
             "Aktiva Lancar" => $activa_lancar,
-            "Aktiva Tetap" => $activa_tetap
+            "Aktiva Tetap" => $activa_tetap,
+            "Total" => $total_activa_lancar + $total_activa_tetap
         );
-
-        $piutang_bank_debit = Journal::where('account_id', 13)->where('date', 'LIKE', $year.'-%')->sum('debit');
-        $piutang_bank_credit = Journal::where('account_id', 13)->where('date', 'LIKE', $year.'-%')->sum('credit');
-        $piutang_bank = $piutang_bank_debit - $piutang_bank_credit;
+    
+        $utang_bank_debit = Journal::where('account_id', 13)->where('date', 'LIKE', $year.'-%')->sum('debit');
+        $utang_bank_credit = Journal::where('account_id', 13)->where('date', 'LIKE', $year.'-%')->sum('credit');
+        $utang_bank = $utang_bank_debit - $utang_bank_credit;
+        $utang_usaha_debit = Journal::where('account_id', 8)->where('date', 'LIKE', $year.'-%')->sum('debit');
+        $utang_usaha_credit = Journal::where('account_id', 8)->where('date', 'LIKE', $year.'-%')->sum('credit');
+        $utang_usaha = $utang_usaha_debit - $utang_usaha_credit;
         $modal_debit = Journal::where('account_id', 11)->where('date', 'LIKE', $year.'-%')->sum('debit');
         $modal_credit = Journal::where('account_id', 11)->where('date', 'LIKE', $year.'-%')->sum('credit');
         $modal = $modal_debit - $modal_credit;
@@ -105,20 +115,22 @@ class Controller extends BaseController
 
         $passiva = array(
             "Utang Lancar" => array(
-                "Utang Usaha" => $piutang_usaha,
+                "Utang Usaha" => $utang_usaha,
             ),
             "Utang Bank" => array(
-                "Utang Bank" => $piutang_bank,
+                "Utang Bank" => $utang_bank,
             ),
-            "Total Utang" => $piutang_usaha + $piutang_bank,
+            "Total Utang" => $utang_usaha + $utang_bank,
             "Modal" => array(
                 "Modal" => $modal,
                 "Laba Ditahan" => $laba_ditahan,
             ),
-            "Total Modal" => $modal + $laba_ditahan
+            "Total Modal" => $modal + $laba_ditahan,
+            "Total Passiva " => $utang_usaha + $utang_bank + $modal + $laba_ditahan
         );
+
         $pemasukan = Income::where('date', 'LIKE', $year.'-%')->sum('ammount');
-        $tenaga_kerja_langsung = Outcome::where('type', getJenisLogistik(2))->where('date', 'LIKE', $year.'-%')->sum('ammount');
+        $tenaga_kerja_tidak_langsung = Outcome::where('type', getJenisLogistik(2))->where('date', 'LIKE', $year.'-%')->sum('ammount');
         $overhead = Outcome::where(function($q) {
             $q->orWhere('type', getJenisLogistik(3))
             ->orWhere('type', getJenisLogistik(4))
@@ -129,13 +141,13 @@ class Controller extends BaseController
             ->orWhere('type', getJenisLogistik(11))
             ->orWhere('type', getJenisLogistik(12));
         })->where('date', 'LIKE', $year.'-%')->sum('ammount');
-        $biaya_angkut_pembelian = Outcome::where('type', getJenisLogistik(2))->where('date', 'LIKE', $year.'-%')->sum('ammount');
+        $biaya_angkut_pembelian = Outcome::where('type', getJenisLogistik(6))->where('date', 'LIKE', $year.'-%')->sum('ammount');
         $penjualan = array(
             "Penjualan" => $pemasukan
         );
-        $total_harga_pokok = ($tenaga_kerja_langsung + $overhead + $biaya_angkut_pembelian);
+        $total_harga_pokok = ($tenaga_kerja_tidak_langsung + $overhead + $biaya_angkut_pembelian);
         $harga_pokok = array(
-            "Tenaga Kerja Langsung" => $tenaga_kerja_langsung,
+            "Tenaga Kerja Tidak Langsung" => $tenaga_kerja_tidak_langsung,
             "Biaya Overhead Pabrik" => $overhead,
             "Biaya Angkut Pembelian" => $biaya_angkut_pembelian,
         );
@@ -175,9 +187,10 @@ class Controller extends BaseController
             "Beban Administrasi Bank" => $beban_administrasi_bank,
             "Beban Lain-Lain" => $biaya_lain_lain,
         );  
-        $total_beban_lain = $beban_administrasi_bank - $biaya_lain_lain;
+        $total_beban_lain = $beban_administrasi_bank + $biaya_lain_lain;
+        $total_beban = $total_beban_lain +   $total_biaya_operasional;
         $laba_kotor = $pemasukan + $total_harga_pokok;
-        $laba_sebelum_pajak = (($laba_kotor + $pend_bunga_bank) - $total_beban_lain);
+        $laba_sebelum_pajak = (($laba_kotor + $pend_bunga_bank) - $total_beban);
         $pajak = $laba_kotor * 0.1;
         $pendapatan = array(
             "Penjualan" => $penjualan,
@@ -226,12 +239,16 @@ class Controller extends BaseController
         $p_gedung = Outcome::where('type', getJenisOperasional(16))->where('date', 'LIKE', $year.'-%')->sum('ammount');
         $akumulasi = Outcome::where('type', 'LIKE', 'Akumulasi')->where('date', 'LIKE', $year.'-%')->sum('ammount');
 
+        $total_activa_lancar =  $kas + $rekening + $piutang_usaha;
         $activa_lancar = array(
             "Kas" => $kas,
             "Rekening" => $rekening,
             // "Rekap Bahan Baku" => null,
             "Piutang Usaha" => $piutang_usaha,
+            "Total Aktiva Lancar" => $total_activa_lancar
         );
+
+        $total_activa_tetap = $p_komputer_elektronik + $p_mesin_pabrik + $p_furnitur + $p_kendaraan + $p_gedung + $akumulasi;
         $activa_tetap = array(
             "Aset Komputer & Elektronik" => $p_komputer_elektronik,
             "Aset Mesin Usaha" => $p_mesin_pabrik,
@@ -239,16 +256,21 @@ class Controller extends BaseController
             "Aset Kendaraan" => $p_kendaraan,
             "Aset Gedung" => $p_gedung,
             "Akumulasi Penyusutan" => $akumulasi,
+            "Total Aktiva Tetap" => $total_activa_tetap
         );
         
         $activa = array(
             "Aktiva Lancar" => $activa_lancar,
-            "Aktiva Tetap" => $activa_tetap
+            "Aktiva Tetap" => $activa_tetap,
+            "Total Aktiva" => $total_activa_lancar + $total_activa_tetap
         );
 
-        $piutang_bank_debit = Journal::where('account_id', 13)->where('date', 'LIKE', $year.'-%')->sum('debit');
-        $piutang_bank_credit = Journal::where('account_id', 13)->where('date', 'LIKE', $year.'-%')->sum('credit');
-        $piutang_bank = $piutang_bank_debit - $piutang_bank_credit;
+        $utang_bank_debit = Journal::where('account_id', 13)->where('date', 'LIKE', $year.'-%')->sum('debit');
+        $utang_bank_credit = Journal::where('account_id', 13)->where('date', 'LIKE', $year.'-%')->sum('credit');
+        $utang_bank = $utang_bank_debit - $utang_bank_credit;
+        $utang_usaha_debit = Journal::where('account_id', 8)->where('date', 'LIKE', $year.'-%')->sum('debit');
+        $utang_usaha_credit = Journal::where('account_id', 8)->where('date', 'LIKE', $year.'-%')->sum('credit');
+        $utang_usaha = $utang_usaha_debit - $utang_usaha_credit;
         $modal_debit = Journal::where('account_id', 11)->where('date', 'LIKE', $year.'-%')->sum('debit');
         $modal_credit = Journal::where('account_id', 11)->where('date', 'LIKE', $year.'-%')->sum('credit');
         $modal = $modal_debit - $modal_credit;
@@ -258,20 +280,22 @@ class Controller extends BaseController
 
         $passiva = array(
             "Utang Lancar" => array(
-                "Utang Usaha" => $piutang_usaha,
+                "Utang Usaha" => $utang_usaha,
             ),
             "Utang Bank" => array(
-                "Utang Bank" => $piutang_bank,
+                "Utang Bank" => $utang_bank,
             ),
-            "Total Utang" => $piutang_usaha + $piutang_bank,
+            "Total Utang" => $utang_usaha + $utang_bank,
             "Modal" => array(
                 "Modal" => $modal,
                 "Laba Ditahan" => $laba_ditahan,
             ),
-            "Total Modal" => $modal + $laba_ditahan
+            "Total Modal" => $modal + $laba_ditahan,
+            "Total Passiva " => $utang_usaha + $utang_bank + $modal + $laba_ditahan
         );
+
         $pemasukan = Income::where('date', 'LIKE', $year.'-%')->sum('ammount');
-        $tenaga_kerja_langsung = Outcome::where('type', getJenisLogistik(2))->where('date', 'LIKE', $year.'-%')->sum('ammount');
+        $tenaga_kerja_tidak_langsung = Outcome::where('type', getJenisLogistik(2))->where('date', 'LIKE', $year.'-%')->sum('ammount');
         $overhead = Outcome::where(function($q) {
             $q->orWhere('type', getJenisLogistik(3))
             ->orWhere('type', getJenisLogistik(4))
@@ -282,13 +306,13 @@ class Controller extends BaseController
             ->orWhere('type', getJenisLogistik(11))
             ->orWhere('type', getJenisLogistik(12));
         })->where('date', 'LIKE', $year.'-%')->sum('ammount');
-        $biaya_angkut_pembelian = Outcome::where('type', getJenisLogistik(2))->where('date', 'LIKE', $year.'-%')->sum('ammount');
+        $biaya_angkut_pembelian = Outcome::where('type', getJenisLogistik(6))->where('date', 'LIKE', $year.'-%')->sum('ammount');
         $penjualan = array(
             "Penjualan" => $pemasukan
         );
-        $total_harga_pokok = ($tenaga_kerja_langsung + $overhead + $biaya_angkut_pembelian);
+        $total_harga_pokok = ($tenaga_kerja_tidak_langsung + $overhead + $biaya_angkut_pembelian);
         $harga_pokok = array(
-            "Tenaga Kerja Langsung" => $tenaga_kerja_langsung,
+            "Tenaga Kerja Tidak Langsung" => $tenaga_kerja_tidak_langsung,
             "Biaya Overhead Pabrik" => $overhead,
             "Biaya Angkut Pembelian" => $biaya_angkut_pembelian,
         );
@@ -328,9 +352,10 @@ class Controller extends BaseController
             "Beban Administrasi Bank" => $beban_administrasi_bank,
             "Beban Lain-Lain" => $biaya_lain_lain,
         );  
-        $total_beban_lain = $beban_administrasi_bank - $biaya_lain_lain;
+        $total_beban_lain = $beban_administrasi_bank + $biaya_lain_lain;
+        $total_beban = $total_beban_lain +   $total_biaya_operasional;
         $laba_kotor = $pemasukan + $total_harga_pokok;
-        $laba_sebelum_pajak = (($laba_kotor + $pend_bunga_bank) - $total_beban_lain);
+        $laba_sebelum_pajak = (($laba_kotor + $pend_bunga_bank) - $total_beban);
         $pajak = $laba_kotor * 0.1;
         $pendapatan = array(
             "Penjualan" => $penjualan,

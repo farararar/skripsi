@@ -50,14 +50,9 @@ class OutcomeController extends Controller
         $pm = $request->payment_method;
         $cat = $request->category;
         $type = $request->type;
-        if (strpos(strtolower($type), 'akumulasi') !== false) {
-            $debit_account = 8;
-            $credit_account = 1;
-        } else {
-            $accounts = $this->accountPaymentMethods();
-            $debit_account = $accounts[$pm][$cat]['debit_account'];
-            $credit_account = $accounts[$pm][$cat]['credit_account'];
-        }
+        $accounts = $this->accountPaymentMethods();
+        $debit_account = $accounts[$pm][$cat][$type]['debit_account'];
+        $credit_account = $accounts[$pm][$cat][$type]['credit_account'];
         $data = new Outcome;
         $data->user_id = $request->user_id;
         $data->debit_account = $debit_account;
@@ -101,17 +96,14 @@ class OutcomeController extends Controller
         if($data == null) {
             $response = createResponse(false, 404, "Data is Not Available");   
         } else {
+            //$type = str_replace('"','',$request->type);
             $pm = $request->payment_method;
             $cat = $request->category;
             $type = $request->type;
-            if (strpos(strtolower($type), 'akumulasi') !== false) {
-                $debit_account = 8;
-                $credit_account = 1;
-            } else {
-                $accounts = $this->accountPaymentMethods();
-                $debit_account = $accounts[$pm][$cat]['debit_account'];
-                $credit_account = $accounts[$pm][$cat]['credit_account'];
-            }
+            $accounts = $this->accountPaymentMethods();
+            
+            $debit_account = $accounts[$pm][$cat][$type]['debit_account'];
+            $credit_account = $accounts[$pm][$cat][$type]['credit_account'];
             $data->user_id = $request->user_id;
             $data->debit_account = $debit_account;
             $data->credit_account = $credit_account;
@@ -280,31 +272,295 @@ class OutcomeController extends Controller
         return array(
             "Tunai" => array(
                 "Operasional" => array(
-                    "debit_account" => 7,
-                    "credit_account" => 1
+                    "Tagihan Listrik" => array(
+                        "debit_account" => 0,
+                        "credit_account" => 1
+                    ),
+                    "Tagihan Air" => array(
+                        "debit_account" => 1,
+                        "credit_account" => 1
+                    ),
+                    "Tagihan Telfon" => array(
+                        "debit_account" => 2,
+                        "credit_account" => 1
+                    ),
+                    "Tagihan Internet" => array(
+                        "debit_account" => 3,
+                        "credit_account" => 1
+                    ),
+                    "Sewa Gedung" => array(
+                        "debit_account" => 4,
+                        "credit_account" => 1
+                    ),
+                    "Sewa Pabrik" => array(
+                        "debit_account" => 5,
+                        "credit_account" => 1
+                    ),
+                    "Biaya asuransi" => array(
+                        "debit_account" => 6,
+                        "credit_account" => 1
+                    ),
+                    "Alat tulis kantor" => array(
+                        "debit_account" => 7,
+                        "credit_account" => 1
+                    ),
+                    "Pengadaan furniture" => array(
+                        "debit_account" => 8,
+                        "credit_account" => 1
+                    ),
+                    "Pengadaan kendaraan" => array(
+                        "debit_account" => 9,
+                        "credit_account" => 1
+                    ),
+                    "Pengadaan elektronik" => array(
+                        "debit_account" => 10,
+                        "credit_account" => 1
+                    ),
+                    "Gaji pegawai perusahaan" => array(
+                        "debit_account" => 11,
+                        "credit_account" => 1
+                    ),
+                    "Pemeliharaan gedung" => array(
+                        "debit_account" => 12,
+                        "credit_account" => 1
+                    ),
+                    "Pemeliharaan kendaraan" => array(
+                        "debit_account" => 13,
+                        "credit_account" => 1
+                    ),
+                    "Iklan dan pemasaran" => array(
+                        "debit_account" => 14,
+                        "credit_account" => 1
+                    ),
+                    "Pengadaan mesin pabrik" => array(
+                        "debit_account" => 15,
+                        "credit_account" => 1
+                    ),
+                    "Pengadaan gedung kantor/pabrik" => array(
+                        "debit_account" => 16,
+                        "credit_account" => 1
+                    ),
+                    "Akumulasi penyusutan mesin" => array(
+                        "debit_account" => 17,
+                        "credit_account" => 1
+                    ),
+                    "Akumulasi penyusutan gedung" => array(
+                        "debit_account" => 18,
+                        "credit_account" => 1
+                    ),
+                    "Akumulasi penyusutan kendaraan" => array(
+                        "debit_account" => 19,
+                        "credit_account" => 1
+                    ),
+                    "Biaya Lain-Lain" => array(
+                        "debit_account" => 20,
+                        "credit_account" => 1
+                    ),
                 ),
                 "Logistik" => array(
-                    "debit_account" => 9,
-                    "credit_account" => 1
+                    "Pembelian bahan baku langsung" => array(
+                        "debit_account" => 0,
+                        "credit_account" => 1
+                    ),
+                    "Pembeliaan bahan baku pembantu" => array(
+                        "debit_account" => 1,
+                        "credit_account" => 1
+                    ),
+                    "Gaji tenaga kerja tidak langsung" => array(
+                        "debit_account" => 2,
+                        "credit_account" => 1
+                    ),
+                    "Reparasi & pemeliharaan mesin pabrik" => array(
+                        "debit_account" => 3,
+                        "credit_account" => 1
+                    ),
+                    "Reparasi & pemeliharaan gedung pabrik" => array(
+                        "debit_account" => 4,
+                        "credit_account" => 1
+                    ),
+                    "Reparasi & pemeliharaan kendaraan" => array(
+                        "debit_account" => 5,
+                        "credit_account" => 1
+                    ),
+                    "Biaya angkut pembelian bahan baku" => array(
+                        "debit_account" => 6,
+                        "credit_account" => 1
+                    ),
+                    "Tagihan listrik pabrik" => array(
+                        "debit_account" => 7,
+                        "credit_account" => 1
+                    ),
+                    "Tagihan air  pabrik" => array(
+                        "debit_account" => 8,
+                        "credit_account" => 1
+                    ),
+                    "Biaya administrasi pabrik" => array(
+                        "debit_account" => 9,
+                        "credit_account" => 1
+                    ),
+                    "Pajak bumi & bangunan" => array(
+                        "debit_account" => 10,
+                        "credit_account" => 1
+                    ),
+                    "Penyusutan mesin dan peralatan pabrik" => array(
+                        "debit_account" => 11,
+                        "credit_account" => 1
+                    ),
+                    "Biaya BOP lain-lain" => array(
+                        "debit_account" => 12,
+                        "credit_account" => 1
+                    ),
                 ),
             ),
             "Kredit" => array(
                 "Operasional" => array(
-                    "debit_account" => 7,
-                    "credit_account" => 4
+                    "Tagihan Listrik" => array(
+                        "debit_account" => 0,
+                        "credit_account" => 8
+                    ),
+                    "Tagihan Air" => array(
+                        "debit_account" => 1,
+                        "credit_account" => 8
+                    ),
+                    "Tagihan Telfon" => array(
+                        "debit_account" => 2,
+                        "credit_account" => 8
+                    ),
+                    "Tagihan Internet" => array(
+                        "debit_account" => 3,
+                        "credit_account" => 8
+                    ),
+                    "Sewa Gedung" => array(
+                        "debit_account" => 4,
+                        "credit_account" => 8
+                    ),
+                    "Sewa Pabrik" => array(
+                        "debit_account" => 5,
+                        "credit_account" => 8
+                    ),
+                    "Biaya asuransi" => array(
+                        "debit_account" => 6,
+                        "credit_account" => 8
+                    ),
+                    "Alat tulis kantor" => array(
+                        "debit_account" => 7,
+                        "credit_account" => 8
+                    ),
+                    "Pengadaan furniture" => array(
+                        "debit_account" => 8,
+                        "credit_account" => 8
+                    ),
+                    "Pengadaan kendaraan" => array(
+                        "debit_account" => 9,
+                        "credit_account" => 8
+                    ),
+                    "Pengadaan elektronik" => array(
+                        "debit_account" => 10,
+                        "credit_account" => 8
+                    ),
+                    "Gaji pegawai perusahaan" => array(
+                        "debit_account" => 11,
+                        "credit_account" => 8
+                    ),
+                    "Pemeliharaan gedung" => array(
+                        "debit_account" => 12,
+                        "credit_account" => 8
+                    ),
+                    "Pemeliharaan kendaraan" => array(
+                        "debit_account" => 13,
+                        "credit_account" => 8
+                    ),
+                    "Iklan dan pemasaran" => array(
+                        "debit_account" => 14,
+                        "credit_account" => 8
+                    ),
+                    "Pengadaan mesin pabrik" => array(
+                        "debit_account" => 15,
+                        "credit_account" => 8
+                    ),
+                    "Pengadaan gedung kantor/pabrik" => array(
+                        "debit_account" => 16,
+                        "credit_account" => 8
+                    ),
+                    "Akumulasi penyusutan mesin" => array(
+                        "debit_account" => 17,
+                        "credit_account" => 8
+                    ),
+                    "Akumulasi penyusutan gedung" => array(
+                        "debit_account" => 18,
+                        "credit_account" => 8
+                    ),
+                    "Akumulasi penyusutan kendaraan" => array(
+                        "debit_account" => 19,
+                        "credit_account" => 8
+                    ),
+                    "Biaya Lain-Lain" => array(
+                        "debit_account" => 20,
+                        "credit_account" => 8
+                    ),
                 ),
                 "Logistik" => array(
-                    "debit_account" => 9,
-                    "credit_account" => 4
+                    "Pembelian bahan baku langsung" => array(
+                        "debit_account" => 0,
+                        "credit_account" => 8
+                    ),
+                    "Pembeliaan bahan baku pembantu" => array(
+                        "debit_account" => 1,
+                        "credit_account" => 8
+                    ),
+                    "Gaji tenaga kerja tidak langsung" => array(
+                        "debit_account" => 2,
+                        "credit_account" => 8
+                    ),
+                    "Reparasi & pemeliharaan mesin pabrik" => array(
+                        "debit_account" => 3,
+                        "credit_account" => 8
+                    ),
+                    "Reparasi & pemeliharaan gedung pabrik" => array(
+                        "debit_account" => 4,
+                        "credit_account" => 8
+                    ),
+                    "Reparasi & pemeliharaan kendaraan" => array(
+                        "debit_account" => 5,
+                        "credit_account" => 8
+                    ),
+                    "Biaya angkut pembelian bahan baku" => array(
+                        "debit_account" => 6,
+                        "credit_account" => 8
+                    ),
+                    "Tagihan listrik pabrik" => array(
+                        "debit_account" => 7,
+                        "credit_account" => 8
+                    ),
+                    "Tagihan air  pabrik" => array(
+                        "debit_account" => 8,
+                        "credit_account" => 8
+                    ),
+                    "Biaya administrasi pabrik" => array(
+                        "debit_account" => 9,
+                        "credit_account" => 8
+                    ),
+                    "Pajak bumi & bangunan" => array(
+                        "debit_account" => 10,
+                        "credit_account" => 8
+                    ),
+                    "Penyusutan mesin dan peralatan pabrik" => array(
+                        "debit_account" => 11,
+                        "credit_account" => 8
+                    ),
+                    "Biaya BOP lain-lain" => array(
+                        "debit_account" => 12,
+                        "credit_account" => 8
+                    ),
                 ),
             ),
             "Pembayaran Utang"  => array(
                 "Operasional" => array(
-                    "debit_account" => 4,
+                    "debit_account" => 8,
                     "credit_account" => 1
                 ),
                 "Logistik" => array(
-                    "debit_account" => 4,
+                    "debit_account" => 8,
                     "credit_account" => 1
                 ),
             ),
