@@ -25,7 +25,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Accounting App | Farah Thesis
+        Accounting App
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}

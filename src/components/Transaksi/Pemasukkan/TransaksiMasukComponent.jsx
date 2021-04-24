@@ -215,10 +215,6 @@ const TransaksiMasukComponent = (props) => {
         ...value,
         ['product['+id_prod+']']: 1,
       });
-
-      
-        
-       
         
         if(subtotal.length === 0){
           console.log('Sakali deui');

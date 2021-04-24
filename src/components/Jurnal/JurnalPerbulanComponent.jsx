@@ -211,11 +211,11 @@ const JurnalPerbulanComponent = ({ Next, userData, params }) => {
               <MDBBox display="flex" justifyContent="start">
                 <h5 className="pt-2 mx-2">
                   <small>
-                  <b> <NumberFormat value = {debit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '}  /> </b>
+                  <b> <NumberFormat value = {kredit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '}  /> </b>
                   </small>
                   <br></br>
                   <small>
-                 <b><NumberFormat value={kredit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '}/> </b>
+                 <b><NumberFormat value={debit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '}/> </b>
                   </small>
                 </h5>
               </MDBBox>

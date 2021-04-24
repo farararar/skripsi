@@ -81,8 +81,7 @@ const JurnalManualComponent = ({ Change, userData, status }) => {
     console.log('user dtaa = ', userData);
     ListAccount();
     setValue(userData ? userData : constData);
-    // ListCustomer();
-    // ListProduct();
+    
     const loopingTanggal = () => {
       let tanggal = "";
       let data_tanggal = [];
@@ -150,26 +149,11 @@ const JurnalManualComponent = ({ Change, userData, status }) => {
       credit: value.credit,
       description: value.description,
       invoice_number: value.invoice_number,
-      date: today.getFullYear() + "-" + bulan + "-" + tanggal,
+      date: today.getFullYear() + "-" + today.getMonth() + "-" + today.getDate(),
     };
 
-    // await setValue({...value, date: today.getFullYear() + "-" + bulan + "-" + tanggal})
-    // alert(JSON.stringify(data))
+  
     JournalManual(data, Change, status, value.id)
-    // AddIncome(data, () =>
-    //   setValue({
-    //     customer_id: "",
-    //     account_id: "",
-    //     product_id: "",
-    //     invoice_number: "",
-    //     description: "",
-    //     payment_method: "",
-    //     date: "",
-    //     unit: 0,
-    //     unit_price: 0,
-    //     information: "",
-    //   })
-    // );
     setOpenDialogApprove(false);
   };
   return (
@@ -206,8 +190,6 @@ const JurnalManualComponent = ({ Change, userData, status }) => {
                     }}
                   />
                 </MuiPickersUtilsProvider>
-
-
               </form>
             </MDBCol>
             <MDBCol lg="6">
@@ -277,13 +259,6 @@ const JurnalManualComponent = ({ Change, userData, status }) => {
                     </MDBBtn>
                   </MDBBox>
                 </MDBCol>
-                {/* <MDBCol lg="6">
-                                    <MDBBox display="flex" justifyContent="start">
-                                        <MDBBtn color="danger" >
-                                            Batal
-                                        </MDBBtn>
-                                    </MDBBox>
-                                </MDBCol> */}
               </MDBRow>
             </MDBCol>
           </MDBRow>

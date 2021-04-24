@@ -138,18 +138,8 @@ const ListPemasukanComponent = ({ props, dataTamp, Next, NextR }) => {
                           Review
                         </MDBBtn>
                       )}
-                      {login.data && login.data.name === 'Marketing' &&
+                      {login.data && login.data.name === 'Marketing' && item.review_status !== 'approved' &&
                         <>
-                          <MDBBtn
-                            color="dark-green"
-                            size="sm"
-                            style={{ margin: "10px" }}
-                            onClick={() =>
-                              history.push(`/generate-invoice-income`, { userId: item.id })
-                            }
-                          >
-                            Generate
-                      </MDBBtn>
                           <EditIcon
                             color="dark-green"
                             size="sm"
@@ -164,6 +154,23 @@ const ListPemasukanComponent = ({ props, dataTamp, Next, NextR }) => {
                           />
                         </>
                       }
+
+                      {login.data && login.data.name === 'Marketing' && 
+                        <>
+                          <MDBBtn
+                            color="dark-green"
+                            size="sm"
+                            style={{ margin: "10px" }}
+                            onClick={() =>
+                              history.push(`/generate-invoice-income`, { userId: item.id })
+                            }
+                          >
+                            Generate
+                      </MDBBtn>
+                        </>
+                      }
+
+
                     </MDBRow>
                   </MDBCol>
                 </MDBRow>

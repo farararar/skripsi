@@ -129,6 +129,7 @@ const UpdateIncome = (dispatch) => (id, data, callback) => {
       },
     })
     .then((res) => {
+      console.log("RESONSDE UPDATE",res);
       if (res.data.success) {
         dispatch({ type: "NO-LOADING" });
         callback();
@@ -136,12 +137,13 @@ const UpdateIncome = (dispatch) => (id, data, callback) => {
       } else {
         alert(res.data.message);
         dispatch({ type: "NO-LOADING" });
+        console.log("error post")
       }
     })
     .catch((error) => {
       dispatch({ type: "NO-LOADING" });
       alert(error);
-      // console.log(error)
+      console.log("error post",error)
     });
 };
 
