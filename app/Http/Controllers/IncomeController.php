@@ -256,6 +256,7 @@ class IncomeController extends Controller
             $data->repayment            = 0;
             $data->due_date             = $request->jatuh_tempo;
         }
+       
         $data->date             = $request->date;
         $data->save();
 
@@ -333,6 +334,7 @@ class IncomeController extends Controller
                 $data->repayment            = 0;
                 $data->due_date             = $request->jatuh_tempo;
             }
+         
             $data->date             = $request->date;
             $data->save();
     
@@ -384,6 +386,7 @@ class IncomeController extends Controller
                 $debit->invoice_number = $data->invoice_number;
                 $debit->debit = $data->ammount;
                 $debit->credit = 0;
+            
                 $debit->description = $data->description;
                 $debit->date = $data->date;
                 $debit->save();
@@ -393,6 +396,7 @@ class IncomeController extends Controller
                 $credit->invoice_number = $data->invoice_number;
                 $credit->debit = 0;
                 $credit->credit = $data->ammount;
+                
                 $credit->description = $data->description;
                 $credit->date = $data->date;
                 $credit->save();
@@ -483,8 +487,8 @@ class IncomeController extends Controller
                 "credit_account" => 2
             ),
             "Pembayaran Uang Muka" => array(
-                "debit_account" => 1,
-                "credit_account" => 6
+                "debit_account" => 4,
+                "credit_account" => 2
             ),
             "Pembayaran Bulanan" => array(
                 "debit_account" => 4,
