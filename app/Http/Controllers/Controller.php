@@ -192,7 +192,7 @@ class Controller extends BaseController
         );  
         $total_beban_lain = $beban_administrasi_bank + $biaya_lain_lain;
         $total_beban = $total_beban_lain +   $total_biaya_operasional;
-        $laba_kotor = $pemasukan + $total_harga_pokok;
+        $laba_kotor = $pemasukan - $total_harga_pokok;
         $laba_sebelum_pajak = (($laba_kotor + $pend_bunga_bank) - $total_beban);
         $pajak = $laba_kotor * 0.1;
         $pendapatan = array(
@@ -472,7 +472,7 @@ class Controller extends BaseController
         );  
         $total_beban_lain = $beban_administrasi_bank + $biaya_lain_lain;
         $total_beban = $total_beban_lain +   $total_biaya_operasional;
-        $laba_kotor = $pemasukan + $total_harga_pokok;
+        $laba_kotor = $pemasukan - $total_harga_pokok;
         $laba_sebelum_pajak = (($laba_kotor + $pend_bunga_bank) - $total_beban);
         $pajak = $laba_kotor * 0.1;
         $pendapatan = array(
