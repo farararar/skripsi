@@ -144,7 +144,7 @@ const JurnalManualComponent = ({ Change, userData, status }) => {
 
     console.log(value)
     let data = {
-      account_id: value.akun.id,
+      account_id: value.account_id,
       debit: value.debit,
       credit: value.credit,
       description: value.description,
@@ -199,16 +199,16 @@ const JurnalManualComponent = ({ Change, userData, status }) => {
                 </InputLabel>
                 <Select
                   label="Akun"
-                  value={value.akun ? value.akun.name : ''}
-                  name={'akun'}
-                  onChange={handleChange("akun")}
+                  value={parseInt(value.account_id)}
+                  name={'account_id'}
+                  onChange={handleChange("account_id")}
                 >
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
 
                   {listAccount && listAccount.map((res, i) => (
-                    <MenuItem value={res}>{res.name}</MenuItem>
+                    <MenuItem value={parseInt(res.id)}>{res.name}</MenuItem>
                   ))}
                 </Select>
               </FormControl>

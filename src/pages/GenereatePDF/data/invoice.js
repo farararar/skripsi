@@ -13,7 +13,8 @@ const invoice = {
         "sno": 1,
         "desc": "ad sunt culpa occaecat qui",
         "qty": 5,
-        "rate": 405.89
+        "rate": 405.89,
+        "total" : 670.90
       },
     ]
   }

@@ -22,27 +22,24 @@ const styles = StyleSheet.create({
         width: '10%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
-        textAlign: 'right',
+        textAlign: 'center',
         paddingRight: 8,
     },
     rate: {
         width: '15%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
-        textAlign: 'right',
+        textAlign: 'center',
         paddingRight: 8,
     },
     amount: {
         width: '15%',
-        textAlign: 'right',
+        textAlign: 'center',
         paddingRight: 8,
     },
-    amount1: {
-        width: '15%',
+    price: {
         borderLeftColor: borderColor,
         borderLeftWidth: 1,
-        textAlign: 'right',
-        paddingRight: 8,
     },
   });
 
@@ -53,7 +50,7 @@ const InvoiceTableRow = ({items}) => {
             <Text style={styles.description}>{item.name}</Text>
             <Text style={styles.qty}>{item.qty}</Text>
             <Text style={styles.amount}>{item.unit_price}</Text>
-            <Text style={styles.amount1}>{item.unit_total}</Text>
+            <Text style={styles.price}>{item.total}</Text>
         </View>
     )
     return (<Fragment>{rows}</Fragment> )

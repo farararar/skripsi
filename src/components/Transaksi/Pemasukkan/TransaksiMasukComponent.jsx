@@ -80,21 +80,21 @@ const TransaksiMasukComponent = (props) => {
   };
 
   function tex_dp(paymentod) {
-    if (paymentod == 'Pembayaran Uang Muka' || paymentod == 'Pembayaran Bulanan') {
+    if (paymentod == 'Pembayaran Bulanan') {
       return (
         <TextField
           fullWidth label="Uang Muka"
           variant="outlined"
           margin="normal"
           multiline rowsMax={4}
-          value={value.uang_muka}
-          onChange={handleChange("uang_muka")} />
+          value={0}
+          onChange={handleChange("uang muka")} />
       )
     }
   };
 
   function jatuhtempo(paymentod) {
-    if (paymentod == 'Pembayaran Uang Muka' || paymentod == 'Pembayaran Bulanan') {
+    if (paymentod == 'Pembayaran Bulanan') {
       return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
@@ -172,17 +172,13 @@ const TransaksiMasukComponent = (props) => {
   }
 
   useEffect(() => {
-    // Update the document title using the browser API
     console.log("VALUE : ", value)
     console.log("Subtotal.. : ", subtotal)
     updateTotalPrice()  
-    // document.title = `You clicked ${JSON.stringify(subtotal)} times`;
   });
   
   const handleChangeProduk = (name, index) => (event) => {
-    // console.log("Index : ", index)
     console.log('name', name);
-    // console.log('event = ', event.target.value);
 
     if (name === 'product') {
       let id_prod = event.target.value.id
@@ -280,21 +276,6 @@ const TransaksiMasukComponent = (props) => {
   const ammount_value = () =>{
     return value.ammount;
   }
-  
-  // const updateTotalPrice = async () => {
-  //   let total_price = 0
-  //   const tamp = await Object.values(subtotal).map((v) => {
-  //     console.log("testes",v);
-  //     total_price = total_price + v
-  //   });
-  //   Promise.all(tamp).then(() => {
-  //     console.log("Total Price : ", total_price);
-  //     setValue({
-  //       ...value,
-  //       ['ammount']: total_price,
-  //     });
-  //   });
-  // }
 
   useEffect(() => {
     ListAccount();
@@ -420,12 +401,8 @@ const TransaksiMasukComponent = (props) => {
     let newArr = [...count1];
     newArr[index] = 'B';
     setCount(newArr);
-    // updateTotalPrice()
+   
   }
-
-  // useEffect(() => {
-  //   console.log(subtotal);
-  // }, [subtotal])
 
   const addProduct = () =>{
     console.log('Sub total',subtotal);
@@ -529,9 +506,6 @@ const TransaksiMasukComponent = (props) => {
                   </MenuItem>
                   <MenuItem value="Tunai">Tunai</MenuItem>
                   <MenuItem value="Transfer">Transfer</MenuItem>
-                  <MenuItem value="Pembayaran Uang Muka">
-                    Pembayaran Uang Muka
-                  </MenuItem>
                   <MenuItem value="Pembayaran Bulanan">
                     Pembayaran Bulanan
                   </MenuItem>
@@ -541,17 +515,6 @@ const TransaksiMasukComponent = (props) => {
               {tex_dp(value.payment_method)}
               <br></br>
               {jatuhtempo(value.payment_method)}
-              {/*<TextField
-                fullWidth
-                label="Keterangan"
-                variant="outlined"
-                margin="normal"
-                multiline
-                rows={3}
-                rowsMax={5}
-                value={value.information}
-                onChange={handleChange("information")}
-              />*/}
             </MDBCol>
           </MDBRow>
 
@@ -588,7 +551,6 @@ const TransaksiMasukComponent = (props) => {
                         }}
                         onChange={handleChangeProduk(`product[${product[index]}]`, index)}
                         value={value[`product[${product[index]}]`]}
-                        // defaultValue={jmlprod}
                       />
                       
                     </MDBCol>
@@ -643,7 +605,6 @@ const TransaksiMasukComponent = (props) => {
               <MDBCol lg="2">
                 <b>
                   <NumberFormat
-                    // value={value.ammount}
                     value={total}
                     displayType={"text"}
                     thousandSeparator={true}

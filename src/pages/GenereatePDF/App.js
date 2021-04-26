@@ -16,6 +16,7 @@ export default function App({ props, history }) {
     }, 3000);
     return () => clearTimeout(timer);
   }, [])
+  console.log(state.invoiceIncome)
 
   return (
     <>

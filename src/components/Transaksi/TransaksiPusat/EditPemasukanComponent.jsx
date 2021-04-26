@@ -42,6 +42,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
   const { state: { listProduct }, ListProduct } = useContext(ProductContext);
   const { state, AddIncome, UpdateIncome, GetDetailIncome } = useContext(IncomeContext);
   const [openDialogApprove, setOpenDialogApprove] = useState(false);
+  const [openAletDouble , setOpenAletDouble] = useState(false);
   const [selectedDate, setSelectedDate] = useState();
   const [dataTanggal, setDataTanggal] = useState([]);
   const [tanggal, setTanggal] = useState("");
@@ -55,7 +56,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
   const [subtotal, setSubtotal] = useState();
   const [total, setTotal] = useState();
   const [price, setPrice] = useState([]);
-  // const [price, setPrice] = useState();
+  
   const defaultData = {
     customer: "",
     account_id: "",
@@ -136,21 +137,21 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
   ];
 
   function tex_dp(paymentod) {
-    if (paymentod == 'Pembayaran Uang Muka' || paymentod == 'Pembayaran Bulanan') {
+    if (paymentod == 'Pembayaran Bulanan') {
       return (
         <TextField
           fullWidth label="Uang Muka"
           variant="outlined"
           margin="normal"
           multiline rowsMax={4}
-          value={value.down_payment}
-          onChange={handleChange("uang_muka")} />
+          value={0}
+          onChange={handleChange("uang muka")} />
       )
     }
   };
 
-  function jatuhtempo(paymentod, tgl_jt) {
-    if (paymentod == 'Pembayaran Uang Muka' || paymentod == 'Pembayaran Bulanan') {
+  function jatuhtempo(paymentod) {
+    if (paymentod == 'Pembayaran Bulanan') {
       return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
@@ -158,7 +159,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
             id="date-picker-transaksi"
             label="Tanggal Jatuh Tempo"
             format="dd/MM/yyyy"
-            value={tgl_jt}
+            value={selectedDateTempo}
             views={["date"]}
             onChange={handleDateTempoChange}
             KeyboardButtonProps={{
@@ -171,7 +172,7 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
   };
 
   useEffect(() => {
-    // setValue(state.detailIncome);
+  
     let temp = [];
     let tp = {}
     let ti = {}
@@ -251,13 +252,12 @@ const TransaksiMasukComponent = ({ props, data, Next }) => {
         }
       });
 
-      const prod_val  = Object.values(product)
+      const prod_val =  Object.values(product)
       if (prod_val.includes(id_prod)) {
-        alert("produk sudah ada di daftar pembelian")
+        handleDoubleDialog('ok')
         removeCard(index)
-        return(null)
+        return null
       }
-
       setTempProduct({
         ...tempProduct,
         [index] : tp
@@ -327,7 +327,6 @@ const updateTotalPrice = async () => {
       setTotal(sum);
     }
   }else{
-    // alert('total undefine')
     console.log(subtotal);
   }
   
@@ -343,6 +342,28 @@ useEffect(()=>{
   console.log('TOTAL',total);
   updateTotalPrice()
 })
+
+  const alertDouble = () => (
+    <Dialog
+      open={openAletDouble}
+      onClose={handleDoubleCancle}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{"Ada Kesalahan"}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Produk sudah ada pada daftar pembelian silahkan pilih produk lain
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleDoubleCancle} color="primary">
+          Ok
+        </Button>
+       
+      </DialogActions>
+    </Dialog>
+  );
 
   const dialogApprove = () => (
     <Dialog
@@ -394,11 +415,24 @@ useEffect(()=>{
 
   const handleApproveDialog = () => {
     setOpenDialogApprove(true);
+    
   };
 
   const handleApproveCancle = () => {
     setOpenDialogApprove(false);
+    
   };
+
+  const handleDoubleDialog = () => {
+    setOpenAletDouble(true);
+    
+  };
+
+  const handleDoubleCancle = () => {
+    setOpenAletDouble(false);
+    
+  };
+
   const [trigger, setTrigger] = useState(null);
 
   const handleApproveProccess = async () => {
@@ -435,6 +469,7 @@ useEffect(()=>{
       }
     });
     formdata.append("_method", "PUT");
+    formdata.append('kantor','0')
     formdata.append('date',value['date'])
     formdata.append('image',null)
     formdata.append("user_id", data.user_id);
@@ -443,6 +478,7 @@ useEffect(()=>{
         history.push('/list-transaksi-admin')
       });
       setOpenDialogApprove(false);
+      
     });
   };
 
@@ -532,6 +568,7 @@ useEffect(()=>{
       <hr className="" />
       <MDBCard className="mb-2">
         {dialogApprove()}
+        {alertDouble()}
         {state.loading && <LinearProgress />}
         <MDBCardBody className="p-1">
           <MDBRow className="m-3">
@@ -632,9 +669,6 @@ useEffect(()=>{
                   </MenuItem>
                   <MenuItem value="Tunai">Tunai</MenuItem>
                   <MenuItem value="Transfer">Transfer</MenuItem>
-                  <MenuItem value="Pembayaran Uang Muka">
-                    Pembayaran Uang Muka
-                  </MenuItem>
                   <MenuItem value="Pembayaran Bulanan">
                     Pembayaran Bulanan
                   </MenuItem>
@@ -647,17 +681,6 @@ useEffect(()=>{
               {tex_dp(value.payment_method)}
               <br></br>
               {jatuhtempo(value.payment_method, value.due_date)}
-              {/*<TextField
-                fullWidth
-                label="Keterangan"
-                variant="outlined"
-                margin="normal"
-                multiline
-                rows={3}
-                rowsMax={5}
-                value={value.information}
-                onChange={handleChange("information")}
-              />*/}
             </MDBCol>
           </MDBRow>
 
@@ -668,7 +691,7 @@ useEffect(()=>{
                   <MDBRow className="m-12">
                     <MDBCol lg="3">
                       <FormControl fullWidth >
-                        <RemoveCircleOutlinedIcon onClick={() => removeCard(index)} style={{ color: 'red', alignItems: 'flex-end', position: "absolute", right: 0, top: 0, fontSize: 20, cursor: 'pointer' }} />
+                      <RemoveCircleOutlinedIcon onClick={() => removeCard(index)} style={{ color: 'red', alignItems: 'flex-end', position: "absolute", fontSize: 25, cursor: 'pointer', marginLeft: 930, marginTop: -15 }} />
                         <br></br>
                         <InputLabel>Produk</InputLabel>
                         <Select value={tempProduct[index]} onChange={handleChangeProduk(`product`, index)}>

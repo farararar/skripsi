@@ -171,8 +171,8 @@ const JurnalPerbulanComponent = ({ Next, userData, params }) => {
                         </td>
                         <td>{res.account.name}</td>
                         <td>{res.description}</td>
-                        <td><NumberFormat value={res.credit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'green'}}/></td>
-                        <td><NumberFormat value={res.debit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'red'}}/></td>
+                        <td><NumberFormat value={res.debit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'green'}}/></td>
+                        <td><NumberFormat value={res.credit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} style={{color:'red'}}/></td>
                         <td>
                           {
                             res.review_bulanan == 0 &&
