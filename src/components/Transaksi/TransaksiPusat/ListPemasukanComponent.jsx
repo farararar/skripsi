@@ -149,13 +149,13 @@ const ListPemasukanComponent = ({ props, dataTamp, Next, NextR }) => {
                           <DeleteIcon
                             color="red"
                             // size="sm"
-                            style={{ color: "red", margin: "10px" }}
+                            style={{ color: "red", margin:"10px"}}
                             onClick={() => handleDelete(item.id)}
                           />
                         </>
                       }
 
-                      {login.data && login.data.name === 'Marketing' && 
+                      {login.data && login.data.name === 'Marketing' && item.review_status == 'approved' &&
                         <>
                           <MDBBtn
                             color="dark-green"
