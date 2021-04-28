@@ -101,12 +101,23 @@ class Controller extends BaseController
         $biaya_angkut_pembelian_debit = Journal::where('account_id', 25)->where('date', 'LIKE', $year.'-%')->sum('debit');     
         $biaya_angkut_pembelian_kredit = Journal::where('account_id', 25)->where('date', 'LIKE', $year.'-%')->sum('credit');     
         $biaya_angkut_pembelian = $biaya_angkut_pembelian_debit -  $biaya_angkut_pembelian_kredit; 
+
+        $biaya_bahan_debit = Journal::where('account_id', 23)->where('date', 'LIKE', $year.'-%')->sum('debit');     
+        $biaya_bahan_kredit = Journal::where('account_id', 23)->where('date', 'LIKE', $year.'-%')->sum('credit');     
+        $biaya_bahan = $biaya_bahan_debit -   $biaya_bahan_kredit; 
+
+        $biaya_bahan_pembantu_debit = Journal::where('account_id', 24)->where('date', 'LIKE', $year.'-%')->sum('debit');     
+        $biaya_bahan_pembantu_kredit = Journal::where('account_id', 24)->where('date', 'LIKE', $year.'-%')->sum('credit');     
+        $biaya_bahan_pembantu = $biaya_bahan_pembantu_debit - $biaya_bahan_pembantu_kredit; 
         
         $penjualan = array(
             "Penjualan" => $pemasukan
         );
-        $total_harga_pokok = ($tenaga_kerja_tidak_langsung + $overhead + $biaya_angkut_pembelian);
+
+        $total_harga_pokok = ($tenaga_kerja_tidak_langsung + $overhead + $biaya_angkut_pembelian +  $biaya_bahan + $biaya_bahan_pembantu);
         $harga_pokok = array(
+            "Bahan Baku Langsung" =>  $biaya_bahan,
+            "Bahan Baku Pembantu" =>  $biaya_bahan_pembantu,
             "Tenaga Kerja Tidak Langsung" => $tenaga_kerja_tidak_langsung,
             "Biaya Overhead Pabrik" => $overhead,
             "Biaya Angkut Pembelian" => $biaya_angkut_pembelian,
@@ -382,11 +393,22 @@ class Controller extends BaseController
         $biaya_angkut_pembelian_kredit = Journal::where('account_id', 25)->where('date', 'LIKE', $year.'-%')->sum('credit');     
         $biaya_angkut_pembelian = $biaya_angkut_pembelian_debit -  $biaya_angkut_pembelian_kredit; 
         
+        $biaya_bahan_debit = Journal::where('account_id', 23)->where('date', 'LIKE', $year.'-%')->sum('debit');     
+        $biaya_bahan_kredit = Journal::where('account_id', 23)->where('date', 'LIKE', $year.'-%')->sum('credit');     
+        $biaya_bahan = $biaya_bahan_debit -   $biaya_bahan_kredit; 
+
+        $biaya_bahan_pembantu_debit = Journal::where('account_id', 24)->where('date', 'LIKE', $year.'-%')->sum('debit');     
+        $biaya_bahan_pembantu_kredit = Journal::where('account_id', 24)->where('date', 'LIKE', $year.'-%')->sum('credit');     
+        $biaya_bahan_pembantu = $biaya_bahan_pembantu_debit - $biaya_bahan_pembantu_kredit; 
+        
         $penjualan = array(
             "Penjualan" => $pemasukan
         );
-        $total_harga_pokok = ($tenaga_kerja_tidak_langsung + $overhead + $biaya_angkut_pembelian);
+
+        $total_harga_pokok = ($tenaga_kerja_tidak_langsung + $overhead + $biaya_angkut_pembelian +  $biaya_bahan + $biaya_bahan_pembantu);
         $harga_pokok = array(
+            "Bahan Baku Langsung" =>  $biaya_bahan,
+            "Bahan Baku Pembantu" =>  $biaya_bahan_pembantu,
             "Tenaga Kerja Tidak Langsung" => $tenaga_kerja_tidak_langsung,
             "Biaya Overhead Pabrik" => $overhead,
             "Biaya Angkut Pembelian" => $biaya_angkut_pembelian,
