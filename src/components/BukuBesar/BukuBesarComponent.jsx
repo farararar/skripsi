@@ -104,12 +104,6 @@ const BukuBesarComponent = ({ }) => {
                                 ))}
                             </Select>
                         </MDBCol>
-                        {/* <MDBCol lg="2">
-                            <h5 className="pt-2 mx-2">
-                                No. Reff.<br></br>
-                                <small><i>Pilih Jenis Akun</i></small>
-                            </h5>
-                        </MDBCol> */}
                         <MDBCol lg="2">
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <Grid container justify="space-around">
@@ -151,9 +145,6 @@ const BukuBesarComponent = ({ }) => {
                                 <MDBBtn color="dark-green" gradient="blue" onClick={handleFilter}>
                                     Tampilkan <MDBIcon icon="filter" className="ml-1" />
                                 </MDBBtn>
-                                {/* <MDBBtn color="danger" size="sm">
-                                    Tolak <MDBIcon icon="times" className="ml-1" />
-                                </MDBBtn> */}
                             </MDBRow>
                         </MDBCol>
                     </MDBRow>
@@ -194,28 +185,6 @@ const BukuBesarComponent = ({ }) => {
                                 ))}
                             </MDBTableBody>
                         </MDBTable>
-                        {/* <hr></hr>
-                        <MDBRow className='mx-3'>
-                            <MDBCol lg="9">
-                                <h5 className="pt-2 mx-2">
-                                    <small>TOTAL DEBIT</small><br></br>
-                                    <small>TOTAL KREDIT</small><br></br><hr></hr>
-                                    <small>SALDO AWAL</small><br></br>
-                                    <small>SALDO AKHIR</small>
-                                </h5>
-                            </MDBCol>
-                            <MDBCol lg="3">
-                                <MDBBox display='flex' justifyContent="start">
-                                    <h5 className="pt-2 mx-2">
-                                        <small><b><NumberFormat value={state.ledgerAdditional.total_debit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></small><br></br>
-                                        <small><b><NumberFormat value={state.ledgerAdditional.total_credit} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></small><br></br><hr></hr>
-                                        <small><b><NumberFormat value={state.ledgerAdditional.saldo_awal} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></small><br></br>
-                                        <small><b><NumberFormat value={state.ledgerAdditional.saldo_akhir} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></b></small>
-                                    </h5>
-                                </MDBBox>
-                            </MDBCol>
-                        </MDBRow>
-                        <hr></hr> */}
                     </MDBCardBody>
                 </MDBCard>
             )}

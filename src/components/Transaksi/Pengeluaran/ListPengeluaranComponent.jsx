@@ -35,37 +35,6 @@ const ListPengeluaranComponent = (props, dataTamp, NextR) => {
     setValue(data)
   }
 
-  /*const { state, ListOutcome, DeleteOutcome, UpdateOutcome, InvoiceOutcome } = useContext(OutcomeContext);
-  const { isAuthenticated } = useContext(AuthContext)
-  const [Next, setNext] = useState(true);
-  const [value, setValue] = useState([]);
-  const [, setListData] = useState([]);
-  const [login, setLogin] = useState([]);
-  let history = useHistory();
-
-  useEffect(() => {
-    ListOutcome("");
-    setLogin(JSON.parse(localStorage.getItem('login')));
-    setListData(state.listOutcome);
-    return () => { };
-  }, []);
-
-  useEffect(() => {
-    ListOutcome();
-    return () => { };
-  }, []);
-
-  const handleNext = (data) => {
-    setNext(false)
-    setValue(data)
-  }
-
-  const handleClickReview = (data) => {
-    props.history.push(`/review-transaksi-keluar/${data.id}`);
-    dataTamp(data.id);
-    NextR();
-  };*/
-
   const ListTransaksi = () => (
     <Fragment>
       {state.listOutcome.map((item, i) => {

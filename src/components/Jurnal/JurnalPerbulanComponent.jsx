@@ -141,12 +141,6 @@ const JurnalPerbulanComponent = ({ Next, userData, params }) => {
       </MDBCard>
       <MDBCard className="mb-2">
         <MDBCardBody className="p-1">
-          {/* <MDBRow className='m-3'>
-                            <h5 className="pt-2 mx-2">
-                                Tanggal Transaksi<br></br>
-                                <small>11/07/2020</small>
-                            </h5>
-                        </MDBRow> */}
           <MDBTable>
             <MDBTableHead color="primary-color" textWhite>
               <tr>

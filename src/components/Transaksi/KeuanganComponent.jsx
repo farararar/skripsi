@@ -32,15 +32,7 @@ const KeuanganComponent = (props) => {
   const defaultData = {
     invoice_number: "",
     repayment: "",
-    type: "",
-    // description: "",
-    // payment_method: "",
-    // date: "",
-    // information: "",
-    // image: [],
-    // shift: "",
-    // uang_muka :"",
-    // jatuh_tempo : ""
+    type: ""
   };
   const [value, setValue] = useState(defaultData);
   const [openAlertLimit, setOpenAlertLimit] = useState(false);
